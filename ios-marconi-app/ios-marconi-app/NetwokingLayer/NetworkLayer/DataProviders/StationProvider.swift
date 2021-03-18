@@ -5,7 +5,7 @@ class StationProvider: ResponseValidator {
     
     private let _router: AnyRouter<StationApi>
     
-    func fetch(by id: Int) -> Future<Movie> {
+    func fetch(by id: Int) -> Future<Station> {
         return _router.doRequest(.getStation(Id: id))
                       .validateResponse(networkManager: self)
                       .decoded()

@@ -21,8 +21,6 @@ extension ResponseValidator {
     }
 }
 
-public struct Movie: Codable { }
-
 public class NetworkConfig {
     
     public enum APIVersion {
@@ -34,7 +32,7 @@ public class NetworkConfig {
         }
     }
     
-    public static var apiVersion: APIVersion = .v1
+    public static var apiVersion: APIVersion = .v2
     public static var baseURL: URL? {
         return apiVersion.url
     }

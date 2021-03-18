@@ -16,7 +16,7 @@ extension StationApi: EndPointType {
     var path: String {
         switch self {
         case .getStation(let id):
-            return "station/\(id)"
+            return "stations/\(id)"
         }
     }
     
