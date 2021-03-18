@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:ios-marconi-app/ios-marconi-app.xcodeproj">
+      location = "group:ios-marconi-framework/ios-marconi-framework.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:ios-marconi-framework/ios-marconi-framework.xcodeproj">
+      location = "group:ios-marconi-app/ios-marconi-app.xcodeproj">
    </FileRef>
 </Workspace>
