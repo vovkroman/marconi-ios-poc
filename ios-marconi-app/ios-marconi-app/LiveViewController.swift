@@ -12,6 +12,19 @@ import ios_marconi_framework
 
 class LiveViewController: UIViewController/*, AVPlayerItemMetadataCollectorPushDelegate*/ {
     
+    let provider: StationProvider = .init()
+    
+    override func viewDidLoad() {
+        provider.fetch(by: 1005).observe { (result) in
+            switch result {
+            case .success(let movie):
+                print(movie)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
 //    let player = AVPlayer()
 //    var playerItem: AVPlayerItem!
 //    var metadataCollector: AVPlayerItemMetadataCollector!
