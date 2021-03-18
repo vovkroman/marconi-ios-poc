@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:FutureKit/FutureKit.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:ios-marconi-framework/ios-marconi-framework.xcodeproj">
    </FileRef>
    <FileRef
