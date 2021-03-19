@@ -8,4 +8,6 @@
 
 import UIKit
 
-class DigitalViewController: ListViewController<DigitalStations.ViewModel> {}
+extension DigitalStations {
+    class ViewController: ListViewController<ViewModel> {}
+}
