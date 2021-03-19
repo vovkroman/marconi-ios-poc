@@ -7,54 +7,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Digital Station-->
-        <scene sceneID="6GP-lZ-Y7a">
-            <objects>
-                <viewController id="svf-BY-mxu" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="fPm-Zq-5wz">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="448"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="l0h-1n-e2s"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Digital Station" id="wet-BC-q9b"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="7Db-JT-Rcp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1426" y="-730"/>
-        </scene>
-        <!--Rewind Station-->
-        <scene sceneID="FGD-3p-Oqj">
-            <objects>
-                <viewController id="2J7-AH-X3n" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="06c-1h-Co9">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="448"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="zp0-iQ-HJk"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Rewind Station" id="9aI-0J-E1g"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NTR-nu-Son" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1425" y="-345"/>
-        </scene>
-        <!--Live Stations-->
-        <scene sceneID="y0X-9z-sG9">
-            <objects>
-                <viewController id="oIF-vi-pcy" customClass="LiveViewController" customModule="ios_marconi_app" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="SmQ-q6-fW6">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="448"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="3Wd-J0-Rn4"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Live Stations" id="Lzh-76-Cwe"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="C6q-HC-3Am" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1425" y="-1165"/>
-        </scene>
         <!--View Controller-->
         <scene sceneID="x0W-ME-8r7">
             <objects>
@@ -96,14 +48,71 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="oIF-vi-pcy" kind="relationship" relationship="viewControllers" id="gS4-BK-YNK"/>
-                        <segue destination="svf-BY-mxu" kind="relationship" relationship="viewControllers" id="gvB-aS-Guw"/>
-                        <segue destination="2J7-AH-X3n" kind="relationship" relationship="viewControllers" id="1qH-LB-FSb"/>
+                        <segue destination="q85-hR-eop" kind="relationship" relationship="viewControllers" id="dpL-wc-Emg"/>
+                        <segue destination="NwE-hf-rw4" kind="relationship" relationship="viewControllers" id="aGh-K8-oOu"/>
+                        <segue destination="qu6-Yl-7f8" kind="relationship" relationship="viewControllers" id="xC4-Bm-0zA"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vx3-lh-IEh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="567" y="-731"/>
+        </scene>
+        <!--Live Stations-->
+        <scene sceneID="6ZL-oZ-efO">
+            <objects>
+                <tableViewController id="q85-hR-eop" customClass="LiveStationsViewController" customModule="ios_marconi_app" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="dA6-sE-egY">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="448"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <connections>
+                            <outlet property="dataSource" destination="q85-hR-eop" id="sX3-g4-fR4"/>
+                            <outlet property="delegate" destination="q85-hR-eop" id="j1Y-00-BBt"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Live Stations" id="6MQ-hw-uRw"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="w3y-tK-tnD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1357" y="-1211"/>
+        </scene>
+        <!--Digital Stations-->
+        <scene sceneID="Lt5-hG-w4p">
+            <objects>
+                <tableViewController id="NwE-hf-rw4" customClass="DigitalViewController" customModule="ios_marconi_app" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="IqV-z6-9h9">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="448"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <connections>
+                            <outlet property="dataSource" destination="NwE-hf-rw4" id="q9V-SS-3xh"/>
+                            <outlet property="delegate" destination="NwE-hf-rw4" id="TU3-sy-Zzd"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Digital Stations" id="viU-wB-l5X"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vkk-f0-EaC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1357" y="-846"/>
+        </scene>
+        <!--Rewind Stations-->
+        <scene sceneID="5kM-Xr-zRR">
+            <objects>
+                <tableViewController id="qu6-Yl-7f8" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="zF8-tB-JWo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="448"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <connections>
+                            <outlet property="dataSource" destination="qu6-Yl-7f8" id="x6f-Z1-3NI"/>
+                            <outlet property="delegate" destination="qu6-Yl-7f8" id="LLC-s4-do3"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Rewind Stations" id="Ju2-Bl-kDO"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Bs5-Vo-9f6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1342" y="-477"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="xcM-rY-wFk">

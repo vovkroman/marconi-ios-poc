@@ -19,12 +19,9 @@ extension NibLoadable where Self: UIView {
     }
     
     static var nib: UINib {
-        return UINib(nibName: String(describing: self), bundle: nil)
+        let bundle = Bundle(for: Self.self)
+        return UINib(nibName: Self.nibName, bundle: bundle)
     }
-//    static var nib: UINib {
-//        let bundle = Bundle(for: Self.self)
-//        return UINib(nibName: Self.nibName, bundle: bundle)
-//    }
 
     func setupFromNib() {
         guard let view = Self.nib.instantiate(withOwner: self, options: nil).first as? UIView else { fatalError("Error loading \(self) from nib") }
