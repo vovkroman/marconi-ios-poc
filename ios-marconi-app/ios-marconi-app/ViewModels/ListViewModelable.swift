@@ -21,10 +21,12 @@ struct StationHolder: Titlable {
     }
 }
 
-protocol ListViewModelable {
+protocol Selectable {
+    func didSelected(at indexPath: IndexPath)
+}
+
+protocol ListViewModelable: Selectable {
     associatedtype Model: Titlable
-    
-    init()
     var count: Int { get }
     subscript(index: Int) -> Model { get }
 }

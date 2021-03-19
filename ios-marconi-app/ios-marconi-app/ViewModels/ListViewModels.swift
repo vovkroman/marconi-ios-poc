@@ -26,13 +26,24 @@ extension LiveStations {
 
         var count: Int { return _items.count }
         
+        func didSelected(at indexPath: IndexPath) {
+            let future = _provider.fetch(by: _items[indexPath.row].id)
+            future.observe { (result) in
+                switch result {
+                case .success(let station):
+                    print(station)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+        
         required init() {
             _items = [.init(id: 1005, name: "ALT 92.3"),
                       .init(id: 395, name: "Your '70s Playlist"),
                       .init(id: 657, name: "The Cove")]
         }
     }
-
 }
 
 
@@ -48,6 +59,10 @@ extension DigitalStations {
         }
 
         var count: Int { return _items.count }
+        
+        func didSelected(at indexPath: IndexPath) {
+            print(_items[indexPath.row])
+        }
         
         required init() {
             _items = [.init(id: 2395, name: "Women of Alt"),

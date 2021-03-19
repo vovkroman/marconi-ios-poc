@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F08E9D42605048F003D0E07 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9D32605048F003D0E07 /* MainViewController.swift */; };
+		6F08E9D62605093E003D0E07 /* ViewModelOwnable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9D52605093E003D0E07 /* ViewModelOwnable.swift */; };
+		6F08E9D926051DB8003D0E07 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9D826051DB8003D0E07 /* PlayerView.swift */; };
+		6F08E9DB26051DE1003D0E07 /* PlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F08E9DA26051DE1003D0E07 /* PlayerView.xib */; };
 		6F1517D025FFC6D800AD9354 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1517CF25FFC6D800AD9354 /* AppDelegate.swift */; };
 		6F1517D725FFC6D800AD9354 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F1517D525FFC6D800AD9354 /* Main.storyboard */; };
 		6F1517D925FFC6DB00AD9354 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F1517D825FFC6DB00AD9354 /* Assets.xcassets */; };
@@ -69,6 +73,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6F08E9D32605048F003D0E07 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		6F08E9D52605093E003D0E07 /* ViewModelOwnable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelOwnable.swift; sourceTree = "<group>"; };
+		6F08E9D826051DB8003D0E07 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		6F08E9DA26051DE1003D0E07 /* PlayerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerView.xib; sourceTree = "<group>"; };
 		6F1517CC25FFC6D800AD9354 /* ios-marconi-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-marconi-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F1517CF25FFC6D800AD9354 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6F1517D625FFC6D800AD9354 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -127,6 +135,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F08E9D726051D9E003D0E07 /* PlayerView */ = {
+			isa = PBXGroup;
+			children = (
+				6F08E9D826051DB8003D0E07 /* PlayerView.swift */,
+				6F08E9DA26051DE1003D0E07 /* PlayerView.xib */,
+			);
+			path = PlayerView;
+			sourceTree = "<group>";
+		};
 		6F1517C325FFC6D800AD9354 = {
 			isa = PBXGroup;
 			children = (
@@ -174,6 +191,7 @@
 		6F3CAC082601006C0058A72B /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				6F08E9D726051D9E003D0E07 /* PlayerView */,
 				6F44B11F2603C1790047A3E5 /* TableViewCells */,
 				6F44B1152603AFFB0047A3E5 /* ViewControllers */,
 				6FEC7E982600DAF700C55A2D /* Extensions */,
@@ -279,6 +297,7 @@
 		6F44B1152603AFFB0047A3E5 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				6F08E9D32605048F003D0E07 /* MainViewController.swift */,
 				6F44B1162603B0890047A3E5 /* ListViewController.swift */,
 				6F44B11D2603C0C70047A3E5 /* LiveStationsViewController.swift */,
 				6F44B1242603C4EC0047A3E5 /* DigitalViewController.swift */,
@@ -291,6 +310,7 @@
 			children = (
 				6F44B1192603B0F20047A3E5 /* ListViewModelable.swift */,
 				6F44B11B2603B9060047A3E5 /* ListViewModels.swift */,
+				6F08E9D52605093E003D0E07 /* ViewModelOwnable.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -407,6 +427,7 @@
 				6F1517D925FFC6DB00AD9354 /* Assets.xcassets in Resources */,
 				6F44B1232603C1B10047A3E5 /* StationTableViewCell.xib in Resources */,
 				6F1517D725FFC6D800AD9354 /* Main.storyboard in Resources */,
+				6F08E9DB26051DE1003D0E07 /* PlayerView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,6 +446,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F44B10B260388150047A3E5 /* Logger.swift in Sources */,
+				6F08E9D42605048F003D0E07 /* MainViewController.swift in Sources */,
 				6F44B106260387E10047A3E5 /* EndPointType.swift in Sources */,
 				6F44B1222603C1B10047A3E5 /* StationTableViewCell.swift in Sources */,
 				6F44B0FE260387D80047A3E5 /* URLParameterEncoding.swift in Sources */,
@@ -440,11 +462,13 @@
 				6F44B105260387E10047A3E5 /* Router.swift in Sources */,
 				6F44B107260387E60047A3E5 /* Validation.swift in Sources */,
 				6F3CAC1826011AFF0058A72B /* ReusableCollectionView.swift in Sources */,
+				6F08E9D62605093E003D0E07 /* ViewModelOwnable.swift in Sources */,
 				6F44B101260387DE0047A3E5 /* StationApi.swift in Sources */,
 				6F44B0FF260387D80047A3E5 /* JSONParameterEncoder.swift in Sources */,
 				6F44B1252603C4EC0047A3E5 /* DigitalViewController.swift in Sources */,
 				6F3CAC1926011AFF0058A72B /* ReusableTableView.swift in Sources */,
 				6F1517D025FFC6D800AD9354 /* AppDelegate.swift in Sources */,
+				6F08E9D926051DB8003D0E07 /* PlayerView.swift in Sources */,
 				6F44B108260387E60047A3E5 /* Errors.swift in Sources */,
 				6F44B100260387DB0047A3E5 /* StationProvider.swift in Sources */,
 				6F44B11E2603C0C70047A3E5 /* LiveStationsViewController.swift in Sources */,
