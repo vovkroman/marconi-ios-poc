@@ -10,30 +10,41 @@ import AVFoundation
 
 public enum Marconi {}
 
-extension Marconi {
-    enum MError: Equatable {}
-}
-
-protocol StateMachineObserver: class {
-    func stateDidChanched(from: Marconi.StateMachine.State, to: Marconi.StateMachine.State)
+public protocol MarconiPlayerObserver: class {
+    func stateDidChanched(_ stateMachine: Marconi.StateMachine, to: Marconi.StateMachine.State)
 }
 
 extension Marconi {
-    final class StateMachine {
+    public struct MetaData: Equatable {
+        let albumArt: String?
+        let stationInfo: String?
+        let articst: String?
+        let song: String?
+    }
+}
+
+extension Marconi {
+    public enum MError: Equatable {}
+}
+
+extension Marconi {
+    public final class StateMachine {
         
-        enum State: Equatable {
-            case idle
+        public enum State: Equatable {
+            case noPlaying
             case buffering(AVPlayerItem)
-            case playing()
+            case playing(MetaData?)
             case error(MError)
             
-            static func == (lhs: State, rhs: State) -> Bool {
+            public static func == (lhs: State, rhs: State) -> Bool {
                 switch (lhs, rhs) {
-                case (idle, idle):
+                case (noPlaying, noPlaying):
                     return true
                 case (.buffering(let lhs), .buffering(let rhs)):
                     return lhs == rhs
                 case (.error(let lhs), .error(let rhs)):
+                    return lhs == rhs
+                case (.playing(let lhs), .playing(let rhs)):
                     return lhs == rhs
                 default:
                     return false
@@ -42,22 +53,33 @@ extension Marconi {
         }
         
         enum Event {
-            case bufferingStarted
+            case bufferingStarted(AVPlayerItem)
+            case bufferingEnded(MetaData?)
+            case fetchedMetaData(MetaData)
+            case catchTheError(Error?)
         }
         
-        weak var observer: StateMachineObserver?
+        weak var observer: MarconiPlayerObserver?
         
-        private(set) var state: State = .idle {
+        private(set) var state: State = .noPlaying {
             didSet {
                 guard oldValue != state else { return }
-                observer?.stateDidChanched(from: oldValue, to: state)
+                print("\(oldValue) -> \(state)")
+                observer?.stateDidChanched(self, to: state)
             }
         }
         
         func transition(with event: Event) {
-            switch (state, event) {case (_, _):
+            switch (state, event) {
+            case (.noPlaying, .bufferingStarted(let playerItem)):
+                state = .buffering(playerItem)
+            case (.buffering, .bufferingStarted(_)): break
+            case (.buffering, .bufferingEnded(let playingItem)):
+                state = .playing(playingItem)
+            case (.buffering, .fetchedMetaData(let playingItem)):
+                state = .playing(playingItem)
+            case (_, _):
                 break
-                //
             }
         }
     }

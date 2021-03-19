@@ -10,15 +10,20 @@ import AVFoundation
 
 extension Marconi {
     public class Player: AVPlayer {
-        private lazy var _observer: PlayerObserver = .init()
+        private var _observer: PlayerObserver?
         private var _metadataCollector: AVPlayerItemMetadataCollector!
         
         public override func replaceCurrentItem(with item: AVPlayerItem?) {
-            _observer.startMonitoring(item)
-            _metadataCollector = AVPlayerItemMetadataCollector()
-            _metadataCollector.setDelegate(_observer, queue: .main)
-            item?.add(_metadataCollector)
+            _observer?.startMonitoring(item)
             super.replaceCurrentItem(with: item)
+        }
+        
+        public init(_ observer: MarconiPlayerObserver?) {
+            // if MarconiPlayerObserver? doesn't exist then Marconi.Player will behav as regular AVPlayer
+            if let observer = observer {
+                _observer = PlayerObserver(observer)
+            }
+            super.init()
         }
         
         public override init() {
