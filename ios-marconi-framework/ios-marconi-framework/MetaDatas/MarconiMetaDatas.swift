@@ -10,8 +10,8 @@ import AVFoundation
 
 extension Marconi.Live {
     public struct MetaData {
-        let artistName: String
-        let song: String
+        public let artistName: String
+        public let song: String
         
         init?(_ items: [AVMetadataItem]) {
             var dict: [AVMetadataIdentifier: AnyObject] = [:]

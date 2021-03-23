@@ -25,7 +25,6 @@ class MainViewController: UIViewController, Containerable {
     
     private func _addTabBarController() {
         let tabBarController = UITabBarController()
-        
         let liveVC = LiveStations.ViewController(viewModel: LiveStations.ViewModel(_playerController))
         liveVC.tabBarItem.title = "Live Stations"
         

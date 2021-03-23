@@ -14,11 +14,29 @@ protocol MarconiPlayerDelegate: class {
     func willPlayStation(_ station: Station, with url: URL)
 }
 
-class MarconiPlayerController: UIViewController {
+struct PlayingItem {
+    let title: String?
+    let artistName: String?
+    let stationName: String?
+    let url: URL?
+    
+    init(_ item: Marconi.Live.MetaData?, station: Station) {
+        title = item?.song
+        artistName = item?.artistName
+        stationName = station.name
+        url = URL(station.square_logo_large)
+    }
+}
 
+class MarconiPlayerController: UIViewController, Containerable {
+    
+    private(set) weak var _controller: UIViewController?
+    
     typealias Radio = Marconi.Radio
     
     private lazy var _radio: Radio = .init(self)
+    
+    private var _station: Station!
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -31,15 +49,26 @@ class MarconiPlayerController: UIViewController {
     
     // MARK: - UI is state function of State Machine
     private func _noPlayingItem() {
-        
+        let controller = NoPlayingItemViewController()
+        removeController(_controller)
+        addController(controller, onto: view)
+        _controller = controller
     }
     
     private func _buffering() {
-        
+        let controller = PlayingItemViewController()
+        removeController(_controller)
+        addController(controller, onto: view)
+        _controller = controller
+        controller.buffering()
     }
     
-    private func _playing(_ playItem: Marconi.Live.MetaData?) {
-        
+    private func _playing(_ playItem: PlayingItem?) {
+        let controller = PlayingItemViewController()
+        removeController(_controller)
+        addController(controller, onto: view)
+        _controller = controller
+        controller.dispalyItem(playItem)
     }
     
     required init?(coder: NSCoder) {
@@ -55,8 +84,9 @@ extension MarconiPlayerController: MarconiPlayerObserver {
         case .buffering(_):
             _buffering()
         case .playing(let playerItem):
-            _playing(playerItem)
-        case .error(let error):
+            let playingItemDispaly = PlayingItem(playerItem, station: _station)
+            _playing(playingItemDispaly)
+        case .error(_):
             break
         }
     }
@@ -64,6 +94,7 @@ extension MarconiPlayerController: MarconiPlayerObserver {
 
 extension MarconiPlayerController: MarconiPlayerDelegate {
     func willPlayStation(_ station: Station, with url: URL) {
+        _station = station
         _radio.replaceCurrentURL(with: url)
         _radio.play()
     }
