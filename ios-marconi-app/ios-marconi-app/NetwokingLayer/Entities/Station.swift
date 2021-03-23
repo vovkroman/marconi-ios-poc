@@ -10,35 +10,40 @@ import Foundation
 
 struct Station {
     
-    struct Stream: Codable {
-        let type: String?
-        let url: String?
+    struct Stream: Decodable {
+        enum Category: String, Decodable {
+            case mp3, m3u8, aac
+        }
+        let type: Category
+        let url: String
     }
     
-    let stream: [Stream]?
     let id: Int
+    let name: String
+    
+    let streams: [Stream]?
     let square_logo_large: String?
-    let name: String?
 }
 
-extension Station: Codable {
+extension Station: Decodable {
     private enum CodingKeys: String, CodingKey {
         case station
         case id
         case name
         case logo = "square_logo_large"
-        case streams = "station_stream"
+        case stream = "station_stream"
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let station = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .station)
+        
         let id = try station.decode(Int.self, forKey: .id)
+        let name = try station.decode(String.self, forKey: .name)
+        
         let square_logo_large = try? station.decode(String.self, forKey: .logo)
-        let name = try? station.decode(String.self, forKey: .name)
-        let streams = try? station.decode([Stream].self, forKey: .streams)
-        self.init(stream: streams, id: id, square_logo_large: square_logo_large, name: name)
+        let streams = try? station.decode([Stream].self, forKey: .stream)
+        
+        self.init(id: id, name: name, streams: streams, square_logo_large: square_logo_large)
     }
-    
-    func encode(to encoder: Encoder) throws {}
 }

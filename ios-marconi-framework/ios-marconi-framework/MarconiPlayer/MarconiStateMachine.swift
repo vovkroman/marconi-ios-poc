@@ -15,12 +15,15 @@ public protocol MarconiPlayerObserver: class {
 }
 
 extension Marconi {
-    public struct MetaData: Equatable {
-        let albumArt: String?
-        let stationInfo: String?
-        let articst: String?
-        let song: String?
-    }
+    public enum Live {}
+    public enum Digit {}
+}
+
+extension Marconi {
+    static let indentifierPlayId = AVMetadataIdentifier("lsdr/X-PLAY-ID")
+    static let indentifierType = AVMetadataIdentifier("lsdr/X-TYPE")
+    static let indentifierArtistName = AVMetadataIdentifier("lsdr/X-ARTIST")
+    static let indentifierTitle = AVMetadataIdentifier("lsdr/X-TITLE")
 }
 
 extension Marconi {
@@ -33,7 +36,7 @@ extension Marconi {
         public enum State: Equatable {
             case noPlaying
             case buffering(AVPlayerItem)
-            case playing(MetaData?)
+            case playing(Live.MetaData?)
             case error(MError)
             
             public static func == (lhs: State, rhs: State) -> Bool {
@@ -45,6 +48,7 @@ extension Marconi {
                 case (.error(let lhs), .error(let rhs)):
                     return lhs == rhs
                 case (.playing(let lhs), .playing(let rhs)):
+                    guard let rhs = rhs else { return true }
                     return lhs == rhs
                 default:
                     return false
@@ -53,9 +57,10 @@ extension Marconi {
         }
         
         enum Event {
+            case startPlaying
             case bufferingStarted(AVPlayerItem)
-            case bufferingEnded(MetaData?)
-            case fetchedMetaData(MetaData)
+            case bufferingEnded(Live.MetaData?)
+            case fetchedMetaData(Live.MetaData?)
             case catchTheError(Error?)
         }
         
@@ -64,7 +69,6 @@ extension Marconi {
         private(set) var state: State = .noPlaying {
             didSet {
                 guard oldValue != state else { return }
-                print("\(oldValue) -> \(state)")
                 observer?.stateDidChanched(self, to: state)
             }
         }
@@ -73,11 +77,15 @@ extension Marconi {
             switch (state, event) {
             case (.noPlaying, .bufferingStarted(let playerItem)):
                 state = .buffering(playerItem)
+            case (.playing(_), .bufferingStarted(let playerItem)):
+                state = .buffering(playerItem)
             case (.buffering, .bufferingStarted(_)): break
             case (.buffering, .bufferingEnded(let playingItem)):
                 state = .playing(playingItem)
             case (.buffering, .fetchedMetaData(let playingItem)):
                 state = .playing(playingItem)
+            case (.playing(_), .fetchedMetaData(let new)):
+                state = .playing(new)
             case (_, _):
                 break
             }

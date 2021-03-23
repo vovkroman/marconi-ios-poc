@@ -9,26 +9,35 @@
 import AVFoundation
 
 extension Marconi {
-    public class Player: AVPlayer {
+    
+    public class Radio: NSObject {
+        
         private var _observer: PlayerObserver?
-        private var _metadataCollector: AVPlayerItemMetadataCollector!
         
-        public override func replaceCurrentItem(with item: AVPlayerItem?) {
+        private(set) var _player: AVPlayer
+        
+        public func setDelegate(_ observer: MarconiPlayerObserver?) {
+            _observer?._stateMachine.observer = observer
+        }
+        
+        public func play() {
+            _player.play()
+        }
+        
+        public func replaceCurrentURL(with url: URL) {
+            let urlAsset = AVURLAsset(url: url)
+            let item = AVPlayerItem(asset: urlAsset)
             _observer?.startMonitoring(item)
-            super.replaceCurrentItem(with: item)
+            _player.replaceCurrentItem(with: item)
         }
         
-        public init(_ observer: MarconiPlayerObserver?) {
-            // if MarconiPlayerObserver? doesn't exist then Marconi.Player will behav as regular AVPlayer
-            if let observer = observer {
-                _observer = PlayerObserver(observer)
-            }
-            super.init()
+        public init(_ observer: MarconiPlayerObserver?, _ player: AVPlayer = .init()) {
+            _player = player
+            _observer = .init(observer)
         }
         
-        public override init() {
-            super.init()
+        deinit {
+            print("\(self) has been removed")
         }
     }
 }
-

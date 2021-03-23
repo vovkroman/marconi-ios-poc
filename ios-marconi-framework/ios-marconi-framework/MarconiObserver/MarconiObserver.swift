@@ -9,11 +9,21 @@
 import AVFoundation
 
 extension Marconi {
+    
     public class PlayerObserver: NSObject {
         
         private var _playbackLikelyToKeepUpKeyPathObserver: NSKeyValueObservation?
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
+        
+        private(set) var _currentMetaItem: Live.MetaData? {
+            didSet {
+                guard let currentMetaItem = _currentMetaItem else { return }
+                if oldValue != currentMetaItem {
+                    _stateMachine.transition(with: .fetchedMetaData(_currentMetaItem))
+                }
+            }
+        }
         
         private(set) var _stateMachine: StateMachine = .init()
         
@@ -34,10 +44,7 @@ extension Marconi {
         private func _observeStatus(_ playerItem: AVPlayerItem) {
             switch playerItem.status {
             case .readyToPlay:
-                let metadata = playerItem.asset.availableMetadataFormats
-                print(metadata)
-                _stateMachine.transition(with: .bufferingEnded(nil))
-                _fetchMetaData(playerItem)
+                _stateMachine.transition(with: .bufferingEnded(_currentMetaItem))
             case .failed:
                 _stateMachine.transition(with: .catchTheError(playerItem.error))
             default:
@@ -45,10 +52,10 @@ extension Marconi {
             }
         }
         
-        private func _fetchMetaData(_ playerItem: AVPlayerItem) {
+        private func _fetchMetaData(_ playerItem: AVPlayerItem?) {
             let metadataCollector = AVPlayerItemMetadataCollector()
             metadataCollector.setDelegate(self, queue: .main)
-            playerItem.add(metadataCollector)
+            playerItem?.add(metadataCollector)
         }
         
         // Public methods
@@ -59,6 +66,7 @@ extension Marconi {
         
         public func startMonitoring(_ playerItem: AVPlayerItem?) {
             stopMonitoring()
+            _fetchMetaData(playerItem)
             _observeBuffering(playerItem)
         }
         
@@ -75,13 +83,10 @@ extension Marconi {
 }
 
 extension Marconi.PlayerObserver: AVPlayerItemMetadataCollectorPushDelegate {
-    public func metadataCollector(_ metadataCollector: AVPlayerItemMetadataCollector, didCollect metadataGroups: [AVDateRangeMetadataGroup], indexesOfNewGroups: IndexSet, indexesOfModifiedGroups: IndexSet) {
-
-        for item in metadataGroups {
-            for it in item.items {
-                let metadataValue = it.value
-                print("Metadata value: \n \(metadataValue) ---- \(it.identifier)")
-            }
-        }
+    public func metadataCollector(_ metadataCollector: AVPlayerItemMetadataCollector,
+                                  didCollect metadataGroups: [AVDateRangeMetadataGroup],
+                                  indexesOfNewGroups: IndexSet, indexesOfModifiedGroups: IndexSet) {
+        let item = Marconi.Live.MetaData(metadataGroups.flatMap{ $0.items })
+        _currentMetaItem = item
     }
 }

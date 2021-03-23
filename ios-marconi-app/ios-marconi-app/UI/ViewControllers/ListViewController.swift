@@ -32,6 +32,7 @@ class ListViewController<ViewModel: ListViewModelable>: UITableViewController, V
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         _viewModel.didSelected(at: indexPath)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     required init(viewModel: ViewModel) {

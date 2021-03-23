@@ -12,7 +12,7 @@ class StationTableViewCell: UITableViewCell, NibReusable {
     
     @IBOutlet private weak var _title: UILabel!
     
-    func configure<T: Titlable>(_ model: T) {
-        _title.text = model.title
+    func configure<T: Titlable>(_ model: T?) {
+        model.flatMap { _title.text = $0.title }
     }
 }

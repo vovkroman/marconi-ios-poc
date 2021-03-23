@@ -39,7 +39,8 @@
                     </view>
                     <navigationItem key="navigationItem" title="Marconi Player Demo" id="e36-eg-bKh"/>
                     <connections>
-                        <outlet property="tabBarContainerView" destination="94j-hi-nKJ" id="wVJ-wc-6Xo"/>
+                        <outlet property="playerViewContainer" destination="7Rv-GY-45J" id="K73-Bf-YTa"/>
+                        <outlet property="tabBarContainer" destination="94j-hi-nKJ" id="wVJ-wc-6Xo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BgU-md-zWo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

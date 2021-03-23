@@ -8,28 +8,37 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, Containerable {
     
-    @IBOutlet weak var tabBarContainerView: UIView!
+    @IBOutlet private weak var tabBarContainer: UIView!
+    @IBOutlet private weak var playerViewContainer: UIView!
+    
+    private(set) weak var _playerController: MarconiPlayerController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        _addPlayerController()
         _addTabBarController()
     }
     
-    func _addTabBarController() {
+    // MARK: - Private methods
+    
+    private func _addTabBarController() {
         let tabBarController = UITabBarController()
         
-        let liveVC = LiveStations.ViewController(viewModel: LiveStations.ViewModel())
+        let liveVC = LiveStations.ViewController(viewModel: LiveStations.ViewModel(_playerController))
         liveVC.tabBarItem.title = "Live Stations"
         
-        let digitVC = DigitalStations.ViewController(viewModel: DigitalStations.ViewModel())
+        let digitVC = DigitalStations.ViewController(viewModel: DigitalStations.ViewModel(_playerController))
         digitVC.tabBarItem.title = "Digital Stations"
         
         tabBarController.viewControllers = [liveVC, digitVC]
-        addChild(tabBarController)
-        tabBarContainerView.addSubview(tabBarController.view)
-        tabBarController.view.frame = tabBarContainerView.bounds
-        tabBarController.didMove(toParent: self)
+        addController(tabBarController, onto: tabBarContainer)
+    }
+    
+    private func _addPlayerController() {
+        let playerController = MarconiPlayerController()
+        addController(playerController, onto: playerViewContainer)
+        _playerController = playerController
     }
 }

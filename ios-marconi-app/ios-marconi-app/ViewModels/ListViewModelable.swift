@@ -12,7 +12,7 @@ protocol Titlable {
     var title: String { get }
 }
 
-struct StationHolder: Titlable {
+struct StationPlaceholder: Titlable {
     let id: Int
     let name: String
     
@@ -28,5 +28,5 @@ protocol Selectable {
 protocol ListViewModelable: Selectable {
     associatedtype Model: Titlable
     var count: Int { get }
-    subscript(index: Int) -> Model { get }
+    subscript(index: Int) -> Model? { get }
 }

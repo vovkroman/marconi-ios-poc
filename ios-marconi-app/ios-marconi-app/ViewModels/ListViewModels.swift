@@ -14,31 +14,45 @@ enum DigitalStations {}
 extension LiveStations {
     class ViewModel: ListViewModelable {
         
-        typealias Model = StationHolder
+        typealias Model = StationPlaceholder
         
         private let _items: ContiguousArray<Model>
-        
+        private weak var _playerDelegate: MarconiPlayerDelegate?
         private let _provider: StationProvider = .init()
         
-        subscript(index: Int) -> Model {
-            return _items[index]
-        }
-
-        var count: Int { return _items.count }
-        
-        func didSelected(at indexPath: IndexPath) {
-            let future = _provider.fetch(by: _items[indexPath.row].id)
-            future.observe { (result) in
+        private func _fetchStation(by id: Int) {
+            _provider.fetch(by: id).observe { [weak self](result) in
                 switch result {
                 case .success(let station):
-                    print(station)
+                    self?._processTheStation(station)
                 case .failure(let error):
                     print(error)
                 }
             }
         }
         
-        required init() {
+        private func _processTheStation(_ station: Station) {
+            // if hls is not present in streams so skip it
+            guard let hls = station.streams?.first(where: { $0.type == .m3u8 }) else {
+                // TODO: - call delegate
+                return
+            }
+            _playerDelegate?.willPlayStation(station, with: URL(string: hls.url + "?udid=10000343")!)
+        }
+        
+        subscript(index: Int) -> Model? {
+            return _items[safe: index]
+        }
+
+        var count: Int { return _items.count }
+        
+        func didSelected(at indexPath: IndexPath) {
+            guard let stationPlaceHolder = _items[safe: indexPath.row] else { return }
+            _fetchStation(by: stationPlaceHolder.id)
+        }
+        
+        required init(_ playerDelegate: MarconiPlayerDelegate?) {
+            _playerDelegate = playerDelegate
             _items = [.init(id: 1005, name: "ALT 92.3"),
                       .init(id: 395, name: "Your '70s Playlist"),
                       .init(id: 657, name: "The Cove")]
@@ -50,12 +64,12 @@ extension LiveStations {
 extension DigitalStations {
     class ViewModel: ListViewModelable {
         
-        typealias Model = StationHolder
-        
+        typealias Model = StationPlaceholder
+        private weak var _playerDelegate: MarconiPlayerDelegate?
         private let _items: ContiguousArray<Model>
         
-        subscript(index: Int) -> Model {
-            return _items[index]
+        subscript(index: Int) -> Model? {
+            return _items[safe: index]
         }
 
         var count: Int { return _items.count }
@@ -64,7 +78,8 @@ extension DigitalStations {
             print(_items[indexPath.row])
         }
         
-        required init() {
+        required init(_ playerDelegate: MarconiPlayerDelegate?) {
+            _playerDelegate = playerDelegate
             _items = [.init(id: 2395, name: "Women of Alt"),
                       .init(id: 2396, name: "Ladies of Country"),
                       .init(id: 2401, name: "Slow Jams"),
