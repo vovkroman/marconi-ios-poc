@@ -89,16 +89,18 @@ class MarconiPlayerController: UIViewController, Containerable {
 
 extension MarconiPlayerController: MarconiPlayerObserver {
     func stateDidChanched(_ stateMachine: Marconi.StateMachine, to: Marconi.StateMachine.State) {
-        switch to {
-        case .noPlaying:
-            _noPlayingItem()
-        case .buffering(_):
-            _buffering()
-        case .playing(let playerItem):
-            let playingItemDispaly = PlayingItem(playerItem, station: _station)
-            _playing(playingItemDispaly)
-        case .error(_):
-            break
+        DispatchQueue.main.async {
+            switch to {
+            case .noPlaying:
+                self._noPlayingItem()
+            case .buffering(_):
+                self._buffering()
+            case .playing(let playerItem):
+                let playingItemDispaly = PlayingItem(playerItem, station: self._station)
+                self._playing(playingItemDispaly)
+            case .error(_):
+                break
+            }
         }
     }
 }

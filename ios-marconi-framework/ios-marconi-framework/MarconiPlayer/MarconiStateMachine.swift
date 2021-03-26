@@ -27,7 +27,9 @@ extension Marconi {
 }
 
 extension Marconi {
-    public enum MError: Equatable {}
+    public enum MError: Equatable {
+        case playerError(description: String?)
+    }
 }
 
 extension Marconi {
@@ -74,20 +76,26 @@ extension Marconi {
         }
         
         func transition(with event: Event) {
+            print("state: \(state) -> \(event)")
             switch (state, event) {
-            case (.noPlaying, .bufferingStarted(let playerItem)):
-                state = .buffering(playerItem)
-            case (.playing(_), .bufferingStarted(let playerItem)):
-                state = .buffering(playerItem)
             case (.buffering, .bufferingStarted(_)): break
+            case (_, .bufferingStarted(let playerItem)):
+                state = .buffering(playerItem)
             case (.buffering, .bufferingEnded(let playingItem)):
                 state = .playing(playingItem)
-            case (.buffering, .fetchedMetaData(let playingItem)):
-                state = .playing(playingItem)
+            case (.buffering, .fetchedMetaData(_)):
+                // fetched meta data but buffering still in progress
+                break
             case (.playing(_), .fetchedMetaData(let new)):
                 state = .playing(new)
-            case (_, _):
-                break
+            case (_, .bufferingEnded(let playingItem)):
+                state = .playing(playingItem)
+            case (.noPlaying, .fetchedMetaData(_)): break
+            case (_, .startPlaying): break
+            case (_, .catchTheError(let error)):
+                state = .error(.playerError(description: error?.localizedDescription))
+            case (.error(_), .fetchedMetaData(let playingItem)):
+                state = .playing(playingItem)
             }
         }
     }

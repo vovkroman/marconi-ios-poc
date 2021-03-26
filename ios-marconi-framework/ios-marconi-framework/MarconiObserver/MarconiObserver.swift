@@ -27,16 +27,17 @@ extension Marconi {
         
         private(set) var _stateMachine: StateMachine = .init()
         
-        private func _observeBuffering(_ playerItem: AVPlayerItem?) {
-            _playbackBufferEmptyObserver = playerItem?.observe(\.isPlaybackBufferEmpty, options: [.new]) { [weak self](playerItem, _) in
+        private func _observeBuffering(_ playerItem: AVPlayerItem) {
+            _stateMachine.transition(with: .bufferingStarted(playerItem))
+            _playbackBufferEmptyObserver = playerItem.observe(\.isPlaybackBufferEmpty, options: [.new]) { [weak self](playerItem, _) in
                 self?._stateMachine.transition(with: .bufferingStarted(playerItem))
             }
             
-            _playbackLikelyToKeepUpKeyPathObserver = playerItem?.observe(\.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self](playerItem, _) in
+            _playbackLikelyToKeepUpKeyPathObserver = playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self](playerItem, _) in
                 self?._observeStatus(playerItem)
             }
             
-            _playbackBufferFullObserver = playerItem?.observe(\.isPlaybackBufferFull, options: [.new]) { [weak self](playerItem, _) in
+            _playbackBufferFullObserver = playerItem.observe(\.isPlaybackBufferFull, options: [.new]) { [weak self](playerItem, _) in
                 self?._observeStatus(playerItem)
             }
         }
@@ -52,10 +53,10 @@ extension Marconi {
             }
         }
         
-        private func _fetchMetaData(_ playerItem: AVPlayerItem?) {
+        private func _fetchMetaData(_ playerItem: AVPlayerItem) {
             let metadataCollector = AVPlayerItemMetadataCollector()
             metadataCollector.setDelegate(self, queue: .main)
-            playerItem?.add(metadataCollector)
+            playerItem.add(metadataCollector)
         }
         
         // Public methods
@@ -65,15 +66,21 @@ extension Marconi {
         }
         
         public func startMonitoring(_ playerItem: AVPlayerItem?) {
+            guard let newPlayingItem = playerItem else {
+                return
+            }
             stopMonitoring()
-            _fetchMetaData(playerItem)
-            _observeBuffering(playerItem)
+            _fetchMetaData(newPlayingItem)
+            _observeBuffering(newPlayingItem)
         }
         
         public func stopMonitoring() {
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
             _playbackBufferFullObserver?.invalidate()
+            _playbackBufferEmptyObserver = nil
+            _playbackLikelyToKeepUpKeyPathObserver = nil
+            _playbackBufferFullObserver = nil
         }
         
         public init(_ observer: MarconiPlayerObserver?) {
