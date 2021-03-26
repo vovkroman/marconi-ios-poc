@@ -29,10 +29,10 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wOY-cb-XES">
-                    <rect key="frame" x="32" y="37.5" width="407" height="162"/>
+                    <rect key="frame" x="16" y="37.5" width="439" height="172.5"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="252" translatesAutoresizingMaskIntoConstraints="NO" id="TVG-MR-vyV" customClass="MarconiImageView" customModule="ios_marconi_app" customModuleProvider="target">
-                            <rect key="frame" x="16" y="16" width="130" height="130"/>
+                            <rect key="frame" x="16" y="16" width="140.5" height="140.5"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="TVG-MR-vyV" secondAttribute="height" multiplier="1:1" id="Lb4-lO-J1h"/>
                             </constraints>
@@ -43,8 +43,8 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cVp-e5-KSs">
-                            <rect key="frame" x="162" y="16" width="245" height="20.5"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cVp-e5-KSs">
+                            <rect key="frame" x="172.5" y="16" width="266.5" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -57,15 +57,15 @@
                                     <integer key="value" value="4"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="lastLineFillPercent">
-                                    <integer key="value" value="2"/>
+                                    <integer key="value" value="30"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
                                     <real key="value" value="4"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N8H-bb-YBv">
-                            <rect key="frame" x="162" y="44.5" width="245" height="20.5"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N8H-bb-YBv">
+                            <rect key="frame" x="172.5" y="40.5" width="266.5" height="20.5"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -78,15 +78,15 @@
                                     <integer key="value" value="4"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="lastLineFillPercent">
-                                    <integer key="value" value="2"/>
+                                    <integer key="value" value="30"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
                                     <real key="value" value="4"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Syt-Lj-dSx">
-                            <rect key="frame" x="162" y="101.5" width="245" height="20.5"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Syt-Lj-dSx">
+                            <rect key="frame" x="172.5" y="89.5" width="266.5" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -99,15 +99,15 @@
                                     <integer key="value" value="4"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="lastLineFillPercent">
-                                    <integer key="value" value="2"/>
+                                    <integer key="value" value="30"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
                                     <real key="value" value="4"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbo-Jz-B4D">
-                            <rect key="frame" x="162" y="73" width="245" height="20.5"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbo-Jz-B4D">
+                            <rect key="frame" x="172.5" y="65" width="266.5" height="20.5"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -120,7 +120,7 @@
                                     <integer key="value" value="4"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="lastLineFillPercent">
-                                    <integer key="value" value="2"/>
+                                    <integer key="value" value="30"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
                                     <real key="value" value="4"/>
@@ -128,10 +128,11 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="Hbo-Jz-B4D" firstAttribute="top" secondItem="N8H-bb-YBv" secondAttribute="bottom" constant="8" id="45V-Ol-d2f"/>
+                        <constraint firstItem="Hbo-Jz-B4D" firstAttribute="top" secondItem="N8H-bb-YBv" secondAttribute="bottom" constant="4" id="45V-Ol-d2f"/>
                         <constraint firstAttribute="trailing" secondItem="Hbo-Jz-B4D" secondAttribute="trailing" id="4VU-pp-NxS"/>
+                        <constraint firstAttribute="height" priority="250" id="5dN-bz-XEw"/>
                         <constraint firstAttribute="trailing" secondItem="Syt-Lj-dSx" secondAttribute="trailing" id="78A-Qy-Kib"/>
                         <constraint firstItem="N8H-bb-YBv" firstAttribute="leading" secondItem="TVG-MR-vyV" secondAttribute="trailing" constant="16" id="7ID-xI-lV6"/>
                         <constraint firstAttribute="trailing" secondItem="N8H-bb-YBv" secondAttribute="trailing" id="7td-8O-HAP"/>
@@ -139,12 +140,13 @@
                         <constraint firstItem="Syt-Lj-dSx" firstAttribute="leading" secondItem="TVG-MR-vyV" secondAttribute="trailing" constant="16" id="IUS-kL-hCj"/>
                         <constraint firstItem="cVp-e5-KSs" firstAttribute="leading" secondItem="TVG-MR-vyV" secondAttribute="trailing" constant="16" id="J4z-Fg-TrY"/>
                         <constraint firstItem="cVp-e5-KSs" firstAttribute="top" secondItem="TVG-MR-vyV" secondAttribute="top" id="L9c-KA-Rd7"/>
-                        <constraint firstItem="Syt-Lj-dSx" firstAttribute="top" secondItem="Hbo-Jz-B4D" secondAttribute="bottom" constant="8" id="T9e-Q5-IHL"/>
+                        <constraint firstItem="Syt-Lj-dSx" firstAttribute="top" secondItem="Hbo-Jz-B4D" secondAttribute="bottom" constant="4" id="T9e-Q5-IHL"/>
                         <constraint firstItem="TVG-MR-vyV" firstAttribute="leading" secondItem="wOY-cb-XES" secondAttribute="leading" constant="16" id="Tc0-PQ-hpT"/>
                         <constraint firstItem="Hbo-Jz-B4D" firstAttribute="leading" secondItem="TVG-MR-vyV" secondAttribute="trailing" constant="16" id="WaT-mU-ooD"/>
                         <constraint firstAttribute="trailing" secondItem="cVp-e5-KSs" secondAttribute="trailing" id="Zdo-dO-QnU"/>
-                        <constraint firstItem="N8H-bb-YBv" firstAttribute="top" secondItem="cVp-e5-KSs" secondAttribute="bottom" constant="8" id="c5M-TH-bS1"/>
-                        <constraint firstAttribute="bottom" secondItem="TVG-MR-vyV" secondAttribute="bottom" constant="16" id="pEi-oh-1dC"/>
+                        <constraint firstItem="N8H-bb-YBv" firstAttribute="top" secondItem="cVp-e5-KSs" secondAttribute="bottom" constant="4" id="c5M-TH-bS1"/>
+                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Syt-Lj-dSx" secondAttribute="bottom" constant="16" id="mXX-pD-iL5"/>
+                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="TVG-MR-vyV" secondAttribute="bottom" constant="16" id="pEi-oh-1dC"/>
                         <constraint firstItem="TVG-MR-vyV" firstAttribute="top" secondItem="wOY-cb-XES" secondAttribute="top" constant="16" id="uvd-b8-IH7"/>
                     </constraints>
                 </view>
@@ -152,10 +154,9 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
                 <constraint firstItem="OEe-1t-h92" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="5o9-MX-DWH"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="wOY-cb-XES" secondAttribute="trailing" constant="32" id="9v0-d3-eaZ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="wOY-cb-XES" secondAttribute="trailing" constant="16" id="9v0-d3-eaZ"/>
                 <constraint firstItem="OEe-1t-h92" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="BmJ-zM-eSl"/>
-                <constraint firstItem="wOY-cb-XES" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="PmJ-fa-RLa"/>
-                <constraint firstItem="wOY-cb-XES" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="32" id="R4C-Vt-vjb"/>
+                <constraint firstItem="wOY-cb-XES" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="R4C-Vt-vjb"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="OEe-1t-h92" secondAttribute="trailing" constant="15" id="XGP-lJ-YCQ"/>
                 <constraint firstItem="wOY-cb-XES" firstAttribute="top" secondItem="OEe-1t-h92" secondAttribute="bottom" id="eFx-kq-Fg5"/>
                 <constraint firstItem="OEe-1t-h92" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="jSm-XO-P3t"/>

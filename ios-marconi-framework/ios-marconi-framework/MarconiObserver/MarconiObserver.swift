@@ -16,7 +16,7 @@ extension Marconi {
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
         
-        private(set) var _currentMetaItem: Live.MetaData? {
+        private(set) var _currentMetaItem: MetaData? {
             didSet {
                 guard let currentMetaItem = _currentMetaItem else { return }
                 if oldValue != currentMetaItem {
@@ -86,7 +86,7 @@ extension Marconi.PlayerObserver: AVPlayerItemMetadataCollectorPushDelegate {
     public func metadataCollector(_ metadataCollector: AVPlayerItemMetadataCollector,
                                   didCollect metadataGroups: [AVDateRangeMetadataGroup],
                                   indexesOfNewGroups: IndexSet, indexesOfModifiedGroups: IndexSet) {
-        let item = Marconi.Live.MetaData(metadataGroups.flatMap{ $0.items })
+        let item = Marconi.MetaData(metadataGroups.flatMap{ $0.items })
         _currentMetaItem = item
     }
 }

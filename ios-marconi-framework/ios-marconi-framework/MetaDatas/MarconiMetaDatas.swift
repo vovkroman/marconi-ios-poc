@@ -8,7 +8,7 @@
 
 import AVFoundation
 
-extension Marconi.Live {
+extension Marconi {
     public struct MetaData {
         public let artistName: String
         public let song: String
@@ -29,8 +29,8 @@ extension Marconi.Live {
     }
 }
 
-extension Marconi.Live.MetaData: Equatable {
-    public static func == (lhs: Marconi.Live.MetaData, rhs: Marconi.Live.MetaData) -> Bool {
+extension Marconi.MetaData: Equatable {
+    public static func == (lhs: Marconi.MetaData, rhs: Marconi.MetaData) -> Bool {
         return lhs.artistName == rhs.artistName && lhs.song == rhs.song
     }
 }

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="hsb-0Y-T2D">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="hsb-0Y-T2D">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,26 +16,26 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="94j-hi-nKJ">
-                                <rect key="frame" x="0.0" y="403" width="414" height="493"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <rect key="frame" x="0.0" y="401.5" width="414" height="494.5"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Rv-GY-45J">
-                                <rect key="frame" x="0.0" y="88" width="414" height="315"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="313.5"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="Hkd-1H-0oI"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="7Rv-GY-45J" firstAttribute="leading" secondItem="Hkd-1H-0oI" secondAttribute="leading" id="3bK-41-lFz"/>
                             <constraint firstItem="94j-hi-nKJ" firstAttribute="leading" secondItem="Hkd-1H-0oI" secondAttribute="leading" id="4cK-Jm-S4V"/>
                             <constraint firstItem="7Rv-GY-45J" firstAttribute="top" secondItem="Hkd-1H-0oI" secondAttribute="top" id="6Pn-Ns-OZx"/>
                             <constraint firstItem="7Rv-GY-45J" firstAttribute="trailing" secondItem="Hkd-1H-0oI" secondAttribute="trailing" id="EpV-LQ-MWJ"/>
                             <constraint firstAttribute="bottom" secondItem="94j-hi-nKJ" secondAttribute="bottom" id="M4p-Le-Rhx"/>
-                            <constraint firstItem="94j-hi-nKJ" firstAttribute="height" secondItem="uuE-Xw-XgA" secondAttribute="height" multiplier="0.55" id="QVU-Eq-f91"/>
+                            <constraint firstItem="7Rv-GY-45J" firstAttribute="height" secondItem="uuE-Xw-XgA" secondAttribute="height" multiplier="0.35" id="MVn-y9-8tP"/>
                             <constraint firstItem="94j-hi-nKJ" firstAttribute="top" secondItem="7Rv-GY-45J" secondAttribute="bottom" id="wSd-Ps-Lux"/>
                             <constraint firstItem="94j-hi-nKJ" firstAttribute="trailing" secondItem="Hkd-1H-0oI" secondAttribute="trailing" id="xsa-Hk-BEy"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="Hkd-1H-0oI"/>
                     </view>
                     <navigationItem key="navigationItem" title="Marconi Player Demo" id="e36-eg-bKh"/>
                     <connections>
@@ -68,9 +66,4 @@
             <point key="canvasLocation" x="-1307.2463768115942" y="-654.24107142857144"/>
         </scene>
     </scenes>
-    <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-    </resources>
 </document>

@@ -36,7 +36,7 @@ extension Marconi {
         public enum State: Equatable {
             case noPlaying
             case buffering(AVPlayerItem)
-            case playing(Live.MetaData?)
+            case playing(MetaData?)
             case error(MError)
             
             public static func == (lhs: State, rhs: State) -> Bool {
@@ -59,8 +59,8 @@ extension Marconi {
         enum Event {
             case startPlaying
             case bufferingStarted(AVPlayerItem)
-            case bufferingEnded(Live.MetaData?)
-            case fetchedMetaData(Live.MetaData?)
+            case bufferingEnded(MetaData?)
+            case fetchedMetaData(MetaData?)
             case catchTheError(Error?)
         }
         

@@ -12,7 +12,6 @@ import SkeletonView
 class PlayingView: UIView, NibReusable {
     
     @IBOutlet private weak var _titleOfView: UILabel!
-
     @IBOutlet private weak var _imageView: MarconiImageView!
     
     @IBOutlet private weak var _stationName: UILabel!

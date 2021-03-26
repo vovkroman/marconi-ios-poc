@@ -21,7 +21,7 @@ struct PlayingItem {
     let stationName: String?
     let url: URL?
     
-    init(_ item: Marconi.Live.MetaData?, station: Station) {
+    init(_ item: Marconi.MetaData?, station: Station) {
         title = item?.song
         artistName = item?.artistName
         stationName = station.name
