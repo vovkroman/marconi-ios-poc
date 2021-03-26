@@ -33,6 +33,6 @@ extension ImageApi: EndPointType {
     var headers: HTTPHeaders? { return nil }
     
     var cachePolicy: NSURLRequest.CachePolicy {
-        return .returnCacheDataElseLoad
+        return .reloadIgnoringCacheData
     }
 }

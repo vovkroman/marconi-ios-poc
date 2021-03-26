@@ -50,9 +50,12 @@ extension Future {
 
 extension Future where Value == Data {
     @inlinable
-    public func decoded<T: Decodable>(as type: T.Type = T.self, using decoder: JSONDecoder = .init()) -> Future<T> {
+    public func decoded<T: Decodable>(as type: T.Type = T.self) -> Future<T> {
         transformed { data in
-            try decoder.decode(T.self, from: data)
+            try autoreleasepool {
+                let decoder = JSONDecoder()
+                return try decoder.decode(T.self, from: data)
+            }
         }
     }
 }

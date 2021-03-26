@@ -8,10 +8,11 @@
 
 import Foundation
 
-enum LiveStations {}
-enum DigitalStations {}
+enum Live {}
+enum Digital {}
 
-extension LiveStations {
+extension Live {
+    
     class ViewModel: ListViewModelable {
         
         typealias Model = StationPlaceholder
@@ -26,7 +27,8 @@ extension LiveStations {
                 case .success(let station):
                     self?._processTheStation(station)
                 case .failure(let error):
-                    print(error)
+                    Logger.error(error.localizedDescription, category: .api)
+                    self?._playerDelegate?.catchTheError(error)
                 }
             }
         }
@@ -34,7 +36,7 @@ extension LiveStations {
         private func _processTheStation(_ station: Station) {
             // if hls is not present in streams so skip it
             guard let hls = station.streams?.first(where: { $0.type == .m3u8 }) else {
-                // TODO: - call delegate
+                _playerDelegate?.catchTheError(ErrorType.noHls(stationName: station.name))
                 return
             }
             _playerDelegate?.willPlayStation(station, with: URL(string: hls.url + "?udid=10000343")!)
@@ -61,12 +63,31 @@ extension LiveStations {
 }
 
 
-extension DigitalStations {
+extension Digital {
     class ViewModel: ListViewModelable {
         
         typealias Model = StationPlaceholder
-        private weak var _playerDelegate: MarconiPlayerDelegate?
+        
         private let _items: ContiguousArray<Model>
+        private weak var _playerDelegate: MarconiPlayerDelegate?
+        private let _provider: StationProvider = .init()
+        
+        private func _fetchStation(by id: Int) {
+            _provider.fetch(by: id).observe { [weak self](result) in
+                switch result {
+                case .success(let station):
+                    self?._processTheStation(station)
+                case .failure(let error):
+                    Logger.error(error.localizedDescription, category: .api)
+                    self?._playerDelegate?.catchTheError(error)
+                }
+            }
+        }
+        
+        private func _processTheStation(_ station: Station) {
+            let digitalUrl = "https://smartstreams.radio-stg.com/stream/\(station.id)/manifest/digitalstations/playlist.m3u8"
+            _playerDelegate?.willPlayStation(station, with: URL(string: digitalUrl + "?udid=10000343")!)
+        }
         
         subscript(index: Int) -> Model? {
             return _items[safe: index]
@@ -75,7 +96,8 @@ extension DigitalStations {
         var count: Int { return _items.count }
         
         func didSelected(at indexPath: IndexPath) {
-            print(_items[indexPath.row])
+            guard let stationPlaceHolder = _items[safe: indexPath.row] else { return }
+            _fetchStation(by: stationPlaceHolder.id)
         }
         
         required init(_ playerDelegate: MarconiPlayerDelegate?) {

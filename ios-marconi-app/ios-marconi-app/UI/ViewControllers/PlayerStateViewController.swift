@@ -38,6 +38,10 @@ class PlayerStateViewController<View: Viewable>: UIViewController {
 final class NoPlayingItemViewController: PlayerStateViewController<NoPlayingItemView> {}
 final class PlayingItemViewController: PlayerStateViewController<PlayingView> {
     
+    override func viewDidLayoutSubviews() {
+        contentView.layoutSkeletonIfNeeded()
+    }
+    
     func buffering() {
         if isViewLoaded {
             contentView.startBuffering()
@@ -48,5 +52,9 @@ final class PlayingItemViewController: PlayerStateViewController<PlayingView> {
         if isViewLoaded {
             contentView.startPlaying(item)
         }
+    }
+    
+    func willReuseController() {
+        contentView.willReuseView()
     }
 }

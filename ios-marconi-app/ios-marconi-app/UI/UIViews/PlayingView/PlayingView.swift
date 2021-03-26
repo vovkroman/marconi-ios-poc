@@ -12,7 +12,9 @@ import SkeletonView
 class PlayingView: UIView, NibReusable {
     
     @IBOutlet private weak var _titleOfView: UILabel!
-    @IBOutlet private weak var _imageView: UIImageView!
+
+    @IBOutlet private weak var _imageView: MarconiImageView!
+    
     @IBOutlet private weak var _stationName: UILabel!
     @IBOutlet private weak var _titleSong: UILabel!
     @IBOutlet private weak var _artistName: UILabel!
@@ -24,11 +26,10 @@ class PlayingView: UIView, NibReusable {
         _stationName.showAnimatedSkeleton()
         _titleSong.showAnimatedSkeleton()
         _artistName.showAnimatedSkeleton()
-        _typeName.showGradientSkeleton()
+        _typeName.showAnimatedSkeleton()
     }
     
     func stopBuffering() {
-        _imageView.hideSkeleton()
         _stationName.hideSkeleton()
         _titleSong.hideSkeleton()
         _artistName.hideSkeleton()
@@ -41,7 +42,11 @@ class PlayingView: UIView, NibReusable {
         _stationName.text = playingItem?.stationName
         _titleSong.text = playingItem?.title
         _artistName.text = playingItem?.artistName
-        _typeName.text = "Station"
-        _imageView.fetchImage(by: (playingItem?.url)!)
+        _typeName.text = "Type: Station"
+        _imageView.loadImage(from: (playingItem?.url)!)
+    }
+    
+    func willReuseView() {
+        _imageView.cancelLoading()
     }
 }

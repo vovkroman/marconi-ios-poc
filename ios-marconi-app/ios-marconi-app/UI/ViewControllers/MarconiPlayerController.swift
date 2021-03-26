@@ -12,6 +12,7 @@ import ios_marconi_framework
 
 protocol MarconiPlayerDelegate: class {
     func willPlayStation(_ station: Station, with url: URL)
+    func catchTheError(_ error: Error)
 }
 
 struct PlayingItem {
@@ -56,18 +57,28 @@ class MarconiPlayerController: UIViewController, Containerable {
     }
     
     private func _buffering() {
-        let controller = PlayingItemViewController()
-        removeController(_controller)
-        addController(controller, onto: view)
-        _controller = controller
+        guard let controller = _controller as? PlayingItemViewController else {
+            let controller = PlayingItemViewController()
+            removeController(_controller)
+            addController(controller, onto: view)
+            _controller = controller
+            controller.buffering()
+            return
+        }
+        controller.willReuseController()
         controller.buffering()
     }
     
     private func _playing(_ playItem: PlayingItem?) {
-        let controller = PlayingItemViewController()
-        removeController(_controller)
-        addController(controller, onto: view)
-        _controller = controller
+        guard let controller = _controller as? PlayingItemViewController else {
+            let controller = PlayingItemViewController()
+            removeController(_controller)
+            addController(controller, onto: view)
+            _controller = controller
+            controller.dispalyItem(playItem)
+            return
+        }
+        controller.willReuseController()
         controller.dispalyItem(playItem)
     }
     
@@ -93,6 +104,9 @@ extension MarconiPlayerController: MarconiPlayerObserver {
 }
 
 extension MarconiPlayerController: MarconiPlayerDelegate {
+    
+    func catchTheError(_ error: Error) {}
+    
     func willPlayStation(_ station: Station, with url: URL) {
         _station = station
         _radio.replaceCurrentURL(with: url)

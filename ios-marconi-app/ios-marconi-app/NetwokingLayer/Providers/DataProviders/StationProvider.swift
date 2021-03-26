@@ -1,7 +1,7 @@
 import FutureKit
 import Foundation
 
-class StationProvider: ResponseValidator {
+struct StationProvider: ResponseValidator {
     
     private let _router: AnyRouter<StationApi>
     

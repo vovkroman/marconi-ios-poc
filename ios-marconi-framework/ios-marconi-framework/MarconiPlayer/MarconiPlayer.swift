@@ -25,10 +25,9 @@ extension Marconi {
         }
         
         public func replaceCurrentURL(with url: URL) {
-            let urlAsset = AVURLAsset(url: url)
-            let item = AVPlayerItem(asset: urlAsset)
-            _observer?.startMonitoring(item)
-            _player.replaceCurrentItem(with: item)
+            let playingItem = AVPlayerItem(url: url)
+            _observer?.startMonitoring(playingItem)
+            _player.replaceCurrentItem(with: playingItem)
         }
         
         public init(_ observer: MarconiPlayerObserver?, _ player: AVPlayer = .init()) {

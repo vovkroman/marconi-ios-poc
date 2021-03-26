@@ -25,10 +25,10 @@ class MainViewController: UIViewController, Containerable {
     
     private func _addTabBarController() {
         let tabBarController = UITabBarController()
-        let liveVC = LiveStations.ViewController(viewModel: LiveStations.ViewModel(_playerController))
+        let liveVC = Live.ViewController(viewModel: Live.ViewModel(_playerController))
         liveVC.tabBarItem.title = "Live Stations"
         
-        let digitVC = DigitalStations.ViewController(viewModel: DigitalStations.ViewModel(_playerController))
+        let digitVC = Digital.ViewController(viewModel: Digital.ViewModel(_playerController))
         digitVC.tabBarItem.title = "Digital Stations"
         
         tabBarController.viewControllers = [liveVC, digitVC]
