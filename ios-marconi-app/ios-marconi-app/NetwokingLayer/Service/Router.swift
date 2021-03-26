@@ -55,7 +55,13 @@ open class AnyRouter<EndPoint: EndPointType>: NetworkRouter {
     // MARK: - Build request method
     
     private func buildRequest(from route: EndPoint) throws -> URLRequest {
-        var request = URLRequest(url: route.baseURL.appendingPathComponent(route.path),
+        var url: URL
+        if let path = route.path {
+            url = route.baseURL.appendingPathComponent(path)
+        } else {
+            url = route.baseURL
+        }
+        var request = URLRequest(url: url,
                                  cachePolicy: route.cachePolicy,
                                  timeoutInterval: 10.0)
         request.httpMethod = route.httpMethod.rawValue

@@ -35,7 +35,7 @@ extension Logger.Category: CustomStringConvertible {
     public var description: String {
         switch self {
         case .lifeCycle:
-            return "View Controller: Life Cycle"
+            return "Life Cycle"
         case .api:
             return "API"
         case .default:

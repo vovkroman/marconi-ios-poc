@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D5736EE7E203CB28056DD20 /* Pods_ios_marconi_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E08A428D6213F00E85FCFC05 /* Pods_ios_marconi_app.framework */; };
 		6F08E9D42605048F003D0E07 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9D32605048F003D0E07 /* MainViewController.swift */; };
 		6F08E9D62605093E003D0E07 /* ViewModelOwnable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9D52605093E003D0E07 /* ViewModelOwnable.swift */; };
 		6F1517D025FFC6D800AD9354 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1517CF25FFC6D800AD9354 /* AppDelegate.swift */; };
@@ -28,7 +29,6 @@
 		6F44B105260387E10047A3E5 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F44B0EE260387C30047A3E5 /* Router.swift */; };
 		6F44B106260387E10047A3E5 /* EndPointType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F44B0EF260387C30047A3E5 /* EndPointType.swift */; };
 		6F44B107260387E60047A3E5 /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F44B0FB260387C30047A3E5 /* Validation.swift */; };
-		6F44B108260387E60047A3E5 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F44B0FC260387C30047A3E5 /* Errors.swift */; };
 		6F44B10B260388150047A3E5 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F44B10A260388100047A3E5 /* Logger.swift */; };
 		6F44B10D26038C610047A3E5 /* FutureKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F44B10C26038C610047A3E5 /* FutureKit.framework */; };
 		6F44B10E26038C610047A3E5 /* FutureKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F44B10C26038C610047A3E5 /* FutureKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -46,8 +46,20 @@
 		6F6E22152608B5AE0057D41F /* MarconiPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E22142608B5AE0057D41F /* MarconiPlayerController.swift */; };
 		6F6E22182608BF510057D41F /* Containerable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E22172608BF510057D41F /* Containerable.swift */; };
 		6F6E221A2608DDB80057D41F /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E22192608DDB80057D41F /* URL+Extensions.swift */; };
-		6FE9B897260A0C940023F68D /* NoItemToPlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B896260A0C940023F68D /* NoItemToPlayViewController.swift */; };
+		6FA3C254260B2DAA0095D6AB /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C253260B2DAA0095D6AB /* Errors.swift */; };
+		6FA3C257260B38F90095D6AB /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C256260B38F90095D6AB /* ImageLoader.swift */; };
+		6FA3C25A260B39540095D6AB /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C259260B39540095D6AB /* ImageCache.swift */; };
+		6FA3C25C260B58F80095D6AB /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C25B260B58F80095D6AB /* Globals.swift */; };
+		6FA3C25F260BA84E0095D6AB /* MarconiImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C25E260BA84E0095D6AB /* MarconiImageView.swift */; };
+		6FE9B897260A0C940023F68D /* PlayerStateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B896260A0C940023F68D /* PlayerStateViewController.swift */; };
+		6FE9B89A260A132D0023F68D /* NoPlayingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B899260A132D0023F68D /* NoPlayingItemView.swift */; };
+		6FE9B89D260A136C0023F68D /* NoPlayingItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE9B89C260A136C0023F68D /* NoPlayingItemView.xib */; };
+		6FE9B8A0260A18FF0023F68D /* PlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B89F260A18FF0023F68D /* PlayingView.swift */; };
+		6FE9B8A2260A19170023F68D /* PlayingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE9B8A1260A19170023F68D /* PlayingView.xib */; };
+		6FE9B8A4260A466C0023F68D /* ImageApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B8A3260A466C0023F68D /* ImageApi.swift */; };
+		6FE9B8A6260A471F0023F68D /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B8A5260A471F0023F68D /* ImageProvider.swift */; };
 		6FEC7E9A2600DB0D00C55A2D /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEC7E992600DB0D00C55A2D /* NibLoadable.swift */; };
+		6FF116C0260E370300CBCA9C /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116BF260E370300CBCA9C /* ProgressBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +88,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2ED3931EB7DDB41FFAD74885 /* Pods-ios-marconi-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-marconi-app.debug.xcconfig"; path = "Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app.debug.xcconfig"; sourceTree = "<group>"; };
 		6F08E9D32605048F003D0E07 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		6F08E9D52605093E003D0E07 /* ViewModelOwnable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelOwnable.swift; sourceTree = "<group>"; };
 		6F1517CC25FFC6D800AD9354 /* ios-marconi-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-marconi-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,7 +114,6 @@
 		6F44B0F8260387C30047A3E5 /* URLParameterEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLParameterEncoding.swift; sourceTree = "<group>"; };
 		6F44B0F9260387C30047A3E5 /* JSONParameterEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONParameterEncoder.swift; sourceTree = "<group>"; };
 		6F44B0FB260387C30047A3E5 /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
-		6F44B0FC260387C30047A3E5 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		6F44B10A260388100047A3E5 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		6F44B10C26038C610047A3E5 /* FutureKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FutureKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F44B11326038E360047A3E5 /* Station.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
@@ -117,8 +129,22 @@
 		6F6E22142608B5AE0057D41F /* MarconiPlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiPlayerController.swift; sourceTree = "<group>"; };
 		6F6E22172608BF510057D41F /* Containerable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Containerable.swift; sourceTree = "<group>"; };
 		6F6E22192608DDB80057D41F /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
-		6FE9B896260A0C940023F68D /* NoItemToPlayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoItemToPlayViewController.swift; sourceTree = "<group>"; };
+		6FA3C253260B2DAA0095D6AB /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		6FA3C256260B38F90095D6AB /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		6FA3C259260B39540095D6AB /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		6FA3C25B260B58F80095D6AB /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
+		6FA3C25E260BA84E0095D6AB /* MarconiImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiImageView.swift; sourceTree = "<group>"; };
+		6FE9B896260A0C940023F68D /* PlayerStateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStateViewController.swift; sourceTree = "<group>"; };
+		6FE9B899260A132D0023F68D /* NoPlayingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPlayingItemView.swift; sourceTree = "<group>"; };
+		6FE9B89C260A136C0023F68D /* NoPlayingItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoPlayingItemView.xib; sourceTree = "<group>"; };
+		6FE9B89F260A18FF0023F68D /* PlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingView.swift; sourceTree = "<group>"; };
+		6FE9B8A1260A19170023F68D /* PlayingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayingView.xib; sourceTree = "<group>"; };
+		6FE9B8A3260A466C0023F68D /* ImageApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageApi.swift; sourceTree = "<group>"; };
+		6FE9B8A5260A471F0023F68D /* ImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProvider.swift; sourceTree = "<group>"; };
 		6FEC7E992600DB0D00C55A2D /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
+		6FF116BF260E370300CBCA9C /* ProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
+		D8D8FB7978952A9704B8DFA8 /* Pods-ios-marconi-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-marconi-app.release.xcconfig"; path = "Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app.release.xcconfig"; sourceTree = "<group>"; };
+		E08A428D6213F00E85FCFC05 /* Pods_ios_marconi_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ios_marconi_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +154,7 @@
 			files = (
 				6F44B10D26038C610047A3E5 /* FutureKit.framework in Frameworks */,
 				6F46041226029326000E2BC3 /* ios_marconi_framework.framework in Frameworks */,
+				5D5736EE7E203CB28056DD20 /* Pods_ios_marconi_app.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +175,7 @@
 				6F1517E525FFC6DB00AD9354 /* ios-marconi-appTests */,
 				6F1517CD25FFC6D800AD9354 /* Products */,
 				6F46041026029326000E2BC3 /* Frameworks */,
+				C13276B8C996CB9794C642EE /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -163,6 +191,7 @@
 		6F1517CE25FFC6D800AD9354 /* ios-marconi-app */ = {
 			isa = PBXGroup;
 			children = (
+				6FA3C252260B2D990095D6AB /* Errors */,
 				6F44B1182603B0DE0047A3E5 /* ViewModels */,
 				6F44B109260388030047A3E5 /* Logger */,
 				6F44B0EA2603876A0047A3E5 /* NetwokingLayer */,
@@ -172,6 +201,7 @@
 				6F1517D825FFC6DB00AD9354 /* Assets.xcassets */,
 				6F1517DA25FFC6DB00AD9354 /* LaunchScreen.storyboard */,
 				6F1517DD25FFC6DB00AD9354 /* Info.plist */,
+				6FA3C25B260B58F80095D6AB /* Globals.swift */,
 			);
 			path = "ios-marconi-app";
 			sourceTree = "<group>";
@@ -188,6 +218,7 @@
 		6F3CAC082601006C0058A72B /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				6FE9B898260A12F10023F68D /* UIViews */,
 				6F44B11F2603C1790047A3E5 /* TableViewCells */,
 				6F44B1152603AFFB0047A3E5 /* ViewControllers */,
 				6FEC7E982600DAF700C55A2D /* Extensions */,
@@ -209,9 +240,10 @@
 		6F44B0EA2603876A0047A3E5 /* NetwokingLayer */ = {
 			isa = PBXGroup;
 			children = (
+				6FA3C255260B38DA0095D6AB /* ImageCaching */,
 				6F44B11226038DF80047A3E5 /* Entities */,
 				6F44B0F6260387C30047A3E5 /* Encoding */,
-				6F44B0F0260387C30047A3E5 /* NetworkLayer */,
+				6F44B0F0260387C30047A3E5 /* Providers */,
 				6F44B0EB260387C30047A3E5 /* Service */,
 				6F44B0FA260387C30047A3E5 /* Supplementary */,
 			);
@@ -229,20 +261,21 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
-		6F44B0F0260387C30047A3E5 /* NetworkLayer */ = {
+		6F44B0F0260387C30047A3E5 /* Providers */ = {
 			isa = PBXGroup;
 			children = (
 				6F44B0F1260387C30047A3E5 /* DataProviders */,
 				6F44B0F3260387C30047A3E5 /* Routes */,
 				6F44B0F5260387C30047A3E5 /* NetworkConfig.swift */,
 			);
-			path = NetworkLayer;
+			path = Providers;
 			sourceTree = "<group>";
 		};
 		6F44B0F1260387C30047A3E5 /* DataProviders */ = {
 			isa = PBXGroup;
 			children = (
 				6F44B0F2260387C30047A3E5 /* StationProvider.swift */,
+				6FE9B8A5260A471F0023F68D /* ImageProvider.swift */,
 			);
 			path = DataProviders;
 			sourceTree = "<group>";
@@ -251,6 +284,7 @@
 			isa = PBXGroup;
 			children = (
 				6F44B0F4260387C30047A3E5 /* StationApi.swift */,
+				6FE9B8A3260A466C0023F68D /* ImageApi.swift */,
 			);
 			path = Routes;
 			sourceTree = "<group>";
@@ -269,7 +303,6 @@
 			isa = PBXGroup;
 			children = (
 				6F44B0FB260387C30047A3E5 /* Validation.swift */,
-				6F44B0FC260387C30047A3E5 /* Errors.swift */,
 			);
 			path = Supplementary;
 			sourceTree = "<group>";
@@ -298,7 +331,7 @@
 				6F44B1162603B0890047A3E5 /* ListViewController.swift */,
 				6F44B11D2603C0C70047A3E5 /* LiveStationsViewController.swift */,
 				6F44B1242603C4EC0047A3E5 /* DigitalViewController.swift */,
-				6FE9B896260A0C940023F68D /* NoItemToPlayViewController.swift */,
+				6FE9B896260A0C940023F68D /* PlayerStateViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -327,6 +360,7 @@
 			children = (
 				6F44B10C26038C610047A3E5 /* FutureKit.framework */,
 				6F46041126029326000E2BC3 /* ios_marconi_framework.framework */,
+				E08A428D6213F00E85FCFC05 /* Pods_ios_marconi_app.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -355,6 +389,60 @@
 			path = "URL+Extensions";
 			sourceTree = "<group>";
 		};
+		6FA3C252260B2D990095D6AB /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				6FA3C253260B2DAA0095D6AB /* Errors.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		6FA3C255260B38DA0095D6AB /* ImageCaching */ = {
+			isa = PBXGroup;
+			children = (
+				6FA3C256260B38F90095D6AB /* ImageLoader.swift */,
+				6FA3C259260B39540095D6AB /* ImageCache.swift */,
+			);
+			path = ImageCaching;
+			sourceTree = "<group>";
+		};
+		6FA3C25D260BA8100095D6AB /* MarconiImageView */ = {
+			isa = PBXGroup;
+			children = (
+				6FA3C25E260BA84E0095D6AB /* MarconiImageView.swift */,
+			);
+			path = MarconiImageView;
+			sourceTree = "<group>";
+		};
+		6FE9B898260A12F10023F68D /* UIViews */ = {
+			isa = PBXGroup;
+			children = (
+				6FF116BE260E36EF00CBCA9C /* ProgressBar */,
+				6FA3C25D260BA8100095D6AB /* MarconiImageView */,
+				6FE9B89E260A18EB0023F68D /* PlayingView */,
+				6FE9B89B260A13570023F68D /* NoPlayingItemView */,
+			);
+			path = UIViews;
+			sourceTree = "<group>";
+		};
+		6FE9B89B260A13570023F68D /* NoPlayingItemView */ = {
+			isa = PBXGroup;
+			children = (
+				6FE9B899260A132D0023F68D /* NoPlayingItemView.swift */,
+				6FE9B89C260A136C0023F68D /* NoPlayingItemView.xib */,
+			);
+			path = NoPlayingItemView;
+			sourceTree = "<group>";
+		};
+		6FE9B89E260A18EB0023F68D /* PlayingView */ = {
+			isa = PBXGroup;
+			children = (
+				6FE9B89F260A18FF0023F68D /* PlayingView.swift */,
+				6FE9B8A1260A19170023F68D /* PlayingView.xib */,
+			);
+			path = PlayingView;
+			sourceTree = "<group>";
+		};
 		6FEC7E982600DAF700C55A2D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -366,6 +454,24 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		6FF116BE260E36EF00CBCA9C /* ProgressBar */ = {
+			isa = PBXGroup;
+			children = (
+				6FF116BF260E370300CBCA9C /* ProgressBar.swift */,
+			);
+			path = ProgressBar;
+			sourceTree = "<group>";
+		};
+		C13276B8C996CB9794C642EE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2ED3931EB7DDB41FFAD74885 /* Pods-ios-marconi-app.debug.xcconfig */,
+				D8D8FB7978952A9704B8DFA8 /* Pods-ios-marconi-app.release.xcconfig */,
+			);
+			name = Pods;
+			path = ../Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -373,10 +479,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6F1517EB25FFC6DB00AD9354 /* Build configuration list for PBXNativeTarget "ios-marconi-app" */;
 			buildPhases = (
+				477F861D2E61A76E6E7655E7 /* [CP] Check Pods Manifest.lock */,
 				6F1517C825FFC6D800AD9354 /* Sources */,
 				6F1517C925FFC6D800AD9354 /* Frameworks */,
 				6F1517CA25FFC6D800AD9354 /* Resources */,
 				6F46041426029326000E2BC3 /* Embed Frameworks */,
+				329396D8593D10CA8BD834DE /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -449,8 +557,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F1517DC25FFC6DB00AD9354 /* LaunchScreen.storyboard in Resources */,
+				6FE9B89D260A136C0023F68D /* NoPlayingItemView.xib in Resources */,
 				6F1517D925FFC6DB00AD9354 /* Assets.xcassets in Resources */,
 				6F44B1232603C1B10047A3E5 /* StationTableViewCell.xib in Resources */,
+				6FE9B8A2260A19170023F68D /* PlayingView.xib in Resources */,
 				6F1517D725FFC6D800AD9354 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -464,6 +574,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		329396D8593D10CA8BD834DE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		477F861D2E61A76E6E7655E7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ios-marconi-app-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6F1517C825FFC6D800AD9354 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -471,35 +623,44 @@
 			files = (
 				6F44B10B260388150047A3E5 /* Logger.swift in Sources */,
 				6F08E9D42605048F003D0E07 /* MainViewController.swift in Sources */,
+				6FA3C25F260BA84E0095D6AB /* MarconiImageView.swift in Sources */,
 				6F44B106260387E10047A3E5 /* EndPointType.swift in Sources */,
 				6F44B1222603C1B10047A3E5 /* StationTableViewCell.swift in Sources */,
 				6F44B0FE260387D80047A3E5 /* URLParameterEncoding.swift in Sources */,
 				6F44B0FD260387D80047A3E5 /* ParameterEncoding.swift in Sources */,
 				6F44B104260387E10047A3E5 /* HTTPMethod.swift in Sources */,
 				6F6E22132608A55F0057D41F /* Collections+SafeIndex.swift in Sources */,
+				6FE9B8A6260A471F0023F68D /* ImageProvider.swift in Sources */,
 				6F44B102260387DE0047A3E5 /* NetworkConfig.swift in Sources */,
 				6F44B11426038E360047A3E5 /* Station.swift in Sources */,
 				6FEC7E9A2600DB0D00C55A2D /* NibLoadable.swift in Sources */,
 				6F3CAC1526011AF40058A72B /* Reusable.swift in Sources */,
 				6F44B11C2603B9060047A3E5 /* ListViewModels.swift in Sources */,
+				6FE9B8A0260A18FF0023F68D /* PlayingView.swift in Sources */,
+				6FE9B89A260A132D0023F68D /* NoPlayingItemView.swift in Sources */,
 				6F44B103260387E10047A3E5 /* HTTPTask.swift in Sources */,
 				6F44B11A2603B0F20047A3E5 /* ListViewModelable.swift in Sources */,
 				6F44B105260387E10047A3E5 /* Router.swift in Sources */,
+				6FE9B8A4260A466C0023F68D /* ImageApi.swift in Sources */,
 				6F44B107260387E60047A3E5 /* Validation.swift in Sources */,
 				6F6E22152608B5AE0057D41F /* MarconiPlayerController.swift in Sources */,
 				6F3CAC1826011AFF0058A72B /* ReusableCollectionView.swift in Sources */,
 				6F08E9D62605093E003D0E07 /* ViewModelOwnable.swift in Sources */,
 				6F44B101260387DE0047A3E5 /* StationApi.swift in Sources */,
+				6FF116C0260E370300CBCA9C /* ProgressBar.swift in Sources */,
+				6FA3C254260B2DAA0095D6AB /* Errors.swift in Sources */,
+				6FA3C25A260B39540095D6AB /* ImageCache.swift in Sources */,
+				6FA3C25C260B58F80095D6AB /* Globals.swift in Sources */,
 				6F44B0FF260387D80047A3E5 /* JSONParameterEncoder.swift in Sources */,
+				6FA3C257260B38F90095D6AB /* ImageLoader.swift in Sources */,
 				6F44B1252603C4EC0047A3E5 /* DigitalViewController.swift in Sources */,
 				6F3CAC1926011AFF0058A72B /* ReusableTableView.swift in Sources */,
 				6F6E221A2608DDB80057D41F /* URL+Extensions.swift in Sources */,
 				6F1517D025FFC6D800AD9354 /* AppDelegate.swift in Sources */,
 				6F6E22182608BF510057D41F /* Containerable.swift in Sources */,
-				6F44B108260387E60047A3E5 /* Errors.swift in Sources */,
 				6F44B100260387DB0047A3E5 /* StationProvider.swift in Sources */,
 				6F44B11E2603C0C70047A3E5 /* LiveStationsViewController.swift in Sources */,
-				6FE9B897260A0C940023F68D /* NoItemToPlayViewController.swift in Sources */,
+				6FE9B897260A0C940023F68D /* PlayerStateViewController.swift in Sources */,
 				6F44B1172603B0890047A3E5 /* ListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -658,6 +819,7 @@
 		};
 		6F1517EC25FFC6DB00AD9354 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2ED3931EB7DDB41FFAD74885 /* Pods-ios-marconi-app.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -675,6 +837,7 @@
 		};
 		6F1517ED25FFC6DB00AD9354 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D8D8FB7978952A9704B8DFA8 /* Pods-ios-marconi-app.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

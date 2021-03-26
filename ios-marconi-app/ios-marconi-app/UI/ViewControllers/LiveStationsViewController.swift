@@ -8,6 +8,6 @@
 
 import UIKit
 
-extension LiveStations {
+extension Live {
     class ViewController: ListViewController<ViewModel> {}
 }

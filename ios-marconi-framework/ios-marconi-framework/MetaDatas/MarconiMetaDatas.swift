@@ -8,29 +8,22 @@
 
 import AVFoundation
 
-extension Marconi.Live {
+extension Marconi {
     public struct MetaData {
-        let artistName: String
-        let song: String
+        public let artistName: String?
+        public let song: String?
         
-        init?(_ items: [AVMetadataItem]) {
-            var dict: [AVMetadataIdentifier: AnyObject] = [:]
-            for item in items {
-                if let identifier = item.identifier, let value = item.value {
-                    dict[identifier] = value
-                }
-            }
-            guard let artistName = dict[Marconi.indentifierArtistName] as? String, let song = dict[Marconi.indentifierTitle] as? String else {
-                return nil
-            }
-            self.artistName = artistName
-            self.song = song
+        init(_ items: [AVMetadataItem]) {
+            let _parser = MetaDataParser(items)
+            self.artistName = _parser.artistName
+            self.song = _parser.song
+
         }
     }
 }
 
-extension Marconi.Live.MetaData: Equatable {
-    public static func == (lhs: Marconi.Live.MetaData, rhs: Marconi.Live.MetaData) -> Bool {
+extension Marconi.MetaData: Equatable {
+    public static func == (lhs: Marconi.MetaData, rhs: Marconi.MetaData) -> Bool {
         return lhs.artistName == rhs.artistName && lhs.song == rhs.song
     }
 }

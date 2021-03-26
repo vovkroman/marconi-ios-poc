@@ -16,11 +16,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="94j-hi-nKJ">
-                                <rect key="frame" x="0.0" y="358.5" width="414" height="537.5"/>
+                                <rect key="frame" x="0.0" y="401.5" width="414" height="494.5"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Rv-GY-45J">
-                                <rect key="frame" x="0.0" y="88" width="414" height="270.5"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="313.5"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                         </subviews>
@@ -31,7 +31,7 @@
                             <constraint firstItem="7Rv-GY-45J" firstAttribute="top" secondItem="Hkd-1H-0oI" secondAttribute="top" id="6Pn-Ns-OZx"/>
                             <constraint firstItem="7Rv-GY-45J" firstAttribute="trailing" secondItem="Hkd-1H-0oI" secondAttribute="trailing" id="EpV-LQ-MWJ"/>
                             <constraint firstAttribute="bottom" secondItem="94j-hi-nKJ" secondAttribute="bottom" id="M4p-Le-Rhx"/>
-                            <constraint firstItem="94j-hi-nKJ" firstAttribute="height" secondItem="uuE-Xw-XgA" secondAttribute="height" multiplier="0.6" id="QVU-Eq-f91"/>
+                            <constraint firstItem="7Rv-GY-45J" firstAttribute="height" secondItem="uuE-Xw-XgA" secondAttribute="height" multiplier="0.35" id="MVn-y9-8tP"/>
                             <constraint firstItem="94j-hi-nKJ" firstAttribute="top" secondItem="7Rv-GY-45J" secondAttribute="bottom" id="wSd-Ps-Lux"/>
                             <constraint firstItem="94j-hi-nKJ" firstAttribute="trailing" secondItem="Hkd-1H-0oI" secondAttribute="trailing" id="xsa-Hk-BEy"/>
                         </constraints>

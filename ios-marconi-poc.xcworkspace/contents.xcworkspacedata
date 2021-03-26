@@ -10,4 +10,7 @@
    <FileRef
       location = "group:ios-marconi-app/ios-marconi-app.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Pods/Pods.xcodeproj">
+   </FileRef>
 </Workspace>

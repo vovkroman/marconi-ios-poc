@@ -13,7 +13,7 @@ extension StationApi: EndPointType {
         return url
     }
     
-    var path: String {
+    var path: String? {
         switch self {
         case .getStation(let id):
             return "stations/\(id)"
