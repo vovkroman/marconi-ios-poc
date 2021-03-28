@@ -12,12 +12,14 @@ extension Marconi {
     public struct MetaData {
         public let artistName: String?
         public let song: String?
+        public var offset: TimeInterval? = 0.0
+        public var duration: TimeInterval?
         
         init(_ items: [AVMetadataItem]) {
             let _parser = MetaDataParser(items)
             self.artistName = _parser.artistName
             self.song = _parser.song
-
+            self.duration = _parser.duration
         }
     }
 }

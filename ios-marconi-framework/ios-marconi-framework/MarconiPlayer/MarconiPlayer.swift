@@ -32,7 +32,7 @@ extension Marconi {
         
         public init(_ observer: MarconiPlayerObserver?, _ player: AVPlayer = .init()) {
             _player = player
-            _observer = .init(observer)
+            _observer = .init(observer, player: player)
         }
         
         deinit {

@@ -95,7 +95,7 @@ extension MarconiPlayerController: MarconiPlayerObserver {
                 self._noPlayingItem()
             case .buffering(_):
                 self._buffering()
-            case .playing(let playerItem):
+            case .playing(let playerItem, let progress):
                 let playingItemDispaly = PlayingItem(playerItem, station: self._station)
                 self._playing(playingItemDispaly)
             case .error(_):

@@ -15,6 +15,9 @@ extension Marconi {
         private var _playbackLikelyToKeepUpKeyPathObserver: NSKeyValueObservation?
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
+        private var _playbackProgressObserver: Any?
+        
+        private weak var _player: AVPlayer?
         
         private(set) var _currentMetaItem: MetaData? {
             didSet {
@@ -39,6 +42,12 @@ extension Marconi {
             
             _playbackBufferFullObserver = playerItem.observe(\.isPlaybackBufferFull, options: [.new]) { [weak self](playerItem, _) in
                 self?._observeStatus(playerItem)
+            }
+        }
+        
+        private func _observeProgress() {
+            _playbackProgressObserver = _player?.addLinearPeriodicTimeObserver(every: 1.0, queue: .main){ [weak self] progress in
+                self?._stateMachine.transition(with: .progressDidChanged(progress: progress.rounded()))
             }
         }
         
@@ -72,19 +81,23 @@ extension Marconi {
             stopMonitoring()
             _fetchMetaData(newPlayingItem)
             _observeBuffering(newPlayingItem)
+            _observeProgress()
         }
         
         public func stopMonitoring() {
+            _player?.removeTimeObserver(_playbackProgressObserver)
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
             _playbackBufferFullObserver?.invalidate()
             _playbackBufferEmptyObserver = nil
             _playbackLikelyToKeepUpKeyPathObserver = nil
             _playbackBufferFullObserver = nil
+            _playbackProgressObserver = nil
         }
         
-        public init(_ observer: MarconiPlayerObserver?) {
+        public init(_ observer: MarconiPlayerObserver?, player: AVPlayer) {
             _stateMachine.observer = observer
+            _player = player
         }
     }
 }

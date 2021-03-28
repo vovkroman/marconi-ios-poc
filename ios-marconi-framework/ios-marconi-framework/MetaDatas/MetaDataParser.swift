@@ -18,6 +18,10 @@ struct MetaDataParser {
         return _dict[Identifier.title] as? String
     }
     
+    var duration: TimeInterval? {
+        return _dict[Identifier.songDuration] as? TimeInterval
+    }
+    
     private var _dict: [AVMetadataIdentifier: AnyObject] = [:]
     
     init(_ items: [AVMetadataItem]) {
