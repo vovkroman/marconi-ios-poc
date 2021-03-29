@@ -9,17 +9,37 @@
 import AVFoundation
 
 extension Marconi {
+    
+    public enum Progress {
+        case unknown
+        case progress(progress: TimeInterval)
+    }
+    
     public struct MetaData {
         public let artistName: String?
         public let song: String?
-        public var offset: TimeInterval? = 0.0
+        public var offset: TimeInterval?
         public var duration: TimeInterval?
         
         init(_ items: [AVMetadataItem]) {
             let _parser = MetaDataParser(items)
-            self.artistName = _parser.artistName
-            self.song = _parser.song
+            self.artistName = _parser.artistName ?? "Unknown"
+            self.song = _parser.song ?? "Unknown"
             self.duration = _parser.duration
+            self.offset = _parser.offset
+        }
+    }
+}
+
+extension Marconi.Progress: Equatable {
+    public static func == (lhs: Marconi.Progress, rhs: Marconi.Progress) -> Bool {
+        switch (lhs, rhs) {
+        case (.unknown, unknown):
+            return true
+        case (.progress(let lhs), .progress(let rhs)):
+            return lhs == rhs
+        default:
+            return false
         }
     }
 }

@@ -75,6 +75,7 @@ extension Marconi {
         }
         
         public func startMonitoring(_ playerItem: AVPlayerItem?) {
+            _currentMetaItem = nil
             guard let newPlayingItem = playerItem else {
                 return
             }

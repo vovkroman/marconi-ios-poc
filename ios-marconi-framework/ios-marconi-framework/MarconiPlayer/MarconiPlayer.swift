@@ -16,10 +16,6 @@ extension Marconi {
         
         private(set) var _player: AVPlayer
         
-        public func setDelegate(_ observer: MarconiPlayerObserver?) {
-            _observer?._stateMachine.observer = observer
-        }
-        
         public func play() {
             _player.play()
         }

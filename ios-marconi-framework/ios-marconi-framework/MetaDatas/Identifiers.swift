@@ -26,7 +26,7 @@ enum Identifier {
     static let datumTime = AVMetadataIdentifier("lsdr/X-DATUM-TIME")
     static let songDuration = AVMetadataIdentifier("lsdr/X-SONG-DURATION")
     static let songID = AVMetadataIdentifier("lsdr/X-SONG-ID")
-    static let datumStartTime = AVMetadataIdentifier("key=X-DATUM-START-TIME")
+    static let datumStartTime = AVMetadataIdentifier("lsdr/X-DATUM-START-TIME")
     static let segmentStartTime = AVMetadataIdentifier("lsdr/X-SEGMENT-START-TIME")
     static let sessionPlayID = AVMetadataIdentifier("lsdr/X-SESSION-PLAY-ID")
     static let songType = AVMetadataIdentifier("lsdr/X-SONG-TYPE")

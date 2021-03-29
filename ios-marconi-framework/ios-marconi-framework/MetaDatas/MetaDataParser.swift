@@ -19,7 +19,13 @@ struct MetaDataParser {
     }
     
     var duration: TimeInterval? {
-        return _dict[Identifier.songDuration] as? TimeInterval
+        let stringValue = _dict[Identifier.songDuration]
+        return stringValue?.doubleValue
+    }
+    
+    var offset: TimeInterval? {
+        let stringValue = _dict[Identifier.datumStartTime]
+        return stringValue?.doubleValue
     }
     
     private var _dict: [AVMetadataIdentifier: AnyObject] = [:]

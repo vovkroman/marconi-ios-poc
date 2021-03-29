@@ -38,7 +38,7 @@ extension Marconi {
         public enum State: Equatable {
             case noPlaying
             case buffering(AVPlayerItem)
-            case playing(MetaData?, TimeInterval?)
+            case playing(MetaData?, Progress)
             case error(MError)
             
             public static func == (lhs: State, rhs: State) -> Bool {
@@ -73,29 +73,37 @@ extension Marconi {
         private(set) var state: State = .noPlaying {
             didSet {
                 guard oldValue != state else { return }
+                print("state: \(oldValue) -> \(state)")
                 observer?.stateDidChanched(self, to: state)
             }
         }
         
         func transition(with event: Event) {
-            print("state: \(state) -> \(event)")
             switch (state, event) {
             case (.buffering, .bufferingStarted(_)): break
             case (_, .bufferingStarted(let playerItem)):
                 state = .buffering(playerItem)
             case (.buffering, .bufferingEnded(let playingItem)):
                 guard let offset = playingItem?.offset, let duartion = playingItem?.duration else {
-                    state = .playing(playingItem, nil)
+                    state = .playing(playingItem, .unknown)
                     return
                 }
-                state = .playing(playingItem, offset / duartion)
+                state = .playing(playingItem, .progress(progress: offset / duartion))
             case (.buffering, .fetchedMetaData(_)):
                 // fetched meta data but buffering still in progress
                 break
             case (.playing(_ , _), .fetchedMetaData(let new)):
-                state = .playing(new, new?.offset)
-            case (_, .bufferingEnded(let playingItem)):
-                state = .playing(playingItem, playingItem?.offset)
+                guard let offset = new?.offset, let duartion = new?.duration else {
+                    state = .playing(new, .unknown)
+                    return
+                }
+                state = .playing(new, .progress(progress: offset / duartion))
+            case (_, .bufferingEnded(let new)):
+                guard let offset = new?.offset, let duartion = new?.duration else {
+                    state = .playing(new, .unknown)
+                    return
+                }
+                state = .playing(new, .progress(progress: offset / duartion))
             case (.noPlaying, .fetchedMetaData(_)): break
             case (_, .startPlaying): break
             case (_, .catchTheError(let error)):
@@ -103,16 +111,16 @@ extension Marconi {
             case (.error(_), .fetchedMetaData(let playingItem)):
                 // if playingItem doesn't conatin duration or offset, most likely, it's Live Station
                 guard let offset = playingItem?.offset, let duration = playingItem?.duration else {
-                    state = .playing(playingItem, nil)
+                    state = .playing(playingItem, .unknown)
                     return
                 }
-                state = .playing(playingItem, offset / duration)
+                state = .playing(playingItem, .progress(progress: offset / duration))
             case (.playing(let playingItem, _), .progressDidChanged(let progress)):
                 guard let duration = playingItem?.duration else {
-                    state = .playing(playingItem, nil)
+                    state = .playing(playingItem, .unknown)
                     return
                 }
-                state = .playing(playingItem, progress / duration)
+                state = .playing(playingItem, .progress(progress: progress / duration))
             case (_, .progressDidChanged(_)):
                 // if not playing there is no sense to update progress (state)
                 break

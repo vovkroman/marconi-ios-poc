@@ -58,8 +58,8 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     private func _buffering() {
         guard let controller = _controller as? PlayingItemViewController else {
-            let controller = PlayingItemViewController()
             removeController(_controller)
+            let controller = PlayingItemViewController()
             addController(controller, onto: view)
             _controller = controller
             controller.buffering()
@@ -82,6 +82,20 @@ class MarconiPlayerController: UIViewController, Containerable {
         controller.dispalyItem(playItem)
     }
     
+    private func _handleState(_ state: Marconi.StateMachine.State) {
+        switch state {
+        case .noPlaying:
+            _noPlayingItem()
+        case .buffering(_):
+            _buffering()
+        case .playing(let playerItem, let progress):
+            let playingItemDispaly = PlayingItem(playerItem, station: _station)
+            _playing(playingItemDispaly)
+        case .error(_):
+            break
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -89,19 +103,7 @@ class MarconiPlayerController: UIViewController, Containerable {
 
 extension MarconiPlayerController: MarconiPlayerObserver {
     func stateDidChanched(_ stateMachine: Marconi.StateMachine, to: Marconi.StateMachine.State) {
-        DispatchQueue.main.async {
-            switch to {
-            case .noPlaying:
-                self._noPlayingItem()
-            case .buffering(_):
-                self._buffering()
-            case .playing(let playerItem, let progress):
-                let playingItemDispaly = PlayingItem(playerItem, station: self._station)
-                self._playing(playingItemDispaly)
-            case .error(_):
-                break
-            }
-        }
+        DispatchQueue.main.async(execute: combine(to, with: _handleState))
     }
 }
 
