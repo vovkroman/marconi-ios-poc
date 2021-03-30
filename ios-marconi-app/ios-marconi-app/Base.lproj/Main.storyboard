@@ -17,14 +17,14 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="94j-hi-nKJ">
                                 <rect key="frame" x="0.0" y="401.5" width="414" height="494.5"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Rv-GY-45J">
                                 <rect key="frame" x="0.0" y="88" width="414" height="313.5"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="7Rv-GY-45J" firstAttribute="leading" secondItem="Hkd-1H-0oI" secondAttribute="leading" id="3bK-41-lFz"/>
                             <constraint firstItem="94j-hi-nKJ" firstAttribute="leading" secondItem="Hkd-1H-0oI" secondAttribute="leading" id="4cK-Jm-S4V"/>
