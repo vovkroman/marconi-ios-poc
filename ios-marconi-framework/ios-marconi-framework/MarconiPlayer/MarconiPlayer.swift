@@ -21,6 +21,8 @@ extension Marconi {
         }
         
         public func replaceCurrentURL(with url: URL) {
+            _observer?.stopMonitoring()
+            _player.replaceCurrentItem(with: nil)
             let playingItem = AVPlayerItem(url: url)
             _observer?.startMonitoring(playingItem)
             _player.replaceCurrentItem(with: playingItem)

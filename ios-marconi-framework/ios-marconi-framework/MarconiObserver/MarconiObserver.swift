@@ -79,7 +79,6 @@ extension Marconi {
             guard let newPlayingItem = playerItem else {
                 return
             }
-            stopMonitoring()
             _fetchMetaData(newPlayingItem)
             _observeBuffering(newPlayingItem)
             _observeProgress()

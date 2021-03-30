@@ -11,6 +11,7 @@
             <connections>
                 <outlet property="_artistName" destination="Hbo-Jz-B4D" id="0tc-IV-l4E"/>
                 <outlet property="_imageView" destination="TVG-MR-vyV" id="ByO-m4-3CH"/>
+                <outlet property="_progressBar" destination="qgZ-og-aLc" id="pQM-fP-40I"/>
                 <outlet property="_stationName" destination="cVp-e5-KSs" id="riW-lL-pAY"/>
                 <outlet property="_titleOfView" destination="OEe-1t-h92" id="Zkf-qY-tHb"/>
                 <outlet property="_titleSong" destination="N8H-bb-YBv" id="Mcn-kh-UuJ"/>
@@ -150,8 +151,18 @@
                         <constraint firstItem="TVG-MR-vyV" firstAttribute="top" secondItem="wOY-cb-XES" secondAttribute="top" constant="16" id="uvd-b8-IH7"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qgZ-og-aLc" customClass="MarconiProgressBar" customModule="ios_marconi_app" customModuleProvider="target">
+                    <rect key="frame" x="16" y="218" width="439" height="5"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="5" id="uO6-Xx-dFc"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isSkeletonable" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                </view>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="OEe-1t-h92" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="5o9-MX-DWH"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="wOY-cb-XES" secondAttribute="trailing" constant="16" id="9v0-d3-eaZ"/>
@@ -160,10 +171,13 @@
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="OEe-1t-h92" secondAttribute="trailing" constant="15" id="XGP-lJ-YCQ"/>
                 <constraint firstItem="wOY-cb-XES" firstAttribute="top" secondItem="OEe-1t-h92" secondAttribute="bottom" id="eFx-kq-Fg5"/>
                 <constraint firstItem="OEe-1t-h92" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="jSm-XO-P3t"/>
+                <constraint firstItem="qgZ-og-aLc" firstAttribute="top" secondItem="wOY-cb-XES" secondAttribute="bottom" constant="8" id="lHw-O3-v6w"/>
+                <constraint firstItem="qgZ-og-aLc" firstAttribute="trailing" secondItem="wOY-cb-XES" secondAttribute="trailing" id="qkt-zG-dCb"/>
+                <constraint firstItem="qgZ-og-aLc" firstAttribute="leading" secondItem="wOY-cb-XES" secondAttribute="leading" id="ymN-YN-Cs4"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <point key="canvasLocation" x="-88" y="-232"/>
+            <point key="canvasLocation" x="-89.130434782608702" y="-232.36607142857142"/>
         </view>
     </objects>
 </document>
