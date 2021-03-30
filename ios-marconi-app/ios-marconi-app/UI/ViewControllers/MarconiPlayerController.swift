@@ -39,6 +39,8 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     private var _station: Station!
     
+    var stationType: StationType = .live
+    
     init() {
         super.init(nibName: nil, bundle: nil)
     }

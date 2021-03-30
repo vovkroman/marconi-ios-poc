@@ -25,6 +25,7 @@ class MainViewController: UIViewController, Containerable {
     
     private func _addTabBarController() {
         let tabBarController = UITabBarController()
+        tabBarController.delegate = self
         let liveVC = Live.ViewController(viewModel: Live.ViewModel(_playerController))
         liveVC.tabBarItem.title = "Live Stations"
         
@@ -39,5 +40,12 @@ class MainViewController: UIViewController, Containerable {
         let playerController = MarconiPlayerController()
         addController(playerController, onto: playerViewContainer)
         _playerController = playerController
+    }
+}
+
+extension MainViewController: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        let _stationType = StationType(integerLiteral: tabBarController.selectedIndex)
+        _playerController?.stationType = _stationType
     }
 }

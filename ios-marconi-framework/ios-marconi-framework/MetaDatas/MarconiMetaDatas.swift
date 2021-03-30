@@ -16,8 +16,11 @@ extension Marconi {
     }
     
     public struct MetaData {
+        // Data for Live
         public let artistName: String?
         public let song: String?
+        
+        // Data for Digit
         public var offset: TimeInterval?
         public var duration: TimeInterval?
         

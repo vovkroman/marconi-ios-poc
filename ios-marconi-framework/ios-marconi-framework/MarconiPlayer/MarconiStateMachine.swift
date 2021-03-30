@@ -20,13 +20,6 @@ extension Marconi {
 }
 
 extension Marconi {
-    static let indentifierPlayId = AVMetadataIdentifier("lsdr/X-PLAY-ID")
-    static let indentifierType = AVMetadataIdentifier("lsdr/X-TYPE")
-    static let indentifierArtistName = AVMetadataIdentifier("lsdr/X-ARTIST")
-    static let indentifierTitle = AVMetadataIdentifier("lsdr/X-TITLE")
-}
-
-extension Marconi {
     public enum MError: Equatable {
         case playerError(description: String?)
     }

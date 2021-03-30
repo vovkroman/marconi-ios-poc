@@ -67,7 +67,8 @@ final class MarconiImageView: UIImageView {
     
     private lazy var _provider: ImageProvider = .init()
     
-    func loadImage(from url: URL) {
+    func loadImage(from url: URL?) {
+        guard let url = url else { return }
         let size = frame.size
         _provider.fetchImage(by: url)
                   .loadInto(into: self, with: size)
