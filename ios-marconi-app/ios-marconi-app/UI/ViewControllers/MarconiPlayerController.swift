@@ -15,20 +15,6 @@ protocol MarconiPlayerDelegate: class {
     func catchTheError(_ error: Error)
 }
 
-struct PlayingItem {
-    let title: String?
-    let artistName: String?
-    let stationName: String?
-    let url: URL?
-    
-    init(_ item: Marconi.MetaData?, station: Station) {
-        title = item?.song
-        artistName = item?.artistName
-        stationName = station.name
-        url = URL(station.square_logo_large)
-    }
-}
-
 class MarconiPlayerController: UIViewController, Containerable {
     
     private(set) weak var _controller: UIViewController?
@@ -36,8 +22,8 @@ class MarconiPlayerController: UIViewController, Containerable {
     typealias Radio = Marconi.Radio
     
     private lazy var _radio: Radio = .init(self)
-    
     private var _station: Station!
+    private var _playingItem: PlayingItem?
     
     var stationType: StationType = .live
     
@@ -84,15 +70,31 @@ class MarconiPlayerController: UIViewController, Containerable {
         controller.dispalyItem(playItem)
     }
     
+    private func _updateProgress(_ value: CGFloat) {
+        print("Updating progress \(value)")
+    }
+    
     private func _handleState(_ state: Marconi.StateMachine.State) {
         switch state {
         case .noPlaying:
             _noPlayingItem()
         case .buffering(_):
             _buffering()
-        case .playing(let playerItem, let progress):
-            let playingItemDispaly = PlayingItem(playerItem, station: _station)
-            _playing(playingItemDispaly)
+            _playingItem = nil
+        case .playing(let newMetaDataItem, let progress):
+            guard let playingItem = _playingItem else {
+                let playingItemDispaly = PlayingItem(newMetaDataItem, station: _station)
+                _playing(playingItemDispaly)
+                _playingItem = playingItemDispaly
+                return
+            }
+            let playingItemDispaly = PlayingItem(newMetaDataItem, station: _station)
+            if playingItem == playingItemDispaly {
+                _updateProgress(progress.value)
+            } else {
+                _playing(playingItemDispaly)
+                _playingItem = playingItemDispaly
+            }
         case .error(_):
             break
         }
@@ -114,6 +116,7 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
     func catchTheError(_ error: Error) {}
     
     func willPlayStation(_ station: Station, with url: URL) {
+        _playingItem = nil
         _station = station
         _radio.replaceCurrentURL(with: url)
         _radio.play()

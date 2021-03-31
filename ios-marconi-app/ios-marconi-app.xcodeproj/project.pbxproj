@@ -61,6 +61,7 @@
 		6FEC7E9A2600DB0D00C55A2D /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEC7E992600DB0D00C55A2D /* NibLoadable.swift */; };
 		6FF116C0260E370300CBCA9C /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116BF260E370300CBCA9C /* ProgressBar.swift */; };
 		6FF2C77D2613650900707126 /* StationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2C77C2613650900707126 /* StationType.swift */; };
+		6FF2C78426139E8A00707126 /* PlayingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2C78326139E8A00707126 /* PlayingItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +146,7 @@
 		6FEC7E992600DB0D00C55A2D /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
 		6FF116BF260E370300CBCA9C /* ProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		6FF2C77C2613650900707126 /* StationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationType.swift; sourceTree = "<group>"; };
+		6FF2C78326139E8A00707126 /* PlayingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingItem.swift; sourceTree = "<group>"; };
 		D8D8FB7978952A9704B8DFA8 /* Pods-ios-marconi-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-marconi-app.release.xcconfig"; path = "Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app.release.xcconfig"; sourceTree = "<group>"; };
 		E08A428D6213F00E85FCFC05 /* Pods_ios_marconi_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ios_marconi_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -469,6 +471,7 @@
 			isa = PBXGroup;
 			children = (
 				6FF2C77C2613650900707126 /* StationType.swift */,
+				6FF2C78326139E8A00707126 /* PlayingItem.swift */,
 			);
 			path = DisplayNodes;
 			sourceTree = "<group>";
@@ -653,6 +656,7 @@
 				6F44B103260387E10047A3E5 /* HTTPTask.swift in Sources */,
 				6F44B11A2603B0F20047A3E5 /* ListViewModelable.swift in Sources */,
 				6F44B105260387E10047A3E5 /* Router.swift in Sources */,
+				6FF2C78426139E8A00707126 /* PlayingItem.swift in Sources */,
 				6FE9B8A4260A466C0023F68D /* ImageApi.swift in Sources */,
 				6F44B107260387E60047A3E5 /* Validation.swift in Sources */,
 				6F6E22152608B5AE0057D41F /* MarconiPlayerController.swift in Sources */,

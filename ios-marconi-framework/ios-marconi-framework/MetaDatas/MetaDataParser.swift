@@ -14,7 +14,7 @@ struct MetaDataParser {
         return _dict[Identifier.artist] as? String
     }
     
-    var song: String? {
+    var songName: String? {
         return _dict[Identifier.title] as? String
     }
     

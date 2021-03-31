@@ -13,6 +13,15 @@ extension Marconi {
     public enum Progress {
         case unknown
         case progress(progress: TimeInterval)
+        
+        public var value: CGFloat {
+            switch self {
+            case .unknown:
+                return 0.0
+            case .progress(let progress):
+                return CGFloat(progress)
+            }
+        }
     }
     
     public struct MetaData {
@@ -27,7 +36,7 @@ extension Marconi {
         init(_ items: [AVMetadataItem]) {
             let _parser = MetaDataParser(items)
             self.artistName = _parser.artistName ?? "Unknown"
-            self.song = _parser.song ?? "Unknown"
+            self.song = _parser.songName ?? "Unknown"
             self.duration = _parser.duration
             self.offset = _parser.offset
         }
