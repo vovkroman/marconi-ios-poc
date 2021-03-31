@@ -13,8 +13,13 @@ import ios_marconi_framework
 typealias StationType = Marconi.StationType
 
 protocol MarconiPlayerDelegate: class {
-    func willPlayStation(_ station: StationWrapper, with url: URL)
+    func willPlayStation(_ station: StationWrapper, with url: URL?)
     func catchTheError(_ error: Error)
+}
+
+protocol MarconiPlayerControlsDelegate {
+    func didStopPlaying()
+    func willPlay()
 }
 
 class MarconiPlayerController: UIViewController, Containerable {
@@ -44,41 +49,31 @@ class MarconiPlayerController: UIViewController, Containerable {
         _controller = controller
     }
     
-    private func _buffering() {
+    private func _preparePlayingController() -> PlayingItemViewController {
         guard let controller = _controller as? PlayingItemViewController else {
             removeController(_controller)
             let controller = PlayingItemViewController()
             addController(controller, onto: view)
             _controller = controller
-            controller.buffering()
-            return
+            return controller
         }
+        return controller
+    }
+    
+    private func _buffering() {
+        let controller = _preparePlayingController()
         controller.willReuseController()
         controller.buffering()
     }
     
     private func _startPlaying(_ playItem: DisplayItemNode) {
-        guard let controller = _controller as? PlayingItemViewController else {
-            let controller = PlayingItemViewController()
-            removeController(_controller)
-            addController(controller, onto: view)
-            _controller = controller
-            controller.startPlaying(playItem)
-            return
-        }
+        let controller = _preparePlayingController()
         controller.willReuseController()
         controller.startPlaying(playItem)
     }
     
     private func _updateProgress(_ value: CGFloat) {
-        guard let controller = _controller as? PlayingItemViewController else {
-            let controller = PlayingItemViewController()
-            removeController(_controller)
-            addController(controller, onto: view)
-            _controller = controller
-            controller.updateProgress(value)
-            return
-        }
+        let controller = _preparePlayingController()
         controller.updateProgress(value)
     }
     
@@ -92,24 +87,23 @@ class MarconiPlayerController: UIViewController, Containerable {
         case .playing(let metaData, let progress):
             switch metaData {
             case .live:
+                // call _startPlaying only once, because we don't need to update UI
                 if progress.isZero {
                     let playingItemDispaly = DisplayItemNode(metaData, station: _station)
                      _startPlaying(playingItemDispaly)
                 }
             case .digit, .none:
-                guard let playingItem = _playingItem else {
-                    let playingItemDispaly = DisplayItemNode(metaData, station: _station)
+                let playingItemDispaly = DisplayItemNode(metaData, station: _station)
+                guard let playingItem = _playingItem, playingItem == playingItemDispaly else {
                     _startPlaying(playingItemDispaly)
                     _playingItem = playingItemDispaly
                     return
                 }
-                let playingItemDispaly = DisplayItemNode(metaData, station: _station)
-                if playingItem == playingItemDispaly {
-                    _updateProgress(CGFloat(metaData.duration.flatMap{ progress / $0 } ?? 0.0))
-                } else {
-                    _startPlaying(playingItemDispaly)
-                    _playingItem = playingItemDispaly
+                guard let duration = metaData.duration,
+                    let offset = metaData.offset else {
+                    return
                 }
+                _updateProgress(CGFloat((progress + offset) / duration))
             }
         case .error(_):
             break
@@ -131,7 +125,8 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
     
     func catchTheError(_ error: Error) {}
     
-    func willPlayStation(_ wrapper: StationWrapper, with url: URL) {
+    func willPlayStation(_ wrapper: StationWrapper, with url: URL?) {
+        guard let url = url else { return }
         _playingItem = nil
         _station = wrapper.station
         _radio.replaceCurrentURL(with: url, stationType: wrapper.type)

@@ -59,6 +59,7 @@
 		6FE9B8A4260A466C0023F68D /* ImageApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B8A3260A466C0023F68D /* ImageApi.swift */; };
 		6FE9B8A6260A471F0023F68D /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B8A5260A471F0023F68D /* ImageProvider.swift */; };
 		6FEC7E9A2600DB0D00C55A2D /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEC7E992600DB0D00C55A2D /* NibLoadable.swift */; };
+		6FF0EECA2614D4670023D2AD /* UserDefaults+StorageSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0EEC92614D4670023D2AD /* UserDefaults+StorageSettings.swift */; };
 		6FF116C0260E370300CBCA9C /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116BF260E370300CBCA9C /* ProgressBar.swift */; };
 		6FF2C78426139E8A00707126 /* DisplayItemNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2C78326139E8A00707126 /* DisplayItemNode.swift */; };
 /* End PBXBuildFile section */
@@ -143,6 +144,7 @@
 		6FE9B8A3260A466C0023F68D /* ImageApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageApi.swift; sourceTree = "<group>"; };
 		6FE9B8A5260A471F0023F68D /* ImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProvider.swift; sourceTree = "<group>"; };
 		6FEC7E992600DB0D00C55A2D /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
+		6FF0EEC92614D4670023D2AD /* UserDefaults+StorageSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StorageSettings.swift"; sourceTree = "<group>"; };
 		6FF116BF260E370300CBCA9C /* ProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		6FF2C78326139E8A00707126 /* DisplayItemNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayItemNode.swift; sourceTree = "<group>"; };
 		D8D8FB7978952A9704B8DFA8 /* Pods-ios-marconi-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-marconi-app.release.xcconfig"; path = "Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app.release.xcconfig"; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 		6F1517CE25FFC6D800AD9354 /* ios-marconi-app */ = {
 			isa = PBXGroup;
 			children = (
+				6FF0EEC82614D4570023D2AD /* Storage */,
 				6FA3C252260B2D990095D6AB /* Errors */,
 				6F44B1182603B0DE0047A3E5 /* ViewModels */,
 				6F44B109260388030047A3E5 /* Logger */,
@@ -457,6 +460,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		6FF0EEC82614D4570023D2AD /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				6FF0EEC92614D4670023D2AD /* UserDefaults+StorageSettings.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
 		6FF116BE260E36EF00CBCA9C /* ProgressBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -661,6 +672,7 @@
 				6F44B101260387DE0047A3E5 /* StationApi.swift in Sources */,
 				6FF116C0260E370300CBCA9C /* ProgressBar.swift in Sources */,
 				6FA3C254260B2DAA0095D6AB /* Errors.swift in Sources */,
+				6FF0EECA2614D4670023D2AD /* UserDefaults+StorageSettings.swift in Sources */,
 				6FA3C25A260B39540095D6AB /* ImageCache.swift in Sources */,
 				6FA3C25C260B58F80095D6AB /* Globals.swift in Sources */,
 				6F44B0FF260387D80047A3E5 /* JSONParameterEncoder.swift in Sources */,
