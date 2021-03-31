@@ -55,6 +55,15 @@ extension Marconi {
             }
         }
         
+        public var offset: TimeInterval? {
+            switch self {
+            case .live, .none:
+                return nil
+            case .digit(_ , _, let offset, _, _):
+                return offset
+            }
+        }
+        
         init(_ parser: Live.DataParser) {
             self = .live(artist: parser.song, song: parser.artist)
         }

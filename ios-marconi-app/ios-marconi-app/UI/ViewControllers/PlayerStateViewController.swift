@@ -48,7 +48,7 @@ final class PlayingItemViewController: PlayerStateViewController<PlayingView> {
         }
     }
     
-    func dispalyItem(_ item: DisplayItemNode?) {
+    func startPlaying(_ item: DisplayItemNode) {
         if isViewLoaded {
             contentView.startPlaying(item)
         }

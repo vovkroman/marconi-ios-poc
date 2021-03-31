@@ -18,6 +18,8 @@ class PlayingView: UIView, NibReusable {
     @IBOutlet private weak var _titleSong: UILabel!
     @IBOutlet private weak var _artistName: UILabel!
     @IBOutlet private weak var _typeName: UILabel!
+        
+    @IBOutlet private weak var _controlsView: UIView!
     
     @IBOutlet private weak var _progressBar: MarconiProgressBar!
     
@@ -28,7 +30,7 @@ class PlayingView: UIView, NibReusable {
         _titleSong.showAnimatedSkeleton()
         _artistName.showAnimatedSkeleton()
         _typeName.showAnimatedSkeleton()
-        _progressBar.showAnimatedSkeleton()
+        _controlsView.showAnimatedSkeleton()
     }
     
     func stopBuffering() {
@@ -36,18 +38,20 @@ class PlayingView: UIView, NibReusable {
         _titleSong.hideSkeleton()
         _artistName.hideSkeleton()
         _typeName.hideSkeleton()
-        _progressBar.hideSkeleton()
+        _controlsView.hideSkeleton()
     }
     
-    func startPlaying(_ playingItem: DisplayItemNode?) {
+    func startPlaying(_ playingItem: DisplayItemNode) {
         stopBuffering()
-        _progressBar.progress = 0.3
         _titleOfView.text = "Now playing:"
-        _stationName.text = playingItem?.stationName
-        _titleSong.text = playingItem?.title
-        _artistName.text = playingItem?.artistName
+        _controlsView.isHidden = !playingItem.isShowPlayerControls
+        
+        _stationName.text = playingItem.stationName
+        _titleSong.text = playingItem.title
+        _artistName.text = playingItem.artistName
         _typeName.text = "Type: Station"
-        _imageView.loadImage(from: (playingItem?.url)!)
+        
+        _imageView.loadImage(from: playingItem.url)
     }
     
     func updateProgress(_ value: CGFloat) {

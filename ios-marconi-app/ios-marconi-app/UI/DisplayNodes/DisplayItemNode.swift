@@ -13,12 +13,18 @@ struct DisplayItemNode {
     let artistName: String?
     let stationName: String?
     let url: URL?
+    let isShowPlayerControls: Bool
     
-    init(_ item: Marconi.MetaData?, station: Station) {
-        title = item?.song ?? "Unknown"
-        artistName = item?.artist ?? "Unknown"
+    init(_ item: Marconi.MetaData, station: Station) {
+        title = item.song ?? "Unknown"
+        artistName = item.artist ?? "Unknown"
         stationName = station.name
-        url = item?.imageUrl ?? URL(station.square_logo_large)
+        url = item.imageUrl ?? URL(station.square_logo_large)
+        isShowPlayerControls = (item == .digit(artist: item.artist,
+                                         song: item.song,
+                                         offset: item.offset,
+                                         duration: item.duration,
+                                         url: item.imageUrl))
     }
 }
 

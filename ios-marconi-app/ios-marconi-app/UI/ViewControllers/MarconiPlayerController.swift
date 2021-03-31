@@ -57,17 +57,17 @@ class MarconiPlayerController: UIViewController, Containerable {
         controller.buffering()
     }
     
-    private func _playing(_ playItem: DisplayItemNode?) {
+    private func _startPlaying(_ playItem: DisplayItemNode) {
         guard let controller = _controller as? PlayingItemViewController else {
             let controller = PlayingItemViewController()
             removeController(_controller)
             addController(controller, onto: view)
             _controller = controller
-            controller.dispalyItem(playItem)
+            controller.startPlaying(playItem)
             return
         }
         controller.willReuseController()
-        controller.dispalyItem(playItem)
+        controller.startPlaying(playItem)
     }
     
     private func _updateProgress(_ value: CGFloat) {
@@ -94,12 +94,12 @@ class MarconiPlayerController: UIViewController, Containerable {
             case .live:
                 if progress.isZero {
                     let playingItemDispaly = DisplayItemNode(metaData, station: _station)
-                     _playing(playingItemDispaly)
+                     _startPlaying(playingItemDispaly)
                 }
             case .digit, .none:
                 guard let playingItem = _playingItem else {
                     let playingItemDispaly = DisplayItemNode(metaData, station: _station)
-                    _playing(playingItemDispaly)
+                    _startPlaying(playingItemDispaly)
                     _playingItem = playingItemDispaly
                     return
                 }
@@ -107,7 +107,7 @@ class MarconiPlayerController: UIViewController, Containerable {
                 if playingItem == playingItemDispaly {
                     _updateProgress(CGFloat(metaData.duration.flatMap{ progress / $0 } ?? 0.0))
                 } else {
-                    _playing(playingItemDispaly)
+                    _startPlaying(playingItemDispaly)
                     _playingItem = playingItemDispaly
                 }
             }
