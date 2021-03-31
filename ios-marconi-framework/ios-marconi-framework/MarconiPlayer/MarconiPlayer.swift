@@ -20,11 +20,13 @@ extension Marconi {
             _player.play()
         }
         
-        public func replaceCurrentURL(with url: URL) {
+        public func replaceCurrentURL(with url: URL, stationType: StationType) {
             _observer?.stopMonitoring()
             _player.replaceCurrentItem(with: nil)
             let playingItem = AVPlayerItem(url: url)
-            _observer?.startMonitoring(playingItem)
+            
+            // we need to know station type to know how to map paylaod
+            _observer?.startMonitoring(playingItem, stationType: stationType)
             _player.replaceCurrentItem(with: playingItem)
         }
         

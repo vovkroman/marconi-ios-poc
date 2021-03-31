@@ -15,11 +15,6 @@ public protocol MarconiPlayerObserver: class {
 }
 
 extension Marconi {
-    public enum Live {}
-    public enum Digit {}
-}
-
-extension Marconi {
     public enum MError: Equatable {
         case playerError(description: String?)
     }
@@ -31,7 +26,7 @@ extension Marconi {
         public enum State: Equatable {
             case noPlaying
             case buffering(AVPlayerItem)
-            case playing(MetaData?, Progress)
+            case playing(MetaData, TimeInterval)
             case error(MError)
             
             public static func == (lhs: State, rhs: State) -> Bool {
@@ -43,7 +38,6 @@ extension Marconi {
                 case (.error(let lhs), .error(let rhs)):
                     return lhs == rhs
                 case (.playing(let lhsMeta, let lhsProgress), .playing(let rhsMeta, let rhsProgress)):
-                    guard let rhsMeta = rhsMeta else { return true }
                     return lhsMeta == rhsMeta && lhsProgress == rhsProgress
                 default:
                     return false
@@ -54,10 +48,10 @@ extension Marconi {
         enum Event {
             case startPlaying
             case bufferingStarted(AVPlayerItem)
-            case bufferingEnded(MetaData?)
+            case bufferingEnded(MetaData)
             // Progress is rounded
             case progressDidChanged(progress: TimeInterval)
-            case fetchedMetaData(MetaData?)
+            case fetchedMetaData(MetaData)
             case catchTheError(Error?)
         }
         
@@ -66,54 +60,34 @@ extension Marconi {
         private(set) var state: State = .noPlaying {
             didSet {
                 guard oldValue != state else { return }
-                print("state: \(oldValue) -> \(state)")
+                //print("state: \(oldValue) -> \(state)")
                 observer?.stateDidChanched(self, to: state)
             }
         }
         
         func transition(with event: Event) {
+            print("state: \(event) -> \(state)")
             switch (state, event) {
             case (.buffering, .bufferingStarted(_)): break
             case (_, .bufferingStarted(let playerItem)):
                 state = .buffering(playerItem)
             case (.buffering, .bufferingEnded(let playingItem)):
-                guard let offset = playingItem?.offset, let duartion = playingItem?.duration else {
-                    state = .playing(playingItem, .unknown)
-                    return
-                }
-                state = .playing(playingItem, .progress(progress: offset / duartion))
+                state = .playing(playingItem, 0.0)
             case (.buffering, .fetchedMetaData(_)):
                 // fetched meta data but buffering still in progress
                 break
-            case (.playing(_ , _), .fetchedMetaData(let new)):
-                guard let offset = new?.offset, let duartion = new?.duration else {
-                    state = .playing(new, .unknown)
-                    return
-                }
-                state = .playing(new, .progress(progress: offset / duartion))
+            case (.playing(_ , let progress), .fetchedMetaData(let new)):
+                state = .playing(new, progress)
             case (_, .bufferingEnded(let new)):
-                guard let offset = new?.offset, let duartion = new?.duration else {
-                    state = .playing(new, .unknown)
-                    return
-                }
-                state = .playing(new, .progress(progress: offset / duartion))
+                state = .playing(new, 0.0)
             case (.noPlaying, .fetchedMetaData(_)): break
             case (_, .startPlaying): break
             case (_, .catchTheError(let error)):
                 state = .error(.playerError(description: error?.localizedDescription))
             case (.error(_), .fetchedMetaData(let playingItem)):
-                // if playingItem doesn't conatin duration or offset, most likely, it's Live Station
-                guard let offset = playingItem?.offset, let duration = playingItem?.duration else {
-                    state = .playing(playingItem, .unknown)
-                    return
-                }
-                state = .playing(playingItem, .progress(progress: offset / duration))
+                state = .playing(playingItem, 0.0)
             case (.playing(let playingItem, _), .progressDidChanged(let progress)):
-                guard let duration = playingItem?.duration else {
-                    state = .playing(playingItem, .unknown)
-                    return
-                }
-                state = .playing(playingItem, .progress(progress: progress / duration))
+                state = .playing(playingItem, progress)
             case (_, .progressDidChanged(_)):
                 // if not playing there is no sense to update progress (state)
                 break

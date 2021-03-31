@@ -10,8 +10,10 @@ import UIKit
 import AVFoundation
 import ios_marconi_framework
 
+typealias StationType = Marconi.StationType
+
 protocol MarconiPlayerDelegate: class {
-    func willPlayStation(_ station: Station, with url: URL)
+    func willPlayStation(_ station: StationWrapper, with url: URL)
     func catchTheError(_ error: Error)
 }
 
@@ -23,10 +25,8 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     private lazy var _radio: Radio = .init(self)
     private var _station: Station!
-    private var _playingItem: PlayingItem?
-    
-    var stationType: StationType = .live
-    
+    private var _playingItem: DisplayItemNode?
+        
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -57,7 +57,7 @@ class MarconiPlayerController: UIViewController, Containerable {
         controller.buffering()
     }
     
-    private func _playing(_ playItem: PlayingItem?) {
+    private func _playing(_ playItem: DisplayItemNode?) {
         guard let controller = _controller as? PlayingItemViewController else {
             let controller = PlayingItemViewController()
             removeController(_controller)
@@ -71,7 +71,15 @@ class MarconiPlayerController: UIViewController, Containerable {
     }
     
     private func _updateProgress(_ value: CGFloat) {
-        print("Updating progress \(value)")
+        guard let controller = _controller as? PlayingItemViewController else {
+            let controller = PlayingItemViewController()
+            removeController(_controller)
+            addController(controller, onto: view)
+            _controller = controller
+            controller.updateProgress(value)
+            return
+        }
+        controller.updateProgress(value)
     }
     
     private func _handleState(_ state: Marconi.StateMachine.State) {
@@ -81,19 +89,27 @@ class MarconiPlayerController: UIViewController, Containerable {
         case .buffering(_):
             _buffering()
             _playingItem = nil
-        case .playing(let newMetaDataItem, let progress):
-            guard let playingItem = _playingItem else {
-                let playingItemDispaly = PlayingItem(newMetaDataItem, station: _station)
-                _playing(playingItemDispaly)
-                _playingItem = playingItemDispaly
-                return
-            }
-            let playingItemDispaly = PlayingItem(newMetaDataItem, station: _station)
-            if playingItem == playingItemDispaly {
-                _updateProgress(progress.value)
-            } else {
-                _playing(playingItemDispaly)
-                _playingItem = playingItemDispaly
+        case .playing(let metaData, let progress):
+            switch metaData {
+            case .live:
+                if progress.isZero {
+                    let playingItemDispaly = DisplayItemNode(metaData, station: _station)
+                     _playing(playingItemDispaly)
+                }
+            case .digit, .none:
+                guard let playingItem = _playingItem else {
+                    let playingItemDispaly = DisplayItemNode(metaData, station: _station)
+                    _playing(playingItemDispaly)
+                    _playingItem = playingItemDispaly
+                    return
+                }
+                let playingItemDispaly = DisplayItemNode(metaData, station: _station)
+                if playingItem == playingItemDispaly {
+                    _updateProgress(CGFloat(metaData.duration.flatMap{ progress / $0 } ?? 0.0))
+                } else {
+                    _playing(playingItemDispaly)
+                    _playingItem = playingItemDispaly
+                }
             }
         case .error(_):
             break
@@ -115,10 +131,10 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
     
     func catchTheError(_ error: Error) {}
     
-    func willPlayStation(_ station: Station, with url: URL) {
+    func willPlayStation(_ wrapper: StationWrapper, with url: URL) {
         _playingItem = nil
-        _station = station
-        _radio.replaceCurrentURL(with: url)
+        _station = wrapper.station
+        _radio.replaceCurrentURL(with: url, stationType: wrapper.type)
         _radio.play()
     }
 }

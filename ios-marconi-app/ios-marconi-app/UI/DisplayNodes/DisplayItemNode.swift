@@ -8,22 +8,22 @@
 
 import ios_marconi_framework
 
-struct PlayingItem {
+struct DisplayItemNode {
     let title: String?
     let artistName: String?
     let stationName: String?
     let url: URL?
     
     init(_ item: Marconi.MetaData?, station: Station) {
-        title = item?.song
-        artistName = item?.artistName
+        title = item?.song ?? "Unknown"
+        artistName = item?.artist ?? "Unknown"
         stationName = station.name
-        url = URL(station.square_logo_large)
+        url = item?.imageUrl ?? URL(station.square_logo_large)
     }
 }
 
-extension PlayingItem: Equatable {
-    static func == (lhs: PlayingItem, rhs: PlayingItem) -> Bool {
+extension DisplayItemNode: Equatable {
+    static func == (lhs: DisplayItemNode, rhs: DisplayItemNode) -> Bool {
         return lhs.title == rhs.title &&
                lhs.artistName == rhs.artistName &&
                lhs.stationName == rhs.stationName

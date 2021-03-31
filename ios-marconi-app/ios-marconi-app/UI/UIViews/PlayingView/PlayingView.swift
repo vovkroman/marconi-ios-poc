@@ -39,7 +39,7 @@ class PlayingView: UIView, NibReusable {
         _progressBar.hideSkeleton()
     }
     
-    func startPlaying(_ playingItem: PlayingItem?) {
+    func startPlaying(_ playingItem: DisplayItemNode?) {
         stopBuffering()
         _progressBar.progress = 0.3
         _titleOfView.text = "Now playing:"
@@ -48,6 +48,10 @@ class PlayingView: UIView, NibReusable {
         _artistName.text = playingItem?.artistName
         _typeName.text = "Type: Station"
         _imageView.loadImage(from: (playingItem?.url)!)
+    }
+    
+    func updateProgress(_ value: CGFloat) {
+        _progressBar.progress = value
     }
     
     func willReuseView() {
