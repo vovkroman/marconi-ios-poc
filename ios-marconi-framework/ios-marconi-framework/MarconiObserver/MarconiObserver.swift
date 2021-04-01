@@ -76,6 +76,10 @@ extension Marconi {
             stopMonitoring()
         }
         
+        public func setPlayer(_ player: AVPlayer) {
+            _player = player
+        }
+        
         public func startMonitoring(_ playerItem: AVPlayerItem?, stationType: StationType) {
             _currentMetaItem = .none
             guard let newPlayingItem = playerItem else {
@@ -112,9 +116,8 @@ extension Marconi {
             }
         }
         
-        public init(_ observer: MarconiPlayerObserver?, player: AVPlayer) {
+        public init(_ observer: MarconiPlayerObserver?) {
             _stateMachine.observer = observer
-            _player = player
         }
     }
 }

@@ -90,9 +90,12 @@ extension Digital {
         }
         
         private func _processTheStation(_ station: Station) {
-            let digitalUrl = "https://smartstreams.radio-stg.com/stream/\(station.id)/manifest/digitalstations/playlist.m3u8"
+            var digitalUrl = "https://smartstreams.radio-stg.com/stream/\(station.id)/manifest/digitalstations/playlist.m3u8?udid=\(UserDefaults.udid)"
+            if let offset = UserDefaults.progress(by: station) {
+                digitalUrl += "&playlistOffset=\(offset)"
+            }
             _playerDelegate?.willPlayStation(StationWrapper(station: station, type: .digit),
-                                             with: URL(string: digitalUrl + "?udid=\(UserDefaults.udid)&playlistOffset=60"))
+                                             with: URL(string: digitalUrl))
         }
         
         subscript(index: Int) -> Model? {
@@ -118,5 +121,4 @@ extension Digital {
             ]
         }
     }
-
 }

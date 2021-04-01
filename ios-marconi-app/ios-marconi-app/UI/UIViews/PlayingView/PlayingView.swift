@@ -11,6 +11,8 @@ import SkeletonView
 
 class PlayingView: UIView, NibReusable {
     
+    weak var playerControlsDelegate: MarconiPlayerControlsDelegate?
+    
     @IBOutlet private weak var _titleOfView: UILabel!
     @IBOutlet private weak var _imageView: MarconiImageView!
     
@@ -18,10 +20,9 @@ class PlayingView: UIView, NibReusable {
     @IBOutlet private weak var _titleSong: UILabel!
     @IBOutlet private weak var _artistName: UILabel!
     @IBOutlet private weak var _typeName: UILabel!
-        
     @IBOutlet private weak var _controlsView: UIView!
-    
     @IBOutlet private weak var _progressBar: MarconiProgressBar!
+    @IBOutlet private weak var _playButton: UIButton!
     
     func startBuffering() {
         _titleOfView.text = "Buffering ..."
@@ -44,14 +45,14 @@ class PlayingView: UIView, NibReusable {
     
     func startPlaying(_ playingItem: DisplayItemNode) {
         stopBuffering()
+        _playButton.isSelected = true
         _titleOfView.text = "Now playing:"
         _controlsView.isHidden = !playingItem.isShowPlayerControls
-        _progressBar.progress = playingItem.startTime
+        _progressBar.progress = CGFloat(playingItem.startTime)
         _stationName.text = playingItem.stationName
         _titleSong.text = playingItem.title
         _artistName.text = playingItem.artistName
         _typeName.text = "Type: Station"
-        
         _imageView.loadImage(from: playingItem.url)
     }
     
@@ -61,5 +62,17 @@ class PlayingView: UIView, NibReusable {
     
     func willReuseView() {
         _imageView.cancelLoading()
+    }
+    
+    // MARK: - Acions
+    
+    @IBAction func playToggleAction(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        playerControlsDelegate?.playToggle(isPlay: sender.isSelected)
+    }
+    
+    @IBAction func muteToggleAction(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        playerControlsDelegate?.muteToggle(isMuted: sender.isSelected)
     }
 }

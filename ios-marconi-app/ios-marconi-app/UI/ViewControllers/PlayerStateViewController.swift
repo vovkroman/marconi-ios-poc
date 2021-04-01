@@ -38,6 +38,12 @@ class PlayerStateViewController<View: Viewable>: UIViewController {
 final class NoPlayingItemViewController: PlayerStateViewController<NoPlayingItemView> {}
 final class PlayingItemViewController: PlayerStateViewController<PlayingView> {
     
+    weak var playerControlsDelegate: MarconiPlayerControlsDelegate? {
+        didSet {
+            contentView.playerControlsDelegate = playerControlsDelegate
+        }
+    }
+    
     override func viewDidLayoutSubviews() {
         contentView.layoutSkeletonIfNeeded()
     }

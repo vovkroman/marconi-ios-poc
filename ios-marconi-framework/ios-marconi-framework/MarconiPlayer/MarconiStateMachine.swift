@@ -38,7 +38,7 @@ extension Marconi {
                 case (.error(let lhs), .error(let rhs)):
                     return lhs == rhs
                 case (.playing(let lhsMeta, let lhsProgress), .playing(let rhsMeta, let rhsProgress)):
-                    return lhsMeta == rhsMeta && lhsProgress == rhsProgress
+                    return lhsMeta == rhsMeta && lhsProgress.isEqual(to: rhsProgress)
                 default:
                     return false
                 }

@@ -17,20 +17,38 @@ protocol MarconiPlayerDelegate: class {
     func catchTheError(_ error: Error)
 }
 
-protocol MarconiPlayerControlsDelegate {
-    func didStopPlaying()
-    func willPlay()
+protocol MarconiPlayerControlsDelegate: class {
+    func playToggle(isPlay: Bool)
+    func muteToggle(isMuted: Bool)
 }
 
 class MarconiPlayerController: UIViewController, Containerable {
     
-    private(set) weak var _controller: UIViewController?
+    private weak var _controller: UIViewController?
+
+    private var _playingItemViewController: PlayingItemViewController {
+        guard let controller = _controller as? PlayingItemViewController else {
+            removeController(_controller)
+            let controller = PlayingItemViewController()
+            controller.playerControlsDelegate = self
+            addController(controller, onto: view)
+            _controller = controller
+            return controller
+        }
+        return controller
+    }
     
-    typealias Radio = Marconi.Radio
+    typealias Player = Marconi.Player
     
-    private lazy var _radio: Radio = .init(self)
-    private var _station: Station!
+    private lazy var _player: Player = .init(self)
+    
     private var _playingItem: DisplayItemNode?
+    private var _stationWrapper: StationWrapper? {
+        willSet {
+            guard let oldStation = _stationWrapper, let newStation = newValue else { return }
+            _willReplaceStation(from: oldStation, to: newStation)
+        }
+    }
         
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -41,7 +59,17 @@ class MarconiPlayerController: UIViewController, Containerable {
         _noPlayingItem()
     }
     
-    // MARK: - UI is state function of State Machine
+    // MARK: - Private methods
+    
+    private func _willReplaceStation(from: StationWrapper, to: StationWrapper) {
+        // save progress for current station, needed to initialize digital stream
+        if case .digit = from.type {
+            _playingItem?.saveCurrentProgress(for: from.station)
+        }
+    }
+    
+    // MARK: - UI is function of State Machine
+    
     private func _noPlayingItem() {
         let controller = NoPlayingItemViewController()
         removeController(_controller)
@@ -49,33 +77,24 @@ class MarconiPlayerController: UIViewController, Containerable {
         _controller = controller
     }
     
-    private func _preparePlayingController() -> PlayingItemViewController {
-        guard let controller = _controller as? PlayingItemViewController else {
-            removeController(_controller)
-            let controller = PlayingItemViewController()
-            addController(controller, onto: view)
-            _controller = controller
-            return controller
-        }
-        return controller
-    }
-    
     private func _buffering() {
-        let controller = _preparePlayingController()
+        let controller = _playingItemViewController
         controller.willReuseController()
         controller.buffering()
     }
     
     private func _startPlaying(_ playItem: DisplayItemNode) {
-        let controller = _preparePlayingController()
+        let controller = _playingItemViewController
         controller.willReuseController()
         controller.startPlaying(playItem)
     }
     
     private func _updateProgress(_ value: CGFloat) {
-        let controller = _preparePlayingController()
+        let controller = _playingItemViewController
         controller.updateProgress(value)
     }
+    
+    // MARK: - Handle State
     
     private func _handleState(_ state: Marconi.StateMachine.State) {
         switch state {
@@ -89,11 +108,11 @@ class MarconiPlayerController: UIViewController, Containerable {
             case .live:
                 // call _startPlaying only once, because we don't need to update UI
                 if progress.isZero {
-                    let playingItemDispaly = DisplayItemNode(metaData, station: _station)
+                    let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
                      _startPlaying(playingItemDispaly)
                 }
             case .digit, .none:
-                let playingItemDispaly = DisplayItemNode(metaData, station: _station)
+                let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
                 guard let playingItem = _playingItem, playingItem == playingItemDispaly else {
                     _startPlaying(playingItemDispaly)
                     _playingItem = playingItemDispaly
@@ -103,6 +122,7 @@ class MarconiPlayerController: UIViewController, Containerable {
                     let offset = metaData.offset else {
                     return
                 }
+                _playingItem?.updateProgress(value: progress)
                 _updateProgress(CGFloat((progress + offset) / duration))
             }
         case .error(_):
@@ -127,9 +147,24 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
     
     func willPlayStation(_ wrapper: StationWrapper, with url: URL?) {
         guard let url = url else { return }
+        _stationWrapper = wrapper
         _playingItem = nil
-        _station = wrapper.station
-        _radio.replaceCurrentURL(with: url, stationType: wrapper.type)
-        _radio.play()
+        _player.replaceCurrentURL(with: url, stationType: wrapper.type)
+        _player.play()
+    }
+}
+
+extension MarconiPlayerController: MarconiPlayerControlsDelegate {
+    
+    func playToggle(isPlay: Bool) {
+        if isPlay {
+            _player.play()
+        } else {
+            _player.pause()
+        }
+    }
+    
+    func muteToggle(isMuted: Bool) {
+        _player.isMuted = isMuted
     }
 }

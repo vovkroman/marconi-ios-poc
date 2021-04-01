@@ -42,6 +42,17 @@ extension UserDefaults {
             return id
         }
     }
+    
+    static func saveProgress(_ value: Int, for station: Station) {
+        let key = Keys.offset(stationName: station.name)
+        print("did save value: \(value)")
+        standard.set("\(value)", forKey: key.prefixed)
+    }
+    
+    static func progress(by station: Station) -> String? {
+        let key = Keys.offset(stationName: station.name)
+        return standard.string(forKey: key.prefixed)
+    }
 }
 
 
