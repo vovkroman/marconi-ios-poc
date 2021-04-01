@@ -7,24 +7,37 @@
 //
 
 import ios_marconi_framework
+import UIKit
 
 struct DisplayItemNode {
     let title: String?
     let artistName: String?
     let stationName: String?
     let url: URL?
-    let isShowPlayerControls: Bool
+    var isShowPlayerControls: Bool = false
+    let duration: TimeInterval?
+    let offset: TimeInterval?
     
     init(_ item: Marconi.MetaData, station: Station) {
         title = item.song ?? "Unknown"
         artistName = item.artist ?? "Unknown"
         stationName = station.name
         url = item.imageUrl ?? URL(station.square_logo_large)
-        isShowPlayerControls = (item == .digit(artist: item.artist,
-                                         song: item.song,
-                                         offset: item.offset,
-                                         duration: item.duration,
-                                         url: item.imageUrl))
+        duration = item.duration
+        offset = item.offset
+        if case .digit = item {
+            isShowPlayerControls = true
+        }
+    }
+}
+
+extension DisplayItemNode {
+    // range [0..1) to display on progress bar
+    var startTime: CGFloat {
+        guard let duration = duration, let offset = offset else {
+            return 0.0
+        }
+        return CGFloat(offset / duration)
     }
 }
 

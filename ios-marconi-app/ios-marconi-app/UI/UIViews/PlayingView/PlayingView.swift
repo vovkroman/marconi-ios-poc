@@ -45,7 +45,7 @@ class PlayingView: UIView, NibReusable {
         stopBuffering()
         _titleOfView.text = "Now playing:"
         _controlsView.isHidden = !playingItem.isShowPlayerControls
-        
+        _progressBar.progress = playingItem.startTime
         _stationName.text = playingItem.stationName
         _titleSong.text = playingItem.title
         _artistName.text = playingItem.artistName
