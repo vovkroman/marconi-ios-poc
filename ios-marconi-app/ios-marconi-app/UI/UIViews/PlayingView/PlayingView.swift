@@ -25,12 +25,13 @@ class PlayingView: UIView, NibReusable {
     
     func startBuffering() {
         _titleOfView.text = "Buffering ..."
-        _imageView.showAnimatedSkeleton()
-        _stationName.showAnimatedSkeleton()
-        _titleSong.showAnimatedSkeleton()
-        _artistName.showAnimatedSkeleton()
-        _typeName.showAnimatedSkeleton()
-        _controlsView.showAnimatedSkeleton()
+        let shimmedColor = UIColor.lightGray
+        _imageView.showAnimatedSkeleton(usingColor: shimmedColor)
+        _stationName.showAnimatedSkeleton(usingColor: shimmedColor)
+        _titleSong.showAnimatedSkeleton(usingColor: shimmedColor)
+        _artistName.showAnimatedSkeleton(usingColor: shimmedColor)
+        _typeName.showAnimatedSkeleton(usingColor: shimmedColor)
+        _controlsView.showAnimatedSkeleton(usingColor: shimmedColor)
     }
     
     func stopBuffering() {

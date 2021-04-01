@@ -16,6 +16,7 @@ class ListViewController<ViewModel: ListViewModelable>: UITableViewController, V
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         tableView.register(StationTableViewCell.self)
         tableView.rowHeight = UITableView.automaticDimension
     }
