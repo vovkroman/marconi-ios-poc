@@ -48,9 +48,15 @@ final class PlayingItemViewController: PlayerStateViewController<PlayingView> {
         }
     }
     
-    func dispalyItem(_ item: PlayingItem?) {
+    func startPlaying(_ item: DisplayItemNode) {
         if isViewLoaded {
             contentView.startPlaying(item)
+        }
+    }
+    
+    func updateProgress(_ value: CGFloat) {
+        if isViewLoaded {
+            contentView.updateProgress(value)
         }
     }
     

@@ -11,6 +11,11 @@ import Foundation
 enum Live {}
 enum Digital {}
 
+struct StationWrapper {    
+    let station: Station
+    let type: StationType
+}
+
 extension Live {
     
     class ViewModel: ListViewModelable {
@@ -39,7 +44,8 @@ extension Live {
                 _playerDelegate?.catchTheError(ErrorType.noHls(stationName: station.name))
                 return
             }
-            _playerDelegate?.willPlayStation(station, with: URL(string: hls.url + "?udid=10000343")!)
+            _playerDelegate?.willPlayStation(StationWrapper(station: station, type: .live),
+                                             with: URL(string: hls.url + "?udid=\(UserDefaults.udid)"))
         }
         
         subscript(index: Int) -> Model? {
@@ -61,7 +67,6 @@ extension Live {
         }
     }
 }
-
 
 extension Digital {
     class ViewModel: ListViewModelable {
@@ -86,7 +91,8 @@ extension Digital {
         
         private func _processTheStation(_ station: Station) {
             let digitalUrl = "https://smartstreams.radio-stg.com/stream/\(station.id)/manifest/digitalstations/playlist.m3u8"
-            _playerDelegate?.willPlayStation(station, with: URL(string: digitalUrl + "?udid=10000343")!)
+            _playerDelegate?.willPlayStation(StationWrapper(station: station, type: .digit),
+                                             with: URL(string: digitalUrl + "?udid=\(UserDefaults.udid)&playlistOffset=60"))
         }
         
         subscript(index: Int) -> Model? {

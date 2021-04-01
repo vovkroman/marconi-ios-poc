@@ -10,7 +10,9 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlayingView" customModule="ios_marconi_app" customModuleProvider="target">
             <connections>
                 <outlet property="_artistName" destination="Hbo-Jz-B4D" id="0tc-IV-l4E"/>
+                <outlet property="_controlsView" destination="YEF-gv-0vy" id="iHV-bg-oCp"/>
                 <outlet property="_imageView" destination="TVG-MR-vyV" id="ByO-m4-3CH"/>
+                <outlet property="_progressBar" destination="PTp-JN-RzG" id="paW-S9-9dL"/>
                 <outlet property="_stationName" destination="cVp-e5-KSs" id="riW-lL-pAY"/>
                 <outlet property="_titleOfView" destination="OEe-1t-h92" id="Zkf-qY-tHb"/>
                 <outlet property="_titleSong" destination="N8H-bb-YBv" id="Mcn-kh-UuJ"/>
@@ -29,7 +31,7 @@
                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wOY-cb-XES">
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wOY-cb-XES">
                     <rect key="frame" x="16" y="37.5" width="439" height="172.5"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="252" translatesAutoresizingMaskIntoConstraints="NO" id="TVG-MR-vyV" customClass="MarconiImageView" customModule="ios_marconi_app" customModuleProvider="target">
@@ -41,7 +43,7 @@
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="isSkeletonable" value="YES"/>
                                 <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
-                                    <real key="value" value="4"/>
+                                    <real key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </imageView>
@@ -57,13 +59,13 @@
                                     <real key="value" value="1"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="linesCornerRadius">
-                                    <integer key="value" value="4"/>
+                                    <integer key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="lastLineFillPercent">
                                     <integer key="value" value="30"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
-                                    <real key="value" value="4"/>
+                                    <real key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </label>
@@ -79,13 +81,13 @@
                                     <real key="value" value="1"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="linesCornerRadius">
-                                    <integer key="value" value="4"/>
+                                    <integer key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="lastLineFillPercent">
                                     <integer key="value" value="30"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
-                                    <real key="value" value="4"/>
+                                    <real key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </label>
@@ -101,13 +103,13 @@
                                     <real key="value" value="1"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="linesCornerRadius">
-                                    <integer key="value" value="4"/>
+                                    <integer key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="lastLineFillPercent">
                                     <integer key="value" value="30"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
-                                    <real key="value" value="4"/>
+                                    <real key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </label>
@@ -123,13 +125,13 @@
                                     <real key="value" value="1"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="linesCornerRadius">
-                                    <integer key="value" value="4"/>
+                                    <integer key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="lastLineFillPercent">
                                     <integer key="value" value="30"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
-                                    <real key="value" value="4"/>
+                                    <real key="value" value="2"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </label>
@@ -156,20 +158,70 @@
                         <constraint firstItem="TVG-MR-vyV" firstAttribute="top" secondItem="wOY-cb-XES" secondAttribute="top" constant="16" id="uvd-b8-IH7"/>
                     </constraints>
                 </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YEF-gv-0vy">
+                    <rect key="frame" x="16" y="218" width="439" height="22"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2yK-P2-Dzc">
+                            <rect key="frame" x="16" y="0.0" width="15" height="22"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" image="play.fill" catalog="system"/>
+                            <state key="selected" image="play.fill"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kSP-wg-arJ">
+                            <rect key="frame" x="420.5" y="0.0" width="18.5" height="22"/>
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" image="speaker.fill" catalog="system"/>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PTp-JN-RzG" customClass="MarconiProgressBar" customModule="ios_marconi_app" customModuleProvider="target">
+                            <rect key="frame" x="39" y="9" width="381.5" height="4"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="4" id="2zf-i6-MFp"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="2yK-P2-Dzc" secondAttribute="bottom" id="0aZ-0b-Zah"/>
+                        <constraint firstAttribute="bottom" secondItem="kSP-wg-arJ" secondAttribute="bottom" id="7KQ-WC-m1b"/>
+                        <constraint firstItem="kSP-wg-arJ" firstAttribute="leading" secondItem="PTp-JN-RzG" secondAttribute="trailing" id="8WZ-4v-7kC"/>
+                        <constraint firstAttribute="trailing" secondItem="kSP-wg-arJ" secondAttribute="trailing" id="S5m-pl-Xgu"/>
+                        <constraint firstItem="PTp-JN-RzG" firstAttribute="centerY" secondItem="2yK-P2-Dzc" secondAttribute="centerY" id="b7n-yp-Uf9"/>
+                        <constraint firstItem="2yK-P2-Dzc" firstAttribute="top" secondItem="YEF-gv-0vy" secondAttribute="top" id="g78-tb-Ldo"/>
+                        <constraint firstItem="kSP-wg-arJ" firstAttribute="top" secondItem="YEF-gv-0vy" secondAttribute="top" id="h51-ts-V8H"/>
+                        <constraint firstItem="2yK-P2-Dzc" firstAttribute="leading" secondItem="YEF-gv-0vy" secondAttribute="leading" constant="16" id="kli-Jz-a74"/>
+                        <constraint firstItem="PTp-JN-RzG" firstAttribute="leading" secondItem="2yK-P2-Dzc" secondAttribute="trailing" constant="8" id="pVK-Hg-5t6"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isSkeletonable" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
+                            <real key="value" value="2"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="YEF-gv-0vy" firstAttribute="leading" secondItem="wOY-cb-XES" secondAttribute="leading" id="0k9-h8-SqS"/>
                 <constraint firstItem="OEe-1t-h92" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="5o9-MX-DWH"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="wOY-cb-XES" secondAttribute="trailing" constant="16" id="9v0-d3-eaZ"/>
                 <constraint firstItem="OEe-1t-h92" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="BmJ-zM-eSl"/>
+                <constraint firstItem="YEF-gv-0vy" firstAttribute="top" secondItem="wOY-cb-XES" secondAttribute="bottom" constant="8" id="FyU-0D-H4P"/>
                 <constraint firstItem="wOY-cb-XES" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="R4C-Vt-vjb"/>
+                <constraint firstItem="YEF-gv-0vy" firstAttribute="trailing" secondItem="wOY-cb-XES" secondAttribute="trailing" id="Ta1-5R-KJP"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="OEe-1t-h92" secondAttribute="trailing" constant="15" id="XGP-lJ-YCQ"/>
                 <constraint firstItem="wOY-cb-XES" firstAttribute="top" secondItem="OEe-1t-h92" secondAttribute="bottom" id="eFx-kq-Fg5"/>
                 <constraint firstItem="OEe-1t-h92" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="15" id="jSm-XO-P3t"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <point key="canvasLocation" x="-88" y="-232"/>
+            <point key="canvasLocation" x="-89.130434782608702" y="-232.36607142857142"/>
         </view>
     </objects>
+    <resources>
+        <image name="play.fill" width="128" height="128"/>
+        <image name="play.fill" catalog="system" width="116" height="128"/>
+        <image name="speaker.fill" catalog="system" width="128" height="121"/>
+    </resources>
 </document>

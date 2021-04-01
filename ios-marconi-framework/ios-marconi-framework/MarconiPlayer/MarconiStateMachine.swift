@@ -15,18 +15,6 @@ public protocol MarconiPlayerObserver: class {
 }
 
 extension Marconi {
-    public enum Live {}
-    public enum Digit {}
-}
-
-extension Marconi {
-    static let indentifierPlayId = AVMetadataIdentifier("lsdr/X-PLAY-ID")
-    static let indentifierType = AVMetadataIdentifier("lsdr/X-TYPE")
-    static let indentifierArtistName = AVMetadataIdentifier("lsdr/X-ARTIST")
-    static let indentifierTitle = AVMetadataIdentifier("lsdr/X-TITLE")
-}
-
-extension Marconi {
     public enum MError: Equatable {
         case playerError(description: String?)
     }
@@ -38,7 +26,7 @@ extension Marconi {
         public enum State: Equatable {
             case noPlaying
             case buffering(AVPlayerItem)
-            case playing(MetaData?)
+            case playing(MetaData, TimeInterval)
             case error(MError)
             
             public static func == (lhs: State, rhs: State) -> Bool {
@@ -49,9 +37,8 @@ extension Marconi {
                     return lhs == rhs
                 case (.error(let lhs), .error(let rhs)):
                     return lhs == rhs
-                case (.playing(let lhs), .playing(let rhs)):
-                    guard let rhs = rhs else { return true }
-                    return lhs == rhs
+                case (.playing(let lhsMeta, let lhsProgress), .playing(let rhsMeta, let rhsProgress)):
+                    return lhsMeta == rhsMeta && lhsProgress == rhsProgress
                 default:
                     return false
                 }
@@ -61,8 +48,10 @@ extension Marconi {
         enum Event {
             case startPlaying
             case bufferingStarted(AVPlayerItem)
-            case bufferingEnded(MetaData?)
-            case fetchedMetaData(MetaData?)
+            case bufferingEnded(MetaData)
+            // Progress is rounded
+            case progressDidChanged(progress: TimeInterval)
+            case fetchedMetaData(MetaData)
             case catchTheError(Error?)
         }
         
@@ -71,31 +60,37 @@ extension Marconi {
         private(set) var state: State = .noPlaying {
             didSet {
                 guard oldValue != state else { return }
+                //print("state: \(oldValue) -> \(state)")
                 observer?.stateDidChanched(self, to: state)
             }
         }
         
         func transition(with event: Event) {
-            print("state: \(state) -> \(event)")
+            print("state: \(event) -> \(state)")
             switch (state, event) {
             case (.buffering, .bufferingStarted(_)): break
             case (_, .bufferingStarted(let playerItem)):
                 state = .buffering(playerItem)
             case (.buffering, .bufferingEnded(let playingItem)):
-                state = .playing(playingItem)
+                state = .playing(playingItem, 0.0)
             case (.buffering, .fetchedMetaData(_)):
                 // fetched meta data but buffering still in progress
                 break
-            case (.playing(_), .fetchedMetaData(let new)):
-                state = .playing(new)
-            case (_, .bufferingEnded(let playingItem)):
-                state = .playing(playingItem)
+            case (.playing(_ , let progress), .fetchedMetaData(let new)):
+                state = .playing(new, progress)
+            case (_, .bufferingEnded(let new)):
+                state = .playing(new, 0.0)
             case (.noPlaying, .fetchedMetaData(_)): break
             case (_, .startPlaying): break
             case (_, .catchTheError(let error)):
                 state = .error(.playerError(description: error?.localizedDescription))
             case (.error(_), .fetchedMetaData(let playingItem)):
-                state = .playing(playingItem)
+                state = .playing(playingItem, 0.0)
+            case (.playing(let playingItem, _), .progressDidChanged(let progress)):
+                state = .playing(playingItem, progress)
+            case (_, .progressDidChanged(_)):
+                // if not playing there is no sense to update progress (state)
+                break
             }
         }
     }

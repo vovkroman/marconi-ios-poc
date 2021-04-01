@@ -14,8 +14,10 @@
 		6F1517BA25FFC66400AD9354 /* ios_marconi_framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F1517AC25FFC66400AD9354 /* ios_marconi_framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F44B1272603C6EA0047A3E5 /* MarconiPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F44B1262603C6EA0047A3E5 /* MarconiPlayer.swift */; };
 		6FE9B895260A077B0023F68D /* MarconiMetaDatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B894260A077B0023F68D /* MarconiMetaDatas.swift */; };
+		6FF0EEC6261473340023D2AD /* StationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0EEC5261473340023D2AD /* StationType.swift */; };
 		6FF116B8260E34C500CBCA9C /* Identifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116B6260E34C500CBCA9C /* Identifiers.swift */; };
 		6FF116B9260E34C500CBCA9C /* MetaDataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116B7260E34C500CBCA9C /* MetaDataParser.swift */; };
+		6FF116C3260E44C300CBCA9C /* Extensions+AVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116C2260E44C300CBCA9C /* Extensions+AVPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,8 +41,10 @@
 		6F1517B925FFC66400AD9354 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F44B1262603C6EA0047A3E5 /* MarconiPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiPlayer.swift; sourceTree = "<group>"; };
 		6FE9B894260A077B0023F68D /* MarconiMetaDatas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiMetaDatas.swift; sourceTree = "<group>"; };
+		6FF0EEC5261473340023D2AD /* StationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationType.swift; sourceTree = "<group>"; };
 		6FF116B6260E34C500CBCA9C /* Identifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Identifiers.swift; sourceTree = "<group>"; };
 		6FF116B7260E34C500CBCA9C /* MetaDataParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaDataParser.swift; sourceTree = "<group>"; };
+		6FF116C2260E44C300CBCA9C /* Extensions+AVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+AVPlayer.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,7 @@
 		6F1517AB25FFC66400AD9354 /* ios-marconi-framework */ = {
 			isa = PBXGroup;
 			children = (
+				6FF116C1260E44A300CBCA9C /* Extensions */,
 				6FE9B893260A075E0023F68D /* MetaDatas */,
 				6F08E9D22604D24D003D0E07 /* MarconiObserver */,
 				6F08E9D12604D239003D0E07 /* MarconiPlayer */,
@@ -124,8 +129,17 @@
 				6FF116B6260E34C500CBCA9C /* Identifiers.swift */,
 				6FF116B7260E34C500CBCA9C /* MetaDataParser.swift */,
 				6FE9B894260A077B0023F68D /* MarconiMetaDatas.swift */,
+				6FF0EEC5261473340023D2AD /* StationType.swift */,
 			);
 			path = MetaDatas;
+			sourceTree = "<group>";
+		};
+		6FF116C1260E44A300CBCA9C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6FF116C2260E44C300CBCA9C /* Extensions+AVPlayer.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -238,6 +252,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FF0EEC6261473340023D2AD /* StationType.swift in Sources */,
+				6FF116C3260E44C300CBCA9C /* Extensions+AVPlayer.swift in Sources */,
 				6F44B1272603C6EA0047A3E5 /* MarconiPlayer.swift in Sources */,
 				6F08E9D02604C596003D0E07 /* MarconiObserver.swift in Sources */,
 				6FE9B895260A077B0023F68D /* MarconiMetaDatas.swift in Sources */,

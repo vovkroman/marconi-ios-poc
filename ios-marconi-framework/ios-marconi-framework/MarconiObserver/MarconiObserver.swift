@@ -10,16 +10,21 @@ import AVFoundation
 
 extension Marconi {
     
-    public class PlayerObserver: NSObject {
+    public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate {
+        
+        private(set) var _stationType: StationType = .live
         
         private var _playbackLikelyToKeepUpKeyPathObserver: NSKeyValueObservation?
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
+        private var _playbackProgressObserver: Any?
         
-        private(set) var _currentMetaItem: MetaData? {
+        private weak var _player: AVPlayer?
+        
+        private(set) var _currentMetaItem: MetaData = .none {
             didSet {
-                guard let currentMetaItem = _currentMetaItem else { return }
-                if oldValue != currentMetaItem {
+                guard _currentMetaItem != .none else { return }
+                if oldValue != _currentMetaItem {
                     _stateMachine.transition(with: .fetchedMetaData(_currentMetaItem))
                 }
             }
@@ -39,6 +44,12 @@ extension Marconi {
             
             _playbackBufferFullObserver = playerItem.observe(\.isPlaybackBufferFull, options: [.new]) { [weak self](playerItem, _) in
                 self?._observeStatus(playerItem)
+            }
+        }
+        
+        private func _observeProgress() {
+            _playbackProgressObserver = _player?.addLinearPeriodicTimeObserver(every: 1.0, queue: .main){ [weak self] progress in
+                self?._stateMachine.transition(with: .progressDidChanged(progress: progress.rounded()))
             }
         }
         
@@ -65,35 +76,45 @@ extension Marconi {
             stopMonitoring()
         }
         
-        public func startMonitoring(_ playerItem: AVPlayerItem?) {
+        public func startMonitoring(_ playerItem: AVPlayerItem?, stationType: StationType) {
+            _currentMetaItem = .none
             guard let newPlayingItem = playerItem else {
                 return
             }
-            stopMonitoring()
+            _stationType = stationType
             _fetchMetaData(newPlayingItem)
             _observeBuffering(newPlayingItem)
+            _observeProgress()
         }
         
         public func stopMonitoring() {
+            _player?.removeTimeObserver(_playbackProgressObserver)
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
             _playbackBufferFullObserver?.invalidate()
             _playbackBufferEmptyObserver = nil
             _playbackLikelyToKeepUpKeyPathObserver = nil
             _playbackBufferFullObserver = nil
+            _playbackProgressObserver = nil
         }
         
-        public init(_ observer: MarconiPlayerObserver?) {
-            _stateMachine.observer = observer
+        public func metadataCollector(_ metadataCollector: AVPlayerItemMetadataCollector,
+                                      didCollect metadataGroups: [AVDateRangeMetadataGroup],
+                                      indexesOfNewGroups: IndexSet, indexesOfModifiedGroups: IndexSet) {
+            let metadataItems = metadataGroups.flatMap{ $0.items }
+            switch _stationType {
+            case .live:
+                let item = MetaData(Live.DataParser(metadataItems))
+                _currentMetaItem = item
+            case .digit:
+                let item = MetaData(Digit.DataParser(metadataItems))
+                _currentMetaItem = item
+            }
         }
-    }
-}
-
-extension Marconi.PlayerObserver: AVPlayerItemMetadataCollectorPushDelegate {
-    public func metadataCollector(_ metadataCollector: AVPlayerItemMetadataCollector,
-                                  didCollect metadataGroups: [AVDateRangeMetadataGroup],
-                                  indexesOfNewGroups: IndexSet, indexesOfModifiedGroups: IndexSet) {
-        let item = Marconi.MetaData(metadataGroups.flatMap{ $0.items })
-        _currentMetaItem = item
+        
+        public init(_ observer: MarconiPlayerObserver?, player: AVPlayer) {
+            _stateMachine.observer = observer
+            _player = player
+        }
     }
 }

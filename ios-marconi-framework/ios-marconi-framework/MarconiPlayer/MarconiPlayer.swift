@@ -16,23 +16,27 @@ extension Marconi {
         
         private(set) var _player: AVPlayer
         
-        public func setDelegate(_ observer: MarconiPlayerObserver?) {
-            _observer?._stateMachine.observer = observer
-        }
-        
         public func play() {
             _player.play()
         }
         
-        public func replaceCurrentURL(with url: URL) {
+        public func pause() {
+            _player.pause()
+        }
+        
+        public func replaceCurrentURL(with url: URL, stationType: StationType) {
+            _observer?.stopMonitoring()
+            _player.replaceCurrentItem(with: nil)
             let playingItem = AVPlayerItem(url: url)
-            _observer?.startMonitoring(playingItem)
+            
+            // we need to know *station type* to know how to map paylaod
+            _observer?.startMonitoring(playingItem, stationType: stationType)
             _player.replaceCurrentItem(with: playingItem)
         }
         
         public init(_ observer: MarconiPlayerObserver?, _ player: AVPlayer = .init()) {
             _player = player
-            _observer = .init(observer)
+            _observer = .init(observer, player: player)
         }
         
         deinit {
