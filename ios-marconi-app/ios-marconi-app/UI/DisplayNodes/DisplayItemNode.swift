@@ -8,17 +8,25 @@
 
 import ios_marconi_framework
 import UIKit
+import FutureKit
+
+typealias NextAction = () -> Future<SkipEntity>
 
 struct DisplayItemNode {
     let title: String?
     let artistName: String?
     let stationName: String?
     let url: URL?
+    
     let duration: TimeInterval?
     let offset: TimeInterval?
-    var isShowPlayerControls: Bool = false
-    var progress: TimeInterval
     
+    var isShowPlayerControls: Bool = false
+    var progress: TimeInterval?
+    var next: NextAction?
+    
+    private let _provider: SkipSongProvider = .init()
+
     init(_ item: Marconi.MetaData, station: Station?) {
         title = item.song ?? "Unknown"
         artistName = item.artist ?? "Unknown"
@@ -26,17 +34,23 @@ struct DisplayItemNode {
         url = item.imageUrl ?? URL(station?.square_logo_large)
         duration = item.duration
         offset = item.offset
-        progress = offset ?? 0.0
+        progress = offset
         if case .digit = item {
             isShowPlayerControls = true
         }
+        guard let playId = item.playId, let trackId = item.trackId, let stationId = station?.id else { return }
+        next = combine(stationId, playId, trackId, with: _provider.skip)
     }
 }
 
 extension DisplayItemNode {
     
     mutating func updateProgress(value: TimeInterval) {
-       progress += value
+        guard let progress = progress else {
+            self.progress = value
+            return
+        }
+        self.progress = progress + value
     }
     
     // range [0..1) to display on progress bar
@@ -53,13 +67,5 @@ extension DisplayItemNode: Equatable {
         return lhs.title == rhs.title &&
                lhs.artistName == rhs.artistName &&
                lhs.stationName == rhs.stationName
-    }
-}
-
-extension DisplayItemNode {
-    func saveCurrentProgress(for station: Station) {
-        if progress > 0.0{
-            UserDefaults.saveProgress(progress.toInt, for: station)
-        }
     }
 }

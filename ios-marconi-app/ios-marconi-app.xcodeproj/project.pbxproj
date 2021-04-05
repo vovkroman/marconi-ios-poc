@@ -59,9 +59,11 @@
 		6FE9B8A4260A466C0023F68D /* ImageApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B8A3260A466C0023F68D /* ImageApi.swift */; };
 		6FE9B8A6260A471F0023F68D /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B8A5260A471F0023F68D /* ImageProvider.swift */; };
 		6FEC7E9A2600DB0D00C55A2D /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEC7E992600DB0D00C55A2D /* NibLoadable.swift */; };
+		6FED1896261B1406000D5E27 /* SkipSongProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FED1895261B1406000D5E27 /* SkipSongProvider.swift */; };
+		6FED1898261B143D000D5E27 /* SkipSongApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FED1897261B143D000D5E27 /* SkipSongApi.swift */; };
+		6FED189A261B1BB4000D5E27 /* SkipEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FED1899261B1BB4000D5E27 /* SkipEntity.swift */; };
 		6FF0EECA2614D4670023D2AD /* UserDefaults+StorageSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0EEC92614D4670023D2AD /* UserDefaults+StorageSettings.swift */; };
 		6FF116C0260E370300CBCA9C /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116BF260E370300CBCA9C /* ProgressBar.swift */; };
-		6FF2B22C26162A0900AECE5D /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2B22B26162A0900AECE5D /* Double+Extension.swift */; };
 		6FF2C78426139E8A00707126 /* DisplayItemNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2C78326139E8A00707126 /* DisplayItemNode.swift */; };
 /* End PBXBuildFile section */
 
@@ -145,9 +147,11 @@
 		6FE9B8A3260A466C0023F68D /* ImageApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageApi.swift; sourceTree = "<group>"; };
 		6FE9B8A5260A471F0023F68D /* ImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProvider.swift; sourceTree = "<group>"; };
 		6FEC7E992600DB0D00C55A2D /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
+		6FED1895261B1406000D5E27 /* SkipSongProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkipSongProvider.swift; sourceTree = "<group>"; };
+		6FED1897261B143D000D5E27 /* SkipSongApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkipSongApi.swift; sourceTree = "<group>"; };
+		6FED1899261B1BB4000D5E27 /* SkipEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkipEntity.swift; sourceTree = "<group>"; };
 		6FF0EEC92614D4670023D2AD /* UserDefaults+StorageSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StorageSettings.swift"; sourceTree = "<group>"; };
 		6FF116BF260E370300CBCA9C /* ProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
-		6FF2B22B26162A0900AECE5D /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		6FF2C78326139E8A00707126 /* DisplayItemNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayItemNode.swift; sourceTree = "<group>"; };
 		D8D8FB7978952A9704B8DFA8 /* Pods-ios-marconi-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-marconi-app.release.xcconfig"; path = "Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app.release.xcconfig"; sourceTree = "<group>"; };
 		E08A428D6213F00E85FCFC05 /* Pods_ios_marconi_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ios_marconi_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -284,6 +288,7 @@
 			children = (
 				6F44B0F2260387C30047A3E5 /* StationProvider.swift */,
 				6FE9B8A5260A471F0023F68D /* ImageProvider.swift */,
+				6FED1895261B1406000D5E27 /* SkipSongProvider.swift */,
 			);
 			path = DataProviders;
 			sourceTree = "<group>";
@@ -293,6 +298,7 @@
 			children = (
 				6F44B0F4260387C30047A3E5 /* StationApi.swift */,
 				6FE9B8A3260A466C0023F68D /* ImageApi.swift */,
+				6FED1897261B143D000D5E27 /* SkipSongApi.swift */,
 			);
 			path = Routes;
 			sourceTree = "<group>";
@@ -327,6 +333,7 @@
 			isa = PBXGroup;
 			children = (
 				6F44B11326038E360047A3E5 /* Station.swift */,
+				6FED1899261B1BB4000D5E27 /* SkipEntity.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -454,7 +461,6 @@
 		6FEC7E982600DAF700C55A2D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				6FF2B22D26162A1800AECE5D /* Double+Extensions */,
 				6F6E221B2608EB710057D41F /* URL+Extensions */,
 				6F6E22162608BF270057D41F /* UIViewControllers */,
 				6F6E22112608A53D0057D41F /* Collections */,
@@ -477,14 +483,6 @@
 				6FF116BF260E370300CBCA9C /* ProgressBar.swift */,
 			);
 			path = ProgressBar;
-			sourceTree = "<group>";
-		};
-		6FF2B22D26162A1800AECE5D /* Double+Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				6FF2B22B26162A0900AECE5D /* Double+Extension.swift */,
-			);
-			path = "Double+Extensions";
 			sourceTree = "<group>";
 		};
 		6FF2C7792613648600707126 /* DisplayNodes */ = {
@@ -659,13 +657,13 @@
 				6FA3C25F260BA84E0095D6AB /* MarconiImageView.swift in Sources */,
 				6F44B106260387E10047A3E5 /* EndPointType.swift in Sources */,
 				6F44B1222603C1B10047A3E5 /* StationTableViewCell.swift in Sources */,
-				6FF2B22C26162A0900AECE5D /* Double+Extension.swift in Sources */,
 				6F44B0FE260387D80047A3E5 /* URLParameterEncoding.swift in Sources */,
 				6F44B0FD260387D80047A3E5 /* ParameterEncoding.swift in Sources */,
 				6F44B104260387E10047A3E5 /* HTTPMethod.swift in Sources */,
 				6F6E22132608A55F0057D41F /* Collections+SafeIndex.swift in Sources */,
 				6FE9B8A6260A471F0023F68D /* ImageProvider.swift in Sources */,
 				6F44B102260387DE0047A3E5 /* NetworkConfig.swift in Sources */,
+				6FED1898261B143D000D5E27 /* SkipSongApi.swift in Sources */,
 				6F44B11426038E360047A3E5 /* Station.swift in Sources */,
 				6FEC7E9A2600DB0D00C55A2D /* NibLoadable.swift in Sources */,
 				6F3CAC1526011AF40058A72B /* Reusable.swift in Sources */,
@@ -689,11 +687,13 @@
 				6FA3C25C260B58F80095D6AB /* Globals.swift in Sources */,
 				6F44B0FF260387D80047A3E5 /* JSONParameterEncoder.swift in Sources */,
 				6FA3C257260B38F90095D6AB /* ImageLoader.swift in Sources */,
+				6FED1896261B1406000D5E27 /* SkipSongProvider.swift in Sources */,
 				6F44B1252603C4EC0047A3E5 /* DigitalViewController.swift in Sources */,
 				6F3CAC1926011AFF0058A72B /* ReusableTableView.swift in Sources */,
 				6F6E221A2608DDB80057D41F /* URL+Extensions.swift in Sources */,
 				6F1517D025FFC6D800AD9354 /* AppDelegate.swift in Sources */,
 				6F6E22182608BF510057D41F /* Containerable.swift in Sources */,
+				6FED189A261B1BB4000D5E27 /* SkipEntity.swift in Sources */,
 				6F44B100260387DB0047A3E5 /* StationProvider.swift in Sources */,
 				6F44B11E2603C0C70047A3E5 /* LiveStationsViewController.swift in Sources */,
 				6FE9B897260A0C940023F68D /* PlayerStateViewController.swift in Sources */,

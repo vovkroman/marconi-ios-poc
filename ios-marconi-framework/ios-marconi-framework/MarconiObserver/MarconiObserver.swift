@@ -48,8 +48,10 @@ extension Marconi {
         }
         
         private func _observeProgress() {
-            _playbackProgressObserver = _player?.addLinearPeriodicTimeObserver(every: 1.0, queue: .main){ [weak self] progress in
-                self?._stateMachine.transition(with: .progressDidChanged(progress: progress.rounded()))
+            if case .digit = _stationType {
+                _playbackProgressObserver = _player?.addLinearPeriodicTimeObserver(every: 1.0, queue: .main){ [weak self] progress in
+                    self?._stateMachine.transition(with: .progressDidChanged(progress: progress.rounded()))
+                }
             }
         }
         

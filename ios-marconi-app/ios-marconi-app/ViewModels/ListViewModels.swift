@@ -16,6 +16,18 @@ struct StationWrapper {
     let type: StationType
 }
 
+extension StationWrapper {
+    func savePlayingItem(playingItem: DisplayItemNode) {
+        if case .digit = type {
+            guard let progress = playingItem.progress,
+                let duration = playingItem.duration else { return }
+            if progress > 0.0 && progress < duration {
+                UserDefaults.saveProgress("\(progress)", for: station)
+            }
+        }
+    }
+}
+
 extension Live {
     
     class ViewModel: ListViewModelable {

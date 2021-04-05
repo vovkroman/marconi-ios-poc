@@ -12,14 +12,22 @@ extension Marconi {
     
     public enum MetaData {
         case none
-        case live(artist: String?, song: String?)
-        case digit(artist: String?, song: String?, offset: TimeInterval?, duration: TimeInterval?, url: URL?)
+        case live(id: String?,
+                   artist: String?,
+                    song: String?)
+        case digit(trackId: String?,
+                    playId: String?,
+                    artist: String?,
+                    song: String?,
+                    offset: TimeInterval?,
+                    duration: TimeInterval?,
+                    url: URL?)
         
         public var song: String? {
             switch self {
-            case .live(_, let song):
+            case .live(_, _, let song):
                 return song
-            case .digit( _, let song, _, _, _):
+            case .digit(_, _, _, let song, _, _, _):
                 return song
             case .none:
                 return nil
@@ -30,16 +38,16 @@ extension Marconi {
             switch self {
             case .live, .none:
                 return nil
-            case .digit(_, _, _, _, let url):
+            case .digit(_, _, _, _, _, _, let url):
                 return url
             }
         }
         
         public var artist: String? {
             switch self {
-            case .live(let artist, _):
+            case .live(_, let artist, _):
                 return artist
-            case .digit(let artist, _, _, _, _):
+            case .digit(_, _, let artist, _, _, _, _):
                 return artist
             case .none:
                 return nil
@@ -50,7 +58,7 @@ extension Marconi {
             switch self {
             case .live, .none:
                 return nil
-            case .digit(_ , _, _, let duration, _):
+            case .digit(_, _, _, _, _, let duration, _):
                 return duration
             }
         }
@@ -59,17 +67,37 @@ extension Marconi {
             switch self {
             case .live, .none:
                 return nil
-            case .digit(_ , _, let offset, _, _):
+            case .digit(_, _ ,_ ,_, let offset, _, _):
                 return offset
             }
         }
         
+        public var trackId: String? {
+            switch self {
+            case .live, .none:
+                return nil
+            case .digit(let trackId, _, _, _, _, _, _):
+                return trackId
+            }
+        }
+        
+        public var playId: String? {
+            switch self {
+            case .live, .none:
+                return nil
+            case .digit(_, let playId, _, _, _, _, _):
+                return playId
+            }
+        }
+        
         init(_ parser: Live.DataParser) {
-            self = .live(artist: parser.song, song: parser.artist)
+            self = .live(id: parser.Id, artist: parser.song, song: parser.artist)
         }
         
         init(_ parser: Digit.DataParser) {
-            self = .digit(artist: parser.artist,
+            self = .digit(trackId: parser.trackId,
+                          playId: parser.playId,
+                          artist: parser.artist,
                           song: parser.song,
                           offset: parser.offset,
                           duration: parser.duration,
@@ -81,12 +109,18 @@ extension Marconi {
 extension Marconi.MetaData: Equatable {
     public static func == (lhs: Marconi.MetaData, rhs: Marconi.MetaData) -> Bool {
         switch (lhs, rhs) {
-        case (.live(let lArtist, let rArtist), .live(let lSong, let rSong)):
-            return lArtist == rArtist && lSong == rSong
-        case (.live(_, _), .digit(_, _, _, _, _)), (.digit(_, _, _, _, _), .live(_, _)):
+        case (.live(let lId, let lArtist, let rArtist), .live(let rId, let lSong, let rSong)):
+            return lId == rId &&
+                    lArtist == rArtist &&
+                    lSong == rSong
+        case (.live(_,_, _), .digit(_, _, _, _, _, _, _)), (.digit(_ ,_ , _, _, _, _, _), .live(_ ,_ ,_ )):
             return false
-        case (.digit(let lArtist, let lSong, let lOffset ,_, _ ), .digit(let rArtist, let rSong, let rOffset, _, _)):
-            return lArtist == rArtist && lSong == rSong && lOffset == rOffset
+        case (.digit(let lTrackId, let lPlayId, let lArtist, let lSong, let lOffset ,_, _ ), .digit(let rTrackId, let rPlayId,  let rArtist, let rSong, let rOffset, _, _)):
+            return lPlayId == rPlayId &&
+                    lTrackId == rTrackId &&
+                    lArtist == rArtist &&
+                    lSong == rSong &&
+                    lOffset == rOffset
         case (.none, .none):
             return true
         case (_, .none):

@@ -75,4 +75,8 @@ class PlayingView: UIView, NibReusable {
         sender.isSelected = !sender.isSelected
         playerControlsDelegate?.muteToggle(isMuted: sender.isSelected)
     }
+    
+    @IBAction func skipAction(_ sender: UIButton) {
+        playerControlsDelegate?.performSkip()
+    }
 }

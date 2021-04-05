@@ -13,3 +13,7 @@ func combine<A, B>(_ value: A, with closure: @escaping (A) -> B) -> () -> B {
 func combine<A, B, C>(_ value1: A, _ value2: B, with closure: @escaping (A, B) -> C) -> () -> C {
     return { closure(value1, value2) }
 }
+
+func combine<A, B, C, D>(_ value1: A, _ value2: B, _ value3: C, with closure: @escaping (A, B, C) -> D) -> () -> D {
+    return { closure(value1, value2, value3) }
+}

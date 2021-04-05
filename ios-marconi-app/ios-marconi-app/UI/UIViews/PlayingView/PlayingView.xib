@@ -160,10 +160,10 @@
                     </constraints>
                 </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YEF-gv-0vy">
-                    <rect key="frame" x="16" y="218" width="439" height="30"/>
+                    <rect key="frame" x="16" y="218" width="439" height="35"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2yK-P2-Dzc">
-                            <rect key="frame" x="16" y="0.0" width="30" height="30"/>
+                            <rect key="frame" x="16" y="0.0" width="35" height="35"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="2yK-P2-Dzc" secondAttribute="height" multiplier="1:1" id="u51-oK-VqP"/>
@@ -176,7 +176,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kSP-wg-arJ">
-                            <rect key="frame" x="409" y="0.0" width="30" height="30"/>
+                            <rect key="frame" x="404" y="0.0" width="35" height="35"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="kSP-wg-arJ" secondAttribute="height" multiplier="1:1" id="1cc-Ci-OaA"/>
                             </constraints>
@@ -188,28 +188,42 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PTp-JN-RzG" customClass="MarconiProgressBar" customModule="ios_marconi_app" customModuleProvider="target">
-                            <rect key="frame" x="54" y="13" width="355" height="4"/>
+                            <rect key="frame" x="51" y="15.5" width="310" height="4"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="4" id="2zf-i6-MFp"/>
                             </constraints>
                         </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k8l-AC-9Pi">
+                            <rect key="frame" x="369" y="0.0" width="35" height="35"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="k8l-AC-9Pi" secondAttribute="height" multiplier="1:1" id="HZo-mf-swU"/>
+                            </constraints>
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <state key="normal" image="arrowshape.turn.up.right.fill" catalog="system"/>
+                            <connections>
+                                <action selector="skipAction:" destination="-1" eventType="touchUpInside" id="ekv-bd-dYy"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="2yK-P2-Dzc" secondAttribute="bottom" id="0aZ-0b-Zah"/>
+                        <constraint firstItem="k8l-AC-9Pi" firstAttribute="top" secondItem="YEF-gv-0vy" secondAttribute="top" id="0fg-0g-Nmz"/>
+                        <constraint firstItem="kSP-wg-arJ" firstAttribute="leading" secondItem="k8l-AC-9Pi" secondAttribute="trailing" id="59D-TC-lvv"/>
                         <constraint firstAttribute="bottom" secondItem="kSP-wg-arJ" secondAttribute="bottom" id="7KQ-WC-m1b"/>
-                        <constraint firstItem="kSP-wg-arJ" firstAttribute="leading" secondItem="PTp-JN-RzG" secondAttribute="trailing" id="8WZ-4v-7kC"/>
-                        <constraint firstAttribute="height" constant="30" id="Pla-4N-zwv"/>
+                        <constraint firstAttribute="height" constant="35" id="Pla-4N-zwv"/>
                         <constraint firstAttribute="trailing" secondItem="kSP-wg-arJ" secondAttribute="trailing" id="S5m-pl-Xgu"/>
+                        <constraint firstAttribute="bottom" secondItem="k8l-AC-9Pi" secondAttribute="bottom" id="WAr-oP-Hfv"/>
                         <constraint firstItem="PTp-JN-RzG" firstAttribute="centerY" secondItem="2yK-P2-Dzc" secondAttribute="centerY" id="b7n-yp-Uf9"/>
                         <constraint firstItem="2yK-P2-Dzc" firstAttribute="top" secondItem="YEF-gv-0vy" secondAttribute="top" id="g78-tb-Ldo"/>
                         <constraint firstItem="kSP-wg-arJ" firstAttribute="top" secondItem="YEF-gv-0vy" secondAttribute="top" id="h51-ts-V8H"/>
                         <constraint firstItem="2yK-P2-Dzc" firstAttribute="leading" secondItem="YEF-gv-0vy" secondAttribute="leading" constant="16" id="kli-Jz-a74"/>
-                        <constraint firstItem="PTp-JN-RzG" firstAttribute="leading" secondItem="2yK-P2-Dzc" secondAttribute="trailing" constant="8" id="pVK-Hg-5t6"/>
+                        <constraint firstItem="PTp-JN-RzG" firstAttribute="leading" secondItem="2yK-P2-Dzc" secondAttribute="trailing" id="pVK-Hg-5t6"/>
+                        <constraint firstItem="k8l-AC-9Pi" firstAttribute="leading" secondItem="PTp-JN-RzG" secondAttribute="trailing" constant="8" id="uRQ-TR-zXL"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="isSkeletonable" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isSkeletonable" value="YES"/>
                         <userDefinedRuntimeAttribute type="number" keyPath="skeletonCornerRadius">
                             <real key="value" value="2"/>
                         </userDefinedRuntimeAttribute>
@@ -235,6 +249,7 @@
         </view>
     </objects>
     <resources>
+        <image name="arrowshape.turn.up.right.fill" catalog="system" width="128" height="106"/>
         <image name="pause.fill" catalog="system" width="116" height="128"/>
         <image name="play.fill" catalog="system" width="116" height="128"/>
         <image name="speaker.2.fill" catalog="system" width="128" height="97"/>

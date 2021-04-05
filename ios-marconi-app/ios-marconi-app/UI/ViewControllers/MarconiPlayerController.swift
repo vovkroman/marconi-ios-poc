@@ -20,6 +20,7 @@ protocol MarconiPlayerDelegate: class {
 protocol MarconiPlayerControlsDelegate: class {
     func playToggle(isPlay: Bool)
     func muteToggle(isMuted: Bool)
+    func performSkip()
 }
 
 class MarconiPlayerController: UIViewController, Containerable {
@@ -38,15 +39,25 @@ class MarconiPlayerController: UIViewController, Containerable {
         return controller
     }
     
+    private var _onSkip: NextAction?
+    
     typealias Player = Marconi.Player
     
     private lazy var _player: Player = .init(self)
     
-    private var _playingItem: DisplayItemNode?
+    private var _playingItem: DisplayItemNode? {
+        didSet {
+            guard let playingItem = _playingItem else {
+                _onSkip = nil
+                return
+            }
+            _onSkip = playingItem.next
+        }
+    }
+    
     private var _stationWrapper: StationWrapper? {
         willSet {
-            guard let oldStation = _stationWrapper, let newStation = newValue else { return }
-            _willReplaceStation(from: oldStation, to: newStation)
+            _willReplaceStation(from: _stationWrapper, to: newValue)
         }
     }
         
@@ -61,11 +72,8 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     // MARK: - Private methods
     
-    private func _willReplaceStation(from: StationWrapper, to: StationWrapper) {
-        // save progress for current station, needed to initialize digital stream
-        if case .digit = from.type {
-            _playingItem?.saveCurrentProgress(for: from.station)
-        }
+    private func _willReplaceStation(from: StationWrapper?, to: StationWrapper?) {
+        _playingItem.flatMap { item in from?.savePlayingItem(playingItem: item) }
     }
     
     // MARK: - UI is function of State Machine
@@ -101,16 +109,13 @@ class MarconiPlayerController: UIViewController, Containerable {
         case .noPlaying:
             _noPlayingItem()
         case .buffering(_):
-            _buffering()
             _playingItem = nil
+            _buffering()
         case .playing(let metaData, let progress):
             switch metaData {
             case .live:
-                // call _startPlaying only once, because we don't need to update UI
-                if progress.isZero {
-                    let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
-                     _startPlaying(playingItemDispaly)
-                }
+                let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
+                _startPlaying(playingItemDispaly)
             case .digit, .none:
                 let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
                 guard let playingItem = _playingItem, playingItem == playingItemDispaly else {
@@ -155,6 +160,21 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
 }
 
 extension MarconiPlayerController: MarconiPlayerControlsDelegate {
+    func performSkip() {
+        _onSkip?().observe(){ [weak self] result in
+            switch result {
+            case .success(let skipItem):
+                if let stationWrapper = self?._stationWrapper {
+                    self?.willPlayStation(stationWrapper, with: URL(skipItem.newPlaybackUrl))
+                }
+            case .failure(let error):
+                print(error)
+                break
+                // catch the error
+            }
+        }
+    }
+    
     
     func playToggle(isPlay: Bool) {
         if isPlay {

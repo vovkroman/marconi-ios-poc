@@ -10,13 +10,12 @@ import Foundation
 
 extension UserDefaults {
     enum Keys {
-        
         private static var prefix: String {
             return Bundle.main.bundleIdentifier ?? "" + ".settings"
         }
         
         case udid
-        case offset(stationName: String)
+        case offset(stationId: Int)
         var prefixed: String { return Keys.prefix + ".\(self)" }
     }
 }
@@ -25,8 +24,8 @@ extension UserDefaults.Keys: CustomStringConvertible {
     var description: String {
         switch self {
         case .udid: return "udid"
-        case .offset(let stationName):
-            return "\(stationName)/offset"
+        case .offset(let stationID):
+            return "\(stationID)/offset"
         }
     }
 }
@@ -43,14 +42,14 @@ extension UserDefaults {
         }
     }
     
-    static func saveProgress(_ value: Int, for station: Station) {
-        let key = Keys.offset(stationName: station.name)
-        print("did save value: \(value)")
-        standard.set("\(value)", forKey: key.prefixed)
+    static func saveProgress(_ value: String, for station: Station) {
+        Logger.debug("\(value) has been saved into local storage")
+        let key = Keys.offset(stationId: station.id)
+        standard.set(value, forKey: key.prefixed)
     }
     
     static func progress(by station: Station) -> String? {
-        let key = Keys.offset(stationName: station.name)
+        let key = Keys.offset(stationId: station.id)
         return standard.string(forKey: key.prefixed)
     }
 }

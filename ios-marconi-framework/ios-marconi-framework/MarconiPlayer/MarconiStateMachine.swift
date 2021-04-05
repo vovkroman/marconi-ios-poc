@@ -60,13 +60,12 @@ extension Marconi {
         private(set) var state: State = .noPlaying {
             didSet {
                 guard oldValue != state else { return }
-                //print("state: \(oldValue) -> \(state)")
+                print("state: \(oldValue) -> \(state)")
                 observer?.stateDidChanched(self, to: state)
             }
         }
         
         func transition(with event: Event) {
-            print("state: \(event) -> \(state)")
             switch (state, event) {
             case (.buffering, .bufferingStarted(_)): break
             case (_, .bufferingStarted(let playerItem)):
@@ -84,10 +83,10 @@ extension Marconi {
             case (_, .startPlaying): break
             case (_, .catchTheError(let error)):
                 state = .error(.playerError(description: error?.localizedDescription))
-            case (.error(_), .fetchedMetaData(let playingItem)):
-                state = .playing(playingItem, 0.0)
-            case (.playing(let playingItem, _), .progressDidChanged(let progress)):
-                state = .playing(playingItem, progress)
+            case (.error(_), .fetchedMetaData(let newMetaData)):
+                state = .playing(newMetaData, 0.0)
+            case (.playing(let metaData, _), .progressDidChanged(let progress)):
+                state = .playing(metaData, progress)
             case (_, .progressDidChanged(_)):
                 // if not playing there is no sense to update progress (state)
                 break
