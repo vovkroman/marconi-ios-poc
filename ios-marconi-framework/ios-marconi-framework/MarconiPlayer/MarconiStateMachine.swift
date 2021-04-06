@@ -26,7 +26,8 @@ extension Marconi {
         public enum State: Equatable {
             case noPlaying
             case buffering(AVPlayerItem)
-            case playing(MetaData, TimeInterval)
+            case startPlaying(MetaData)
+            case continuePlaying(MetaData, TimeInterval)
             case error(MError)
             
             public static func == (lhs: State, rhs: State) -> Bool {
@@ -37,8 +38,10 @@ extension Marconi {
                     return lhs == rhs
                 case (.error(let lhs), .error(let rhs)):
                     return lhs == rhs
-                case (.playing(let lhsMeta, let lhsProgress), .playing(let rhsMeta, let rhsProgress)):
+                case (.continuePlaying(let lhsMeta, let lhsProgress), .continuePlaying(let rhsMeta, let rhsProgress)):
                     return lhsMeta == rhsMeta && lhsProgress.isEqual(to: rhsProgress)
+                case (.startPlaying(let lhsMeta), .startPlaying(let rhsMeta)):
+                    return lhsMeta == rhsMeta
                 default:
                     return false
                 }
@@ -66,33 +69,38 @@ extension Marconi {
         }
         
         func transition(with event: Event) {
+            print("state: \(state) -> \(event)")
             switch (state, event) {
             case (.buffering, .bufferingStarted(_)): break
             case (_, .bufferingStarted(let playerItem)):
                 state = .buffering(playerItem)
             case (.buffering, .bufferingEnded(let playingItem)):
-                state = .playing(playingItem, 0.0)
+                state = .startPlaying(playingItem)
             case (.buffering, .fetchedMetaData(_)):
                 // fetched meta data but buffering still in progress
                 break
-            case (.playing(let old , let progress), .fetchedMetaData(let new)):
-                if old == new {
-                    state = .playing(new, progress)
-                } else {
-                    state = .playing(new, 0.0)
+            case (.startPlaying(let old), .fetchedMetaData(let new)):
+                if old != new {
+                    state = .startPlaying(new)
                 }
             case (_, .bufferingEnded(let new)):
-                state = .playing(new, 0.0)
+                state = .startPlaying(new)
             case (.noPlaying, .fetchedMetaData(_)): break
             case (_, .startPlaying): break
             case (_, .catchTheError(let error)):
                 state = .error(.playerError(description: error?.localizedDescription))
             case (.error(_), .fetchedMetaData(let newMetaData)):
-                state = .playing(newMetaData, 0.0)
-            case (.playing(let metaData, _), .progressDidChanged(let progress)):
-                state = .playing(metaData, progress)
+                state = .startPlaying(newMetaData)
+            case (.startPlaying(let playingItem), .progressDidChanged(let progress)):
+                state = .continuePlaying(playingItem, progress)
+            case (.continuePlaying(let old, _), .fetchedMetaData(let new)):
+                if old != new {
+                    state = .startPlaying(new)
+                }
+            case (.continuePlaying(let meta, _), .progressDidChanged(let progress)):
+                state = .continuePlaying(meta, progress)
             case (_, .progressDidChanged(_)):
-                // if not playing there is no sense to update progress (state)
+            // if not playing there is no sense to update progress (state)
                 break
             }
         }

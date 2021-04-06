@@ -19,9 +19,8 @@ struct StationWrapper {
 extension StationWrapper {
     func savePlayingItem(playingItem: DisplayItemNode) {
         if case .digit = type {
-            guard let progress = playingItem.progress,
-                let duration = playingItem.duration else { return }
-            if progress > 0.0 && progress < duration {
+            guard let progress = playingItem.progress else { return }
+            if progress > 0.0 {
                 UserDefaults.saveProgress("\(progress)", for: station)
             }
         }

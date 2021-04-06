@@ -87,15 +87,21 @@ class MarconiPlayerController: UIViewController, Containerable {
         controller.buffering()
     }
     
-    private func _startPlaying(_ playItem: DisplayItemNode) {
-        let controller = _playingItemViewController
-        controller.willReuseController()
-        controller.startPlaying(playItem)
+    private func _startPlaying(_ playItem: DisplayItemNode?) {
+        if let playItem = playItem {
+            let controller = _playingItemViewController
+            controller.willReuseController()
+            controller.startPlaying(playItem)
+        }
     }
     
-    private func _updateProgress(_ value: CGFloat) {
+    private func _updateProgress(for metaData: Marconi.MetaData, progress: TimeInterval) {
         let controller = _playingItemViewController
-        controller.updateProgress(value)
+        guard let duration = metaData.duration,
+            let offset = metaData.offset else {
+            return
+        }
+        controller.updateProgress(CGFloat((offset + progress) / duration))
     }
     
     // MARK: - Handle State
@@ -107,25 +113,12 @@ class MarconiPlayerController: UIViewController, Containerable {
         case .buffering(_):
             _playingItem = nil
             _buffering()
-        case .playing(let metaData, let progress):
-            switch metaData {
-            case .live:
-                let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
-                _startPlaying(playingItemDispaly)
-            case .digit, .none:
-                let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
-                guard let playingItem = _playingItem, playingItem == playingItemDispaly else {
-                    _startPlaying(playingItemDispaly)
-                    _playingItem = playingItemDispaly
-                    return
-                }
-                guard let duration = metaData.duration,
-                    let offset = metaData.offset else {
-                    return
-                }
-                _playingItem?.updateProgress(value: progress)
-                _updateProgress(CGFloat((progress + offset) / duration))
-            }
+        case .startPlaying(let metaData):
+            let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
+            _playingItem = playingItemDispaly
+            _startPlaying(playingItemDispaly)
+        case .continuePlaying(let metaData, let progress):
+            _updateProgress(for: metaData, progress: progress)
         case .error(_):
             break
         }

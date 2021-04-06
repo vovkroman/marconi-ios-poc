@@ -23,7 +23,6 @@ extension Marconi {
         
         private(set) var _currentMetaItem: MetaData = .none {
             didSet {
-                guard _currentMetaItem != .none else { return }
                 if oldValue != _currentMetaItem {
                     _stateMachine.transition(with: .fetchedMetaData(_currentMetaItem))
                 }
@@ -94,6 +93,7 @@ extension Marconi {
         }
         
         public func stopMonitoring() {
+            _player?.pause()
             _player?.removeTimeObserver(_playbackProgressObserver)
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()

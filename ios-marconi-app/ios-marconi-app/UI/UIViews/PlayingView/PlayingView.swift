@@ -54,7 +54,7 @@ class PlayingView: UIView, NibReusable {
         _stationName.text = playingItem.stationName
         _titleSong.text = playingItem.title
         _artistName.text = playingItem.artistName
-        _typeName.text = "Type: Station"
+        _typeName.text = playingItem.type
         _imageView.loadImage(from: playingItem.url)
     }
     
@@ -79,6 +79,7 @@ class PlayingView: UIView, NibReusable {
     }
     
     @IBAction func skipAction(_ sender: UIButton) {
+        Logger.debug("SKIP has been performed")
         playerControlsDelegate?.performSkip()
     }
 }
