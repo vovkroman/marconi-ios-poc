@@ -1,5 +1,5 @@
 //
-//  PlayingItem.swift
+//  DisplayItemNode.swift
 //  ios-marconi-app
 //
 //  Created by Roman Vovk on 30.03.2021.
@@ -22,6 +22,7 @@ struct DisplayItemNode {
     let offset: TimeInterval?
     
     var isShowPlayerControls: Bool = false
+    var isSkipSupportable: Bool = false
     var progress: TimeInterval?
     var next: NextAction?
     
@@ -37,8 +38,11 @@ struct DisplayItemNode {
         progress = offset
         if case .digit = item {
             isShowPlayerControls = true
+            isSkipSupportable = item.isSkippbale
         }
-        guard let playId = item.playId, let trackId = item.trackId, let stationId = station?.id else { return }
+        guard let playId = item.playId, let trackId = item.trackId, let stationId = station?.id else {
+            return
+        }
         next = combine(stationId, playId, trackId, with: _provider.skip)
     }
 }

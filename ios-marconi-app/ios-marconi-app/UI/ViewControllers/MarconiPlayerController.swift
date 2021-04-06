@@ -25,6 +25,8 @@ protocol MarconiPlayerControlsDelegate: class {
 
 class MarconiPlayerController: UIViewController, Containerable {
     
+    typealias Player = Marconi.Player
+    
     private weak var _controller: UIViewController?
 
     private var _playingItemViewController: PlayingItemViewController {
@@ -41,17 +43,11 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     private var _onSkip: NextAction?
     
-    typealias Player = Marconi.Player
-    
     private lazy var _player: Player = .init(self)
     
     private var _playingItem: DisplayItemNode? {
         didSet {
-            guard let playingItem = _playingItem else {
-                _onSkip = nil
-                return
-            }
-            _onSkip = playingItem.next
+            _onSkip = _playingItem?.next
         }
     }
     

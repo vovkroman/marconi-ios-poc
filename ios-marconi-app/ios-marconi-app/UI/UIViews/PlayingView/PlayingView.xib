@@ -14,6 +14,7 @@
                 <outlet property="_imageView" destination="TVG-MR-vyV" id="ByO-m4-3CH"/>
                 <outlet property="_playButton" destination="2yK-P2-Dzc" id="ABl-ww-jcY"/>
                 <outlet property="_progressBar" destination="PTp-JN-RzG" id="paW-S9-9dL"/>
+                <outlet property="_skipButton" destination="k8l-AC-9Pi" id="QH6-xF-y29"/>
                 <outlet property="_stationName" destination="cVp-e5-KSs" id="riW-lL-pAY"/>
                 <outlet property="_titleOfView" destination="OEe-1t-h92" id="Zkf-qY-tHb"/>
                 <outlet property="_titleSong" destination="N8H-bb-YBv" id="Mcn-kh-UuJ"/>

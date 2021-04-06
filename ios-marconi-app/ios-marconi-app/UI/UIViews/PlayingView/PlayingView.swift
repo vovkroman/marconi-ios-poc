@@ -15,6 +15,7 @@ class PlayingView: UIView, NibReusable {
     
     @IBOutlet private weak var _titleOfView: UILabel!
     @IBOutlet private weak var _imageView: MarconiImageView!
+    @IBOutlet private weak var _skipButton: UIButton!
     
     @IBOutlet private weak var _stationName: UILabel!
     @IBOutlet private weak var _titleSong: UILabel!
@@ -47,6 +48,7 @@ class PlayingView: UIView, NibReusable {
         stopBuffering()
         _playButton.isSelected = true
         _titleOfView.text = "Now playing:"
+        _skipButton.isEnabled = playingItem.isSkipSupportable
         _controlsView.isHidden = !playingItem.isShowPlayerControls
         _progressBar.progress = CGFloat(playingItem.startTime)
         _stationName.text = playingItem.stationName

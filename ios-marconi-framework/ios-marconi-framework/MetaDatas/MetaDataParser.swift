@@ -32,6 +32,16 @@ extension Marconi.Digit {
             return _dict[Identifier.songTitle] as? String
         }
         
+        var skips: Int? {
+            let value = _dict[Identifier.skips] as? String
+            return value.flatMap(Int.init)
+        }
+        
+        var isSkippable: Bool? {
+            let value = _dict[Identifier.skips] as? NSString
+            return value?.boolValue
+        }
+        
         var duration: TimeInterval? {
             let value = _dict[Identifier.songDuration]
             return value?.doubleValue

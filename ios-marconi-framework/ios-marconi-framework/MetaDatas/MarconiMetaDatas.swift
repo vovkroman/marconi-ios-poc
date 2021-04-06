@@ -21,13 +21,15 @@ extension Marconi {
                     song: String?,
                     offset: TimeInterval?,
                     duration: TimeInterval?,
-                    url: URL?)
+                    url: URL?,
+                    skips: Int,
+                    isSkippable: Bool)
         
         public var song: String? {
             switch self {
             case .live(_, _, let song):
                 return song
-            case .digit(_, _, _, let song, _, _, _):
+            case .digit(_, _, _, let song, _, _, _, _, _):
                 return song
             case .none:
                 return nil
@@ -38,7 +40,7 @@ extension Marconi {
             switch self {
             case .live, .none:
                 return nil
-            case .digit(_, _, _, _, _, _, let url):
+            case .digit(_, _, _, _, _, _, let url, _, _):
                 return url
             }
         }
@@ -47,7 +49,7 @@ extension Marconi {
             switch self {
             case .live(_, let artist, _):
                 return artist
-            case .digit(_, _, let artist, _, _, _, _):
+            case .digit(_, _, let artist, _, _, _, _, _, _):
                 return artist
             case .none:
                 return nil
@@ -58,7 +60,7 @@ extension Marconi {
             switch self {
             case .live, .none:
                 return nil
-            case .digit(_, _, _, _, _, let duration, _):
+            case .digit(_, _, _, _, _, let duration, _, _, _):
                 return duration
             }
         }
@@ -67,7 +69,7 @@ extension Marconi {
             switch self {
             case .live, .none:
                 return nil
-            case .digit(_, _ ,_ ,_, let offset, _, _):
+            case .digit(_, _ ,_ ,_, let offset, _, _, _, _):
                 return offset
             }
         }
@@ -76,7 +78,7 @@ extension Marconi {
             switch self {
             case .live, .none:
                 return nil
-            case .digit(let trackId, _, _, _, _, _, _):
+            case .digit(let trackId, _, _, _, _, _, _, _, _):
                 return trackId
             }
         }
@@ -85,8 +87,17 @@ extension Marconi {
             switch self {
             case .live, .none:
                 return nil
-            case .digit(_, let playId, _, _, _, _, _):
+            case .digit(_, let playId, _, _, _, _, _, _, _):
                 return playId
+            }
+        }
+        
+        public var isSkippbale: Bool {
+            switch self {
+            case .digit(_, _, _, _, _, _, _, let skips, let isSkippable):
+                return isSkippable && skips > 0
+            default:
+                return false
             }
         }
         
@@ -101,7 +112,9 @@ extension Marconi {
                           song: parser.song,
                           offset: parser.offset,
                           duration: parser.duration,
-                          url: parser.url)
+                          url: parser.url,
+                          skips: parser.skips ?? 0,
+                          isSkippable: parser.isSkippable ?? false)
         }
     }
 }
@@ -113,14 +126,17 @@ extension Marconi.MetaData: Equatable {
             return lId == rId &&
                     lArtist == rArtist &&
                     lSong == rSong
-        case (.live(_,_, _), .digit(_, _, _, _, _, _, _)), (.digit(_ ,_ , _, _, _, _, _), .live(_ ,_ ,_ )):
+        case (.live(_,_, _), .digit(_, _, _, _, _, _, _, _, _)), (.digit(_ ,_ , _, _, _, _, _, _, _), .live(_ ,_ ,_ )):
             return false
-        case (.digit(let lTrackId, let lPlayId, let lArtist, let lSong, let lOffset ,_, _ ), .digit(let rTrackId, let rPlayId,  let rArtist, let rSong, let rOffset, _, _)):
+        case (.digit(let lTrackId, let lPlayId, let lArtist, let lSong, let lOffset ,_, _, let lSkips, let lisSkippable),
+              .digit(let rTrackId, let rPlayId,  let rArtist, let rSong, let rOffset, _, _, let rSkips, let risSkippable)):
             return lPlayId == rPlayId &&
                     lTrackId == rTrackId &&
                     lArtist == rArtist &&
                     lSong == rSong &&
-                    lOffset == rOffset
+                    lOffset == rOffset &&
+                    lSkips == rSkips &&
+                    lisSkippable == risSkippable
         case (.none, .none):
             return true
         case (_, .none):
