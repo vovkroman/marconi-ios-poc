@@ -24,10 +24,12 @@ class PlayingView: UIView, NibReusable {
     @IBOutlet private weak var _controlsView: UIView!
     @IBOutlet private weak var _progressBar: MarconiProgressBar!
     @IBOutlet private weak var _playButton: UIButton!
+    @IBOutlet private weak var _muteButton: UIButton!
     
     func startBuffering() {
         _titleOfView.text = "Buffering ..."
         let shimmedColor = UIColor.lightGray
+        _muteButton.showAnimatedSkeleton(usingColor: shimmedColor)
         _imageView.showAnimatedSkeleton(usingColor: shimmedColor)
         _stationName.showAnimatedSkeleton(usingColor: shimmedColor)
         _titleSong.showAnimatedSkeleton(usingColor: shimmedColor)
@@ -42,6 +44,7 @@ class PlayingView: UIView, NibReusable {
         _artistName.hideSkeleton()
         _typeName.hideSkeleton()
         _controlsView.hideSkeleton()
+        _muteButton.hideSkeleton()
     }
     
     func startPlaying(_ playingItem: DisplayItemNode) {

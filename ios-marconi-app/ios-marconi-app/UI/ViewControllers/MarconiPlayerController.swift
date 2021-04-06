@@ -53,7 +53,10 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     private var _stationWrapper: StationWrapper? {
         willSet {
-            _willReplaceStation(from: _stationWrapper, to: newValue)
+            let _displayItem = _player.currentMetaData.flatMap{ DisplayItemNode($0, station: _stationWrapper?.station) }
+            guard let displayItem = _displayItem else { return }
+            print("displayItem: \(displayItem)")
+            _stationWrapper?.savePlayingItem(playingItem: displayItem)
         }
     }
         
@@ -65,12 +68,12 @@ class MarconiPlayerController: UIViewController, Containerable {
         super.viewDidLoad()
         _noPlayingItem()
     }
-    
-    // MARK: - Private methods
-    
-    private func _willReplaceStation(from: StationWrapper?, to: StationWrapper?) {
-        _playingItem.flatMap { item in from?.savePlayingItem(playingItem: item) }
-    }
+//
+//    // MARK: - Private methods
+//
+//    private func _willReplaceStation(from: StationWrapper?) {
+//        _playingItem.flatMap { item in from?.savePlayingItem(playingItem: item) }
+//    }
     
     // MARK: - UI is function of State Machine
     

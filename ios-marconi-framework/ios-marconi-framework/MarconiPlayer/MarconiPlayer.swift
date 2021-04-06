@@ -14,6 +14,10 @@ extension Marconi {
         
         private var _observer: PlayerObserver?
         
+        public var currentMetaData: MetaData? {
+            return _observer?._currentMetaItem
+        }
+        
         public func replaceCurrentURL(with url: URL, stationType: StationType) {
             _observer?.stopMonitoring()
             replaceCurrentItem(with: nil)

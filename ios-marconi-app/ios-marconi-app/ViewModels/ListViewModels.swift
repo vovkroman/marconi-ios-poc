@@ -19,7 +19,10 @@ struct StationWrapper {
 extension StationWrapper {
     func savePlayingItem(playingItem: DisplayItemNode) {
         if case .digit = type {
-            guard let progress = playingItem.progress else { return }
+            // please user's seen none second of asset, repeated request will no return meta data
+            // that's why set the default value 1.0s
+            // TODO: Clarify this moment with Tony
+            let progress = playingItem.progress ?? 1.0 //else { return }
             if progress > 0.0 {
                 UserDefaults.saveProgress("\(progress)", for: station)
             }
