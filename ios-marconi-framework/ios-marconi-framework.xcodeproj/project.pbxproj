@@ -7,9 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F08E9CB2604AC74003D0E07 /* MarconiStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9CA2604AC74003D0E07 /* MarconiStateMachine.swift */; };
+		6F08E9D02604C596003D0E07 /* MarconiObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9CF2604C596003D0E07 /* MarconiObserver.swift */; };
 		6F1517B325FFC66400AD9354 /* ios_marconi_framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F1517A925FFC66400AD9354 /* ios_marconi_framework.framework */; };
 		6F1517B825FFC66400AD9354 /* ios_marconi_frameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1517B725FFC66400AD9354 /* ios_marconi_frameworkTests.swift */; };
 		6F1517BA25FFC66400AD9354 /* ios_marconi_framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F1517AC25FFC66400AD9354 /* ios_marconi_framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6F44B1272603C6EA0047A3E5 /* MarconiPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F44B1262603C6EA0047A3E5 /* MarconiPlayer.swift */; };
+		6FE9B895260A077B0023F68D /* MarconiMetaDatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B894260A077B0023F68D /* MarconiMetaDatas.swift */; };
+		6FF0EEC6261473340023D2AD /* StationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0EEC5261473340023D2AD /* StationType.swift */; };
+		6FF116B8260E34C500CBCA9C /* Identifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116B6260E34C500CBCA9C /* Identifiers.swift */; };
+		6FF116B9260E34C500CBCA9C /* MetaDataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116B7260E34C500CBCA9C /* MetaDataParser.swift */; };
+		6FF116C3260E44C300CBCA9C /* Extensions+AVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116C2260E44C300CBCA9C /* Extensions+AVPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,12 +31,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6F08E9CA2604AC74003D0E07 /* MarconiStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiStateMachine.swift; sourceTree = "<group>"; };
+		6F08E9CF2604C596003D0E07 /* MarconiObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiObserver.swift; sourceTree = "<group>"; };
 		6F1517A925FFC66400AD9354 /* ios_marconi_framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ios_marconi_framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F1517AC25FFC66400AD9354 /* ios_marconi_framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ios_marconi_framework.h; sourceTree = "<group>"; };
 		6F1517AD25FFC66400AD9354 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F1517B225FFC66400AD9354 /* ios-marconi-frameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-marconi-frameworkTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F1517B725FFC66400AD9354 /* ios_marconi_frameworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ios_marconi_frameworkTests.swift; sourceTree = "<group>"; };
 		6F1517B925FFC66400AD9354 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6F44B1262603C6EA0047A3E5 /* MarconiPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiPlayer.swift; sourceTree = "<group>"; };
+		6FE9B894260A077B0023F68D /* MarconiMetaDatas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiMetaDatas.swift; sourceTree = "<group>"; };
+		6FF0EEC5261473340023D2AD /* StationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationType.swift; sourceTree = "<group>"; };
+		6FF116B6260E34C500CBCA9C /* Identifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Identifiers.swift; sourceTree = "<group>"; };
+		6FF116B7260E34C500CBCA9C /* MetaDataParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaDataParser.swift; sourceTree = "<group>"; };
+		6FF116C2260E44C300CBCA9C /* Extensions+AVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+AVPlayer.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +66,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F08E9D12604D239003D0E07 /* MarconiPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				6F44B1262603C6EA0047A3E5 /* MarconiPlayer.swift */,
+				6F08E9CA2604AC74003D0E07 /* MarconiStateMachine.swift */,
+			);
+			path = MarconiPlayer;
+			sourceTree = "<group>";
+		};
+		6F08E9D22604D24D003D0E07 /* MarconiObserver */ = {
+			isa = PBXGroup;
+			children = (
+				6F08E9CF2604C596003D0E07 /* MarconiObserver.swift */,
+			);
+			path = MarconiObserver;
+			sourceTree = "<group>";
+		};
 		6F15179F25FFC66400AD9354 = {
 			isa = PBXGroup;
 			children = (
@@ -71,6 +104,10 @@
 		6F1517AB25FFC66400AD9354 /* ios-marconi-framework */ = {
 			isa = PBXGroup;
 			children = (
+				6FF116C1260E44A300CBCA9C /* Extensions */,
+				6FE9B893260A075E0023F68D /* MetaDatas */,
+				6F08E9D22604D24D003D0E07 /* MarconiObserver */,
+				6F08E9D12604D239003D0E07 /* MarconiPlayer */,
 				6F1517AC25FFC66400AD9354 /* ios_marconi_framework.h */,
 				6F1517AD25FFC66400AD9354 /* Info.plist */,
 			);
@@ -84,6 +121,25 @@
 				6F1517B925FFC66400AD9354 /* Info.plist */,
 			);
 			path = "ios-marconi-frameworkTests";
+			sourceTree = "<group>";
+		};
+		6FE9B893260A075E0023F68D /* MetaDatas */ = {
+			isa = PBXGroup;
+			children = (
+				6FF116B6260E34C500CBCA9C /* Identifiers.swift */,
+				6FF116B7260E34C500CBCA9C /* MetaDataParser.swift */,
+				6FE9B894260A077B0023F68D /* MarconiMetaDatas.swift */,
+				6FF0EEC5261473340023D2AD /* StationType.swift */,
+			);
+			path = MetaDatas;
+			sourceTree = "<group>";
+		};
+		6FF116C1260E44A300CBCA9C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6FF116C2260E44C300CBCA9C /* Extensions+AVPlayer.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,6 +204,7 @@
 				TargetAttributes = {
 					6F1517A825FFC66400AD9354 = {
 						CreatedOnToolsVersion = 11.7;
+						LastSwiftMigration = 1170;
 					};
 					6F1517B125FFC66400AD9354 = {
 						CreatedOnToolsVersion = 11.7;
@@ -195,6 +252,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FF0EEC6261473340023D2AD /* StationType.swift in Sources */,
+				6FF116C3260E44C300CBCA9C /* Extensions+AVPlayer.swift in Sources */,
+				6F44B1272603C6EA0047A3E5 /* MarconiPlayer.swift in Sources */,
+				6F08E9D02604C596003D0E07 /* MarconiObserver.swift in Sources */,
+				6FE9B895260A077B0023F68D /* MarconiMetaDatas.swift in Sources */,
+				6FF116B9260E34C500CBCA9C /* MetaDataParser.swift in Sources */,
+				6FF116B8260E34C500CBCA9C /* Identifiers.swift in Sources */,
+				6F08E9CB2604AC74003D0E07 /* MarconiStateMachine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +405,7 @@
 		6F1517BE25FFC66400AD9354 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -356,6 +422,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -364,6 +431,7 @@
 		6F1517BF25FFC66400AD9354 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -388,6 +456,7 @@
 		6F1517C125FFC66400AD9354 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "ios-marconi-frameworkTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -405,6 +474,7 @@
 		6F1517C225FFC66400AD9354 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "ios-marconi-frameworkTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
