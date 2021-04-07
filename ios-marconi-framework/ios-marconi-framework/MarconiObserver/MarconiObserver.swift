@@ -71,10 +71,20 @@ extension Marconi {
             playerItem.add(metadataCollector)
         }
         
+        private func _removeProgressObserver() {
+            _player?.removeTimeObserver(_playbackProgressObserver)
+            _playbackProgressObserver = nil
+        }
+        
         // Public methods
         
         deinit {
             stopMonitoring()
+        }
+        
+        public func discardProgressObserver() {
+            _removeProgressObserver()
+            _observeProgress()
         }
         
         public func setPlayer(_ player: AVPlayer) {

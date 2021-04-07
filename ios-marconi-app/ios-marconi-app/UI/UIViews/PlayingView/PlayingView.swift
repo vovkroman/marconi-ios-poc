@@ -9,9 +9,15 @@
 import UIKit
 import SkeletonView
 
-class PlayingView: UIView, NibReusable {
+typealias ControlsDelegate = MarconiPlayerControlsDelegate & MarconiSeekDelegate
+
+final class PlayingView: UIView, NibReusable {
     
-    weak var playerControlsDelegate: MarconiPlayerControlsDelegate?
+    weak var playerControlsDelegate: ControlsDelegate? {
+        didSet {
+            _progressBar.delegate = playerControlsDelegate
+        }
+    }
     
     @IBOutlet private weak var _titleOfView: UILabel!
     @IBOutlet private weak var _imageView: MarconiImageView!
@@ -22,7 +28,7 @@ class PlayingView: UIView, NibReusable {
     @IBOutlet private weak var _artistName: UILabel!
     @IBOutlet private weak var _typeName: UILabel!
     @IBOutlet private weak var _controlsView: UIView!
-    @IBOutlet private weak var _progressBar: MarconiProgressBar!
+    @IBOutlet private weak var _progressBar: MarconiSlider!
     @IBOutlet private weak var _playButton: UIButton!
     @IBOutlet private weak var _muteButton: UIButton!
     
@@ -53,7 +59,10 @@ class PlayingView: UIView, NibReusable {
         _titleOfView.text = "Now playing:"
         _skipButton.isEnabled = playingItem.isSkipSupportable
         _controlsView.isHidden = !playingItem.isShowPlayerControls
-        _progressBar.progress = CGFloat(playingItem.startTime)
+        
+        _progressBar.maximumValue = playingItem.maxValue
+        _progressBar.minimumValue = playingItem.minValue
+        
         _stationName.text = playingItem.stationName
         _titleSong.text = playingItem.title
         _artistName.text = playingItem.artistName
@@ -61,8 +70,8 @@ class PlayingView: UIView, NibReusable {
         _imageView.loadImage(from: playingItem.url)
     }
     
-    func updateProgress(_ value: CGFloat) {
-        _progressBar.progress = value
+    func updateProgress(_ value: Float) {
+        _progressBar.value = value
     }
     
     func willReuseView() {

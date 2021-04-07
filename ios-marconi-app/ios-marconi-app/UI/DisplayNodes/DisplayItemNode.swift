@@ -29,11 +29,11 @@ struct DisplayItemNode {
 
 extension DisplayItemNode {
     mutating func updateProgress(value: TimeInterval) {
-        guard let progress = progress else {
+        guard let progress = progress, let offset = _metaData.offset else {
             self.progress = value
             return
         }
-        self.progress = progress + value
+        self.progress = offset + progress + value
     }
 }
 
@@ -67,6 +67,10 @@ extension DisplayItemNode {
         }
     }
     
+    var playId: String? {
+        return _metaData.playId
+    }
+    
     var url: URL? {
         return _metaData.imageUrl ?? URL(_station.square_logo_large)
     }
@@ -92,13 +96,11 @@ extension DisplayItemNode {
         return combine(_station.id, playId, trackId, with: _provider.skip)
     }
     
-    var startTime: CGFloat {
-        guard let duration = _metaData.duration, let offset = _metaData.offset else {
-            return 0.0
-        }
-        if offset > duration {
-            return CGFloat((offset - duration) / duration)
-        }
-        return CGFloat(offset / duration)
+    var maxValue: Float {
+        return Float(_metaData.duration ?? 0.0)
+    }
+    
+    var minValue: Float {
+        return 0.0
     }
 }

@@ -63,13 +63,12 @@ extension Marconi {
         private(set) var state: State = .noPlaying {
             didSet {
                 guard oldValue != state else { return }
-                print("state: \(oldValue) -> \(state)")
+                //print("state: \(oldValue) -> \(state)")
                 observer?.stateDidChanched(self, to: state)
             }
         }
         
         func transition(with event: Event) {
-            print("state: \(state) -> \(event)")
             switch (state, event) {
             case (.buffering, .bufferingStarted(_)): break
             case (_, .bufferingStarted(let playerItem)):

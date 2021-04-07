@@ -46,6 +46,9 @@
 		6F6E22152608B5AE0057D41F /* MarconiPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E22142608B5AE0057D41F /* MarconiPlayerController.swift */; };
 		6F6E22182608BF510057D41F /* Containerable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E22172608BF510057D41F /* Containerable.swift */; };
 		6F6E221A2608DDB80057D41F /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E22192608DDB80057D41F /* URL+Extensions.swift */; };
+		6F9AF80E261DB4280034B8F0 /* MarconiSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116BF260E370300CBCA9C /* MarconiSlider.swift */; };
+		6F9AF811261DB8A50034B8F0 /* UIImage+SolidColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9AF810261DB8A50034B8F0 /* UIImage+SolidColor.swift */; };
+		6F9AF815261DEE900034B8F0 /* ApplicationStateListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9AF813261DED530034B8F0 /* ApplicationStateListener.swift */; };
 		6FA3C254260B2DAA0095D6AB /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C253260B2DAA0095D6AB /* Errors.swift */; };
 		6FA3C257260B38F90095D6AB /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C256260B38F90095D6AB /* ImageLoader.swift */; };
 		6FA3C25A260B39540095D6AB /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C259260B39540095D6AB /* ImageCache.swift */; };
@@ -63,7 +66,6 @@
 		6FED1898261B143D000D5E27 /* SkipSongApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FED1897261B143D000D5E27 /* SkipSongApi.swift */; };
 		6FED189A261B1BB4000D5E27 /* SkipEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FED1899261B1BB4000D5E27 /* SkipEntity.swift */; };
 		6FF0EECA2614D4670023D2AD /* UserDefaults+StorageSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0EEC92614D4670023D2AD /* UserDefaults+StorageSettings.swift */; };
-		6FF116C0260E370300CBCA9C /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116BF260E370300CBCA9C /* ProgressBar.swift */; };
 		6FF2C78426139E8A00707126 /* DisplayItemNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2C78326139E8A00707126 /* DisplayItemNode.swift */; };
 /* End PBXBuildFile section */
 
@@ -134,6 +136,8 @@
 		6F6E22142608B5AE0057D41F /* MarconiPlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiPlayerController.swift; sourceTree = "<group>"; };
 		6F6E22172608BF510057D41F /* Containerable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Containerable.swift; sourceTree = "<group>"; };
 		6F6E22192608DDB80057D41F /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
+		6F9AF810261DB8A50034B8F0 /* UIImage+SolidColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SolidColor.swift"; sourceTree = "<group>"; };
+		6F9AF813261DED530034B8F0 /* ApplicationStateListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStateListener.swift; sourceTree = "<group>"; };
 		6FA3C253260B2DAA0095D6AB /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		6FA3C256260B38F90095D6AB /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		6FA3C259260B39540095D6AB /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
@@ -151,7 +155,7 @@
 		6FED1897261B143D000D5E27 /* SkipSongApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkipSongApi.swift; sourceTree = "<group>"; };
 		6FED1899261B1BB4000D5E27 /* SkipEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkipEntity.swift; sourceTree = "<group>"; };
 		6FF0EEC92614D4670023D2AD /* UserDefaults+StorageSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StorageSettings.swift"; sourceTree = "<group>"; };
-		6FF116BF260E370300CBCA9C /* ProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
+		6FF116BF260E370300CBCA9C /* MarconiSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarconiSlider.swift; sourceTree = "<group>"; };
 		6FF2C78326139E8A00707126 /* DisplayItemNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayItemNode.swift; sourceTree = "<group>"; };
 		D8D8FB7978952A9704B8DFA8 /* Pods-ios-marconi-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-marconi-app.release.xcconfig"; path = "Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app.release.xcconfig"; sourceTree = "<group>"; };
 		E08A428D6213F00E85FCFC05 /* Pods_ios_marconi_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ios_marconi_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -213,6 +217,7 @@
 				6F1517DA25FFC6DB00AD9354 /* LaunchScreen.storyboard */,
 				6F1517DD25FFC6DB00AD9354 /* Info.plist */,
 				6FA3C25B260B58F80095D6AB /* Globals.swift */,
+				6F9AF813261DED530034B8F0 /* ApplicationStateListener.swift */,
 			);
 			path = "ios-marconi-app";
 			sourceTree = "<group>";
@@ -404,6 +409,14 @@
 			path = "URL+Extensions";
 			sourceTree = "<group>";
 		};
+		6F9AF80F261DB88B0034B8F0 /* UIImage+SolidColor */ = {
+			isa = PBXGroup;
+			children = (
+				6F9AF810261DB8A50034B8F0 /* UIImage+SolidColor.swift */,
+			);
+			path = "UIImage+SolidColor";
+			sourceTree = "<group>";
+		};
 		6FA3C252260B2D990095D6AB /* Errors */ = {
 			isa = PBXGroup;
 			children = (
@@ -432,7 +445,7 @@
 		6FE9B898260A12F10023F68D /* UIViews */ = {
 			isa = PBXGroup;
 			children = (
-				6FF116BE260E36EF00CBCA9C /* ProgressBar */,
+				6FF116BE260E36EF00CBCA9C /* MarconiSlider */,
 				6FA3C25D260BA8100095D6AB /* MarconiImageView */,
 				6FE9B89E260A18EB0023F68D /* PlayingView */,
 				6FE9B89B260A13570023F68D /* NoPlayingItemView */,
@@ -461,6 +474,7 @@
 		6FEC7E982600DAF700C55A2D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				6F9AF80F261DB88B0034B8F0 /* UIImage+SolidColor */,
 				6F6E221B2608EB710057D41F /* URL+Extensions */,
 				6F6E22162608BF270057D41F /* UIViewControllers */,
 				6F6E22112608A53D0057D41F /* Collections */,
@@ -477,12 +491,12 @@
 			path = Storage;
 			sourceTree = "<group>";
 		};
-		6FF116BE260E36EF00CBCA9C /* ProgressBar */ = {
+		6FF116BE260E36EF00CBCA9C /* MarconiSlider */ = {
 			isa = PBXGroup;
 			children = (
-				6FF116BF260E370300CBCA9C /* ProgressBar.swift */,
+				6FF116BF260E370300CBCA9C /* MarconiSlider.swift */,
 			);
-			path = ProgressBar;
+			path = MarconiSlider;
 			sourceTree = "<group>";
 		};
 		6FF2C7792613648600707126 /* DisplayNodes */ = {
@@ -652,6 +666,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F9AF80E261DB4280034B8F0 /* MarconiSlider.swift in Sources */,
 				6F44B10B260388150047A3E5 /* Logger.swift in Sources */,
 				6F08E9D42605048F003D0E07 /* MainViewController.swift in Sources */,
 				6FA3C25F260BA84E0095D6AB /* MarconiImageView.swift in Sources */,
@@ -662,6 +677,7 @@
 				6F44B104260387E10047A3E5 /* HTTPMethod.swift in Sources */,
 				6F6E22132608A55F0057D41F /* Collections+SafeIndex.swift in Sources */,
 				6FE9B8A6260A471F0023F68D /* ImageProvider.swift in Sources */,
+				6F9AF811261DB8A50034B8F0 /* UIImage+SolidColor.swift in Sources */,
 				6F44B102260387DE0047A3E5 /* NetworkConfig.swift in Sources */,
 				6FED1898261B143D000D5E27 /* SkipSongApi.swift in Sources */,
 				6F44B11426038E360047A3E5 /* Station.swift in Sources */,
@@ -680,13 +696,13 @@
 				6F3CAC1826011AFF0058A72B /* ReusableCollectionView.swift in Sources */,
 				6F08E9D62605093E003D0E07 /* ViewModelOwnable.swift in Sources */,
 				6F44B101260387DE0047A3E5 /* StationApi.swift in Sources */,
-				6FF116C0260E370300CBCA9C /* ProgressBar.swift in Sources */,
 				6FA3C254260B2DAA0095D6AB /* Errors.swift in Sources */,
 				6FF0EECA2614D4670023D2AD /* UserDefaults+StorageSettings.swift in Sources */,
 				6FA3C25A260B39540095D6AB /* ImageCache.swift in Sources */,
 				6FA3C25C260B58F80095D6AB /* Globals.swift in Sources */,
 				6F44B0FF260387D80047A3E5 /* JSONParameterEncoder.swift in Sources */,
 				6FA3C257260B38F90095D6AB /* ImageLoader.swift in Sources */,
+				6F9AF815261DEE900034B8F0 /* ApplicationStateListener.swift in Sources */,
 				6FED1896261B1406000D5E27 /* SkipSongProvider.swift in Sources */,
 				6F44B1252603C4EC0047A3E5 /* DigitalViewController.swift in Sources */,
 				6F3CAC1926011AFF0058A72B /* ReusableTableView.swift in Sources */,

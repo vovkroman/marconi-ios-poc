@@ -23,6 +23,12 @@ protocol MarconiPlayerControlsDelegate: class {
     func performSkip()
 }
 
+protocol MarconiSeekDelegate: class {
+    func seekBegan(_ value: Float, slider: MarconiSlider)
+    func seekInProgress(_ value: Float, slider: MarconiSlider)
+    func seekEnded(_ value: Float, slider: MarconiSlider)
+}
+
 class MarconiPlayerController: UIViewController, Containerable {
     
     typealias Player = Marconi.Player
@@ -53,27 +59,29 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     private var _stationWrapper: StationWrapper? {
         willSet {
-            let _displayItem = _player.currentMetaData.flatMap{ DisplayItemNode($0, station: _stationWrapper?.station) }
-            guard let displayItem = _displayItem else { return }
-            print("displayItem: \(displayItem)")
-            _stationWrapper?.savePlayingItem(playingItem: displayItem)
+            _willReplace(_stationWrapper)
         }
     }
+    
+    private let _applicationStateListener = ApplicationStateListener()
         
     init() {
         super.init(nibName: nil, bundle: nil)
+        _applicationStateListener.delegate = self
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         _noPlayingItem()
     }
-//
+    
 //    // MARK: - Private methods
 //
-//    private func _willReplaceStation(from: StationWrapper?) {
-//        _playingItem.flatMap { item in from?.savePlayingItem(playingItem: item) }
-//    }
+    private func _willReplace(_ stationWrapper: StationWrapper?) {
+        let _displayItem = _player.currentMetaData.flatMap{ DisplayItemNode($0, station: _stationWrapper?.station) }
+        guard let displayItem = _displayItem else { return }
+        _stationWrapper?.savePlayingItem(playingItem: displayItem)
+    }
     
     // MARK: - UI is function of State Machine
     
@@ -100,11 +108,7 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     private func _updateProgress(for metaData: Marconi.MetaData, progress: TimeInterval) {
         let controller = _playingItemViewController
-        guard let duration = metaData.duration,
-            let offset = metaData.offset else {
-            return
-        }
-        controller.updateProgress(CGFloat((offset + progress) / duration))
+        controller.updateProgress(Float(progress))
     }
     
     // MARK: - Handle State
@@ -152,6 +156,11 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
 }
 
 extension MarconiPlayerController: MarconiPlayerControlsDelegate {
+    
+    func performSeek(value: Float) {
+        _player.seek(to: TimeInterval(value))
+    }
+    
     func performSkip() {
         _onSkip?().observe(){ [weak self] result in
             switch result {
@@ -178,5 +187,23 @@ extension MarconiPlayerController: MarconiPlayerControlsDelegate {
     
     func muteToggle(isMuted: Bool) {
         _player.isMuted = isMuted
+    }
+}
+
+extension MarconiPlayerController: MarconiSeekDelegate {
+    func seekBegan(_ value: Float, slider: MarconiSlider) {}
+    
+    func seekInProgress(_ value: Float, slider: MarconiSlider) {}
+    
+    func seekEnded(_ value: Float, slider: MarconiSlider) {}
+}
+
+extension MarconiPlayerController: ApplicationStateListenerDelegate {
+    
+    func onApplicationStateChanged(_ newState: ApplicationState) {
+        if case .didEnterBackground = newState {
+            // To save progress when kill the app
+            _willReplace(_stationWrapper)
+        }
     }
 }

@@ -38,7 +38,7 @@ class PlayerStateViewController<View: Viewable>: UIViewController {
 final class NoPlayingItemViewController: PlayerStateViewController<NoPlayingItemView> {}
 final class PlayingItemViewController: PlayerStateViewController<PlayingView> {
     
-    weak var playerControlsDelegate: MarconiPlayerControlsDelegate? {
+    weak var playerControlsDelegate: ControlsDelegate? {
         didSet {
             contentView.playerControlsDelegate = playerControlsDelegate
         }
@@ -60,7 +60,7 @@ final class PlayingItemViewController: PlayerStateViewController<PlayingView> {
         }
     }
     
-    func updateProgress(_ value: CGFloat) {
+    func updateProgress(_ value: Float) {
         if isViewLoaded {
             contentView.updateProgress(value)
         }

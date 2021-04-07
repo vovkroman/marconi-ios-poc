@@ -16,6 +16,8 @@ extension UserDefaults {
         
         case udid
         case offset(stationId: Int)
+        case playId(stationId: Int)
+        
         var prefixed: String { return Keys.prefix + ".\(self)" }
     }
 }
@@ -25,7 +27,9 @@ extension UserDefaults.Keys: CustomStringConvertible {
         switch self {
         case .udid: return "udid"
         case .offset(let stationID):
-            return "\(stationID)/offset"
+            return "\(stationID)/playlistOffset/"
+        case .playId(let stationID):
+            return "\(stationID)/playId/"
         }
     }
 }
@@ -42,14 +46,25 @@ extension UserDefaults {
         }
     }
     
+    // Save Progress
     static func saveProgress(_ value: String, for station: Station) {
-        Logger.debug("\(value) has been saved into local storage")
         let key = Keys.offset(stationId: station.id)
         standard.set(value, forKey: key.prefixed)
     }
     
     static func progress(by station: Station) -> String? {
         let key = Keys.offset(stationId: station.id)
+        return standard.string(forKey: key.prefixed)
+    }
+    
+    // Save PlayId
+    static func savePlayId(_ value: String, for station: Station) {
+        let key = Keys.playId(stationId: station.id)
+        standard.set(value, forKey: key.prefixed)
+    }
+    
+    static func playId(by station: Station) -> String? {
+        let key = Keys.playId(stationId: station.id)
         return standard.string(forKey: key.prefixed)
     }
 }
