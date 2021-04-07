@@ -15,12 +15,31 @@ extension Marconi {
 
 extension Marconi.Digit {
     struct DataParser {
+        
+        var trackId: String? {
+            return _dict[Identifier.songID] as? String
+        }
+        
+        var playId: String? {
+            return _dict[Identifier.sessionPlayID] as? String
+        }
+        
         var artist: String? {
             return _dict[Identifier.songArtist] as? String
         }
         
         var song: String? {
             return _dict[Identifier.songTitle] as? String
+        }
+        
+        var skips: Int? {
+            let value = _dict[Identifier.skips] as? String
+            return value.flatMap(Int.init)
+        }
+        
+        var isSkippable: Bool? {
+            let value = _dict[Identifier.skips] as? NSString
+            return value?.boolValue
         }
         
         var duration: TimeInterval? {
@@ -31,6 +50,10 @@ extension Marconi.Digit {
         var offset: TimeInterval? {
             let value = _dict[Identifier.datumStartTime]
             return value?.doubleValue
+        }
+        
+        var songID: String? {
+            return _dict[Identifier.songID] as? String
         }
         
         var url: URL? {
@@ -56,6 +79,10 @@ extension Marconi.Live {
     struct DataParser {
         var artist: String? {
             return _dict[Identifier.artist] as? String
+        }
+        
+        var Id: String? {
+            return _dict[Identifier.playID] as? String
         }
         
         var song: String? {

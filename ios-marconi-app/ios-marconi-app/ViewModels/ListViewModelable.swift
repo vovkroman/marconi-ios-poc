@@ -12,10 +12,12 @@ protocol Titlable {
     var title: String { get }
 }
 
-struct StationPlaceholder: Titlable {
+struct StationPlaceholder {
     let id: Int
     let name: String
-    
+}
+
+extension StationPlaceholder: Titlable {
     var title: String {
         return name
     }

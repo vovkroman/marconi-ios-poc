@@ -23,7 +23,6 @@ extension Marconi {
         
         private(set) var _currentMetaItem: MetaData = .none {
             didSet {
-                guard _currentMetaItem != .none else { return }
                 if oldValue != _currentMetaItem {
                     _stateMachine.transition(with: .fetchedMetaData(_currentMetaItem))
                 }
@@ -48,8 +47,10 @@ extension Marconi {
         }
         
         private func _observeProgress() {
-            _playbackProgressObserver = _player?.addLinearPeriodicTimeObserver(every: 1.0, queue: .main){ [weak self] progress in
-                self?._stateMachine.transition(with: .progressDidChanged(progress: progress.rounded()))
+            if case .digit = _stationType {
+                _playbackProgressObserver = _player?.addLinearPeriodicTimeObserver(every: 1.0, queue: .main){ [weak self] progress in
+                    self?._stateMachine.transition(with: .progressDidChanged(progress: progress.rounded()))
+                }
             }
         }
         
@@ -70,10 +71,24 @@ extension Marconi {
             playerItem.add(metadataCollector)
         }
         
+        private func _removeProgressObserver() {
+            _player?.removeTimeObserver(_playbackProgressObserver)
+            _playbackProgressObserver = nil
+        }
+        
         // Public methods
         
         deinit {
             stopMonitoring()
+        }
+        
+        public func discardProgressObserver() {
+            _removeProgressObserver()
+            _observeProgress()
+        }
+        
+        public func setPlayer(_ player: AVPlayer) {
+            _player = player
         }
         
         public func startMonitoring(_ playerItem: AVPlayerItem?, stationType: StationType) {
@@ -88,6 +103,7 @@ extension Marconi {
         }
         
         public func stopMonitoring() {
+            _player?.pause()
             _player?.removeTimeObserver(_playbackProgressObserver)
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
@@ -112,9 +128,8 @@ extension Marconi {
             }
         }
         
-        public init(_ observer: MarconiPlayerObserver?, player: AVPlayer) {
+        public init(_ observer: MarconiPlayerObserver?) {
             _stateMachine.observer = observer
-            _player = player
         }
     }
 }

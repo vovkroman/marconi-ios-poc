@@ -16,6 +16,25 @@ struct StationWrapper {
     let type: StationType
 }
 
+extension StationWrapper {
+    func savePlayingItem(playingItem: DisplayItemNode) {
+        if case .digit = type {
+            
+            // please user's seen none second of asset, repeated request will no return meta data
+            // that's why set the default value 1.0s
+            // TODO: Clarify this moment with Tony
+            let progress = playingItem.progress ?? 1.0 //else { return }
+            if progress > 0.0 {
+                UserDefaults.saveProgress("\(progress)", for: station)
+            }
+            
+            if let playId = playingItem.playId {
+                UserDefaults.savePlayId(playId, for: station)
+            }
+        }
+    }
+}
+
 extension Live {
     
     class ViewModel: ListViewModelable {
@@ -90,9 +109,15 @@ extension Digital {
         }
         
         private func _processTheStation(_ station: Station) {
-            let digitalUrl = "https://smartstreams.radio-stg.com/stream/\(station.id)/manifest/digitalstations/playlist.m3u8"
+            var digitalUrl = "https://smartstreams.radio-stg.com/stream/\(station.id)/manifest/digitalstations/playlist.m3u8?udid=\(UserDefaults.udid)"
+            if let playlistOffset = UserDefaults.progress(by: station) {
+                digitalUrl += "&playlistOffset=\(playlistOffset)"
+            }
+            if let playId = UserDefaults.playId(by: station) {
+                digitalUrl += "&playId=\(playId)"
+            }
             _playerDelegate?.willPlayStation(StationWrapper(station: station, type: .digit),
-                                             with: URL(string: digitalUrl + "?udid=\(UserDefaults.udid)&playlistOffset=60"))
+                                             with: URL(string: digitalUrl))
         }
         
         subscript(index: Int) -> Model? {
@@ -118,5 +143,4 @@ extension Digital {
             ]
         }
     }
-
 }

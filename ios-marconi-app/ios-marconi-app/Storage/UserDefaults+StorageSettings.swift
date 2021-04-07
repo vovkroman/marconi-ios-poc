@@ -10,13 +10,14 @@ import Foundation
 
 extension UserDefaults {
     enum Keys {
-        
         private static var prefix: String {
             return Bundle.main.bundleIdentifier ?? "" + ".settings"
         }
         
         case udid
-        case offset(stationName: String)
+        case offset(stationId: Int)
+        case playId(stationId: Int)
+        
         var prefixed: String { return Keys.prefix + ".\(self)" }
     }
 }
@@ -25,8 +26,10 @@ extension UserDefaults.Keys: CustomStringConvertible {
     var description: String {
         switch self {
         case .udid: return "udid"
-        case .offset(let stationName):
-            return "\(stationName)/offset"
+        case .offset(let stationID):
+            return "\(stationID)/playlistOffset/"
+        case .playId(let stationID):
+            return "\(stationID)/playId/"
         }
     }
 }
@@ -41,6 +44,28 @@ extension UserDefaults {
             standard.set(id, forKey: key)
             return id
         }
+    }
+    
+    // Save Progress
+    static func saveProgress(_ value: String, for station: Station) {
+        let key = Keys.offset(stationId: station.id)
+        standard.set(value, forKey: key.prefixed)
+    }
+    
+    static func progress(by station: Station) -> String? {
+        let key = Keys.offset(stationId: station.id)
+        return standard.string(forKey: key.prefixed)
+    }
+    
+    // Save PlayId
+    static func savePlayId(_ value: String, for station: Station) {
+        let key = Keys.playId(stationId: station.id)
+        standard.set(value, forKey: key.prefixed)
+    }
+    
+    static func playId(by station: Station) -> String? {
+        let key = Keys.playId(stationId: station.id)
+        return standard.string(forKey: key.prefixed)
     }
 }
 

@@ -17,42 +17,29 @@ protocol MarconiPlayerDelegate: class {
     func catchTheError(_ error: Error)
 }
 
-protocol MarconiPlayerControlsDelegate {
-    func didStopPlaying()
-    func willPlay()
+protocol MarconiPlayerControlsDelegate: class {
+    func playToggle(isPlay: Bool)
+    func muteToggle(isMuted: Bool)
+    func performSkip()
+}
+
+protocol MarconiSeekDelegate: class {
+    func seekBegan(_ value: Float, slider: MarconiSlider)
+    func seekInProgress(_ value: Float, slider: MarconiSlider)
+    func seekEnded(_ value: Float, slider: MarconiSlider)
 }
 
 class MarconiPlayerController: UIViewController, Containerable {
     
-    private(set) weak var _controller: UIViewController?
+    typealias Player = Marconi.Player
     
-    typealias Radio = Marconi.Radio
-    
-    private lazy var _radio: Radio = .init(self)
-    private var _station: Station!
-    private var _playingItem: DisplayItemNode?
-        
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        _noPlayingItem()
-    }
-    
-    // MARK: - UI is state function of State Machine
-    private func _noPlayingItem() {
-        let controller = NoPlayingItemViewController()
-        removeController(_controller)
-        addController(controller, onto: view)
-        _controller = controller
-    }
-    
-    private func _preparePlayingController() -> PlayingItemViewController {
+    private weak var _controller: UIViewController?
+
+    private var _playingItemViewController: PlayingItemViewController {
         guard let controller = _controller as? PlayingItemViewController else {
             removeController(_controller)
             let controller = PlayingItemViewController()
+            controller.playerControlsDelegate = self
             addController(controller, onto: view)
             _controller = controller
             return controller
@@ -60,51 +47,85 @@ class MarconiPlayerController: UIViewController, Containerable {
         return controller
     }
     
+    private var _onSkip: NextAction?
+    
+    private lazy var _player: Player = .init(self)
+    
+    private var _playingItem: DisplayItemNode? {
+        didSet {
+            _onSkip = _playingItem?.next
+        }
+    }
+    
+    private var _stationWrapper: StationWrapper? {
+        willSet {
+            _willReplace(_stationWrapper)
+        }
+    }
+    
+    private let _applicationStateListener = ApplicationStateListener()
+        
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        _applicationStateListener.delegate = self
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        _noPlayingItem()
+    }
+    
+//    // MARK: - Private methods
+//
+    private func _willReplace(_ stationWrapper: StationWrapper?) {
+        let _displayItem = _player.currentMetaData.flatMap{ DisplayItemNode($0, station: _stationWrapper?.station) }
+        guard let displayItem = _displayItem else { return }
+        _stationWrapper?.savePlayingItem(playingItem: displayItem)
+    }
+    
+    // MARK: - UI is function of State Machine
+    
+    private func _noPlayingItem() {
+        let controller = NoPlayingItemViewController()
+        removeController(_controller)
+        addController(controller, onto: view)
+        _controller = controller
+    }
+    
     private func _buffering() {
-        let controller = _preparePlayingController()
+        let controller = _playingItemViewController
         controller.willReuseController()
         controller.buffering()
     }
     
-    private func _startPlaying(_ playItem: DisplayItemNode) {
-        let controller = _preparePlayingController()
-        controller.willReuseController()
-        controller.startPlaying(playItem)
+    private func _startPlaying(_ playItem: DisplayItemNode?) {
+        if let playItem = playItem {
+            let controller = _playingItemViewController
+            controller.willReuseController()
+            controller.startPlaying(playItem)
+        }
     }
     
-    private func _updateProgress(_ value: CGFloat) {
-        let controller = _preparePlayingController()
-        controller.updateProgress(value)
+    private func _updateProgress(for metaData: Marconi.MetaData, progress: TimeInterval) {
+        let controller = _playingItemViewController
+        controller.updateProgress(Float(progress))
     }
+    
+    // MARK: - Handle State
     
     private func _handleState(_ state: Marconi.StateMachine.State) {
         switch state {
         case .noPlaying:
             _noPlayingItem()
         case .buffering(_):
-            _buffering()
             _playingItem = nil
-        case .playing(let metaData, let progress):
-            switch metaData {
-            case .live:
-                // call _startPlaying only once, because we don't need to update UI
-                if progress.isZero {
-                    let playingItemDispaly = DisplayItemNode(metaData, station: _station)
-                     _startPlaying(playingItemDispaly)
-                }
-            case .digit, .none:
-                let playingItemDispaly = DisplayItemNode(metaData, station: _station)
-                guard let playingItem = _playingItem, playingItem == playingItemDispaly else {
-                    _startPlaying(playingItemDispaly)
-                    _playingItem = playingItemDispaly
-                    return
-                }
-                guard let duration = metaData.duration,
-                    let offset = metaData.offset else {
-                    return
-                }
-                _updateProgress(CGFloat((progress + offset) / duration))
-            }
+            _buffering()
+        case .startPlaying(let metaData):
+            let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
+            _playingItem = playingItemDispaly
+            _startPlaying(playingItemDispaly)
+        case .continuePlaying(let metaData, let progress):
+            _updateProgress(for: metaData, progress: progress)
         case .error(_):
             break
         }
@@ -127,9 +148,62 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
     
     func willPlayStation(_ wrapper: StationWrapper, with url: URL?) {
         guard let url = url else { return }
+        _stationWrapper = wrapper
         _playingItem = nil
-        _station = wrapper.station
-        _radio.replaceCurrentURL(with: url, stationType: wrapper.type)
-        _radio.play()
+        _player.replaceCurrentURL(with: url, stationType: wrapper.type)
+        _player.play()
+    }
+}
+
+extension MarconiPlayerController: MarconiPlayerControlsDelegate {
+    
+    func performSeek(value: Float) {
+        _player.seek(to: TimeInterval(value))
+    }
+    
+    func performSkip() {
+        _onSkip?().observe(){ [weak self] result in
+            switch result {
+            case .success(let skipItem):
+                if let stationWrapper = self?._stationWrapper {
+                    self?.willPlayStation(stationWrapper, with: URL(skipItem.newPlaybackUrl))
+                }
+            case .failure(let error):
+                print(error)
+                break
+                // catch the error
+            }
+        }
+    }
+    
+    
+    func playToggle(isPlay: Bool) {
+        if isPlay {
+            _player.play()
+        } else {
+            _player.pause()
+        }
+    }
+    
+    func muteToggle(isMuted: Bool) {
+        _player.isMuted = isMuted
+    }
+}
+
+extension MarconiPlayerController: MarconiSeekDelegate {
+    func seekBegan(_ value: Float, slider: MarconiSlider) {}
+    
+    func seekInProgress(_ value: Float, slider: MarconiSlider) {}
+    
+    func seekEnded(_ value: Float, slider: MarconiSlider) {}
+}
+
+extension MarconiPlayerController: ApplicationStateListenerDelegate {
+    
+    func onApplicationStateChanged(_ newState: ApplicationState) {
+        if case .didEnterBackground = newState {
+            // To save progress when kill the app
+            _willReplace(_stationWrapper)
+        }
     }
 }
