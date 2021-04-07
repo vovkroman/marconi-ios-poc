@@ -109,7 +109,8 @@ class MarconiPlayerController: UIViewController, Containerable {
     private func _updateProgress(for metaData: Marconi.MetaData, progress: TimeInterval) {
         let controller = _playingItemViewController
         _playingItem?.updateProgress(value: progress)
-        controller.updateProgress(Float(progress))
+        let progress = Float(_playingItem?._progress ?? 0.0)
+        controller.updateProgress(progress)
     }
     
     // MARK: - Handle State
@@ -122,7 +123,6 @@ class MarconiPlayerController: UIViewController, Containerable {
             _playingItem = nil
             _buffering()
         case .startPlaying(let metaData):
-            print(metaData)
             let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
             _playingItem = playingItemDispaly
             _startPlaying(playingItemDispaly)
@@ -194,9 +194,7 @@ extension MarconiPlayerController: MarconiPlayerControlsDelegate {
 
 extension MarconiPlayerController: MarconiSeekDelegate {
     func seekBegan(_ value: Float, slider: MarconiSlider) {}
-    
     func seekInProgress(_ value: Float, slider: MarconiSlider) {}
-    
     func seekEnded(_ value: Float, slider: MarconiSlider) {}
 }
 
