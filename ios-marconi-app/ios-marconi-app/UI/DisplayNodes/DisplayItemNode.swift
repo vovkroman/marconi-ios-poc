@@ -18,7 +18,7 @@ struct DisplayItemNode {
     private let _metaData: Marconi.MetaData
     private let _station: Station
     
-    private(set) var progress: TimeInterval?
+    private(set) var _progress: TimeInterval?
     
     init?(_ metaData: Marconi.MetaData, station: Station?) {
         guard let station = station else { return nil }
@@ -29,11 +29,11 @@ struct DisplayItemNode {
 
 extension DisplayItemNode {
     mutating func updateProgress(value: TimeInterval) {
-        guard let progress = progress, let offset = _metaData.offset else {
-            self.progress = value
+        guard let offset = _metaData.offset else {
+            self._progress = value
             return
         }
-        self.progress = offset + progress + value
+        self._progress = offset + value
     }
 }
 
@@ -100,7 +100,7 @@ extension DisplayItemNode {
         return Float(_metaData.duration ?? 0.0)
     }
     
-    var minValue: Float {
-        return 0.0
+    var offset: Float {
+        return Float(_metaData.offset ?? 0.0)
     }
 }

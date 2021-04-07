@@ -61,7 +61,8 @@ final class PlayingView: UIView, NibReusable {
         _controlsView.isHidden = !playingItem.isShowPlayerControls
         
         _progressBar.maximumValue = playingItem.maxValue
-        _progressBar.minimumValue = playingItem.minValue
+        _progressBar.minimumValue = 0.0
+        _progressBar.value = playingItem.offset
         
         _stationName.text = playingItem.stationName
         _titleSong.text = playingItem.title

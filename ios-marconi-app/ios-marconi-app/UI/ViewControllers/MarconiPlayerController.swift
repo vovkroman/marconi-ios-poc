@@ -78,7 +78,7 @@ class MarconiPlayerController: UIViewController, Containerable {
 //    // MARK: - Private methods
 //
     private func _willReplace(_ stationWrapper: StationWrapper?) {
-        let _displayItem = _player.currentMetaData.flatMap{ DisplayItemNode($0, station: _stationWrapper?.station) }
+        let _displayItem = _playingItem ?? _player.currentMetaData.flatMap{ DisplayItemNode($0, station: _stationWrapper?.station) }
         guard let displayItem = _displayItem else { return }
         _stationWrapper?.savePlayingItem(playingItem: displayItem)
     }
@@ -108,6 +108,7 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     private func _updateProgress(for metaData: Marconi.MetaData, progress: TimeInterval) {
         let controller = _playingItemViewController
+        _playingItem?.updateProgress(value: progress)
         controller.updateProgress(Float(progress))
     }
     
@@ -121,6 +122,7 @@ class MarconiPlayerController: UIViewController, Containerable {
             _playingItem = nil
             _buffering()
         case .startPlaying(let metaData):
+            print(metaData)
             let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
             _playingItem = playingItemDispaly
             _startPlaying(playingItemDispaly)
@@ -202,7 +204,7 @@ extension MarconiPlayerController: ApplicationStateListenerDelegate {
     
     func onApplicationStateChanged(_ newState: ApplicationState) {
         if case .didEnterBackground = newState {
-            // To save progress when kill the app
+            // To save progress when enter Background the app
             _willReplace(_stationWrapper)
         }
     }

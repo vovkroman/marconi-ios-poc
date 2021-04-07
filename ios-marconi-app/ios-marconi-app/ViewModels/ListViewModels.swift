@@ -23,10 +23,8 @@ extension StationWrapper {
             // please user's seen none second of asset, repeated request will no return meta data
             // that's why set the default value 1.0s
             // TODO: Clarify this moment with Tony
-            let progress = playingItem.progress ?? 1.0 //else { return }
-            if progress > 0.0 {
-                UserDefaults.saveProgress("\(progress)", for: station)
-            }
+            let progress = playingItem._progress ?? 1.0 //else { return }
+            UserDefaults.saveProgress(progress.stringValue, for: station)
             
             if let playId = playingItem.playId {
                 UserDefaults.savePlayId(playId, for: station)
@@ -116,6 +114,7 @@ extension Digital {
             if let playId = UserDefaults.playId(by: station) {
                 digitalUrl += "&playId=\(playId)"
             }
+            print("digitalUrl: \(digitalUrl)")
             _playerDelegate?.willPlayStation(StationWrapper(station: station, type: .digit),
                                              with: URL(string: digitalUrl))
         }
