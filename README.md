@@ -10,17 +10,22 @@ The project contains 2 separated modules/frameworks and target app (descriptions
 - [x] **ios-marconi-framework** - framework which incapsulate all logic related to process metadata depands on station type (currently support digital/live station).
 **ios-marconi-framework** has been implemented upon **State Machine** pattern, supporting next states:
 
-case noPlaying - idle state;
-case buffering(AVPlayerItem) -  current AVPlayerItem has been inistialized, and added to Player, but it's not ready to play;
-case startPlaying(MetaData) -  current AVPlayerItem is ready to play, with metadata (triggered either for live or digital station);
-case continuePlaying(MetaData, TimeInterval) - state is triggered when progress for current item should be updated (triggered either for digital station ONLY);
-case error(MError) - state is triggered when caught any error;
+case **noPlaying** - idle state;
+
+case **buffering(AVPlayerItem)** -  current AVPlayerItem has been inistialized, and added to Player, but it's not ready to play;
+
+case **startPlaying(MetaData)** -  current AVPlayerItem is ready to play, with metadata (triggered either for live or digital station);
+
+case **continuePlaying(MetaData, TimeInterval)** - state is triggered when progress for current item should be updated (triggered either for digital station ONLY);
+
+case **error(MError)** - state is triggered when caught any error;
 
 [Marconi.Player](https://github.com/Entercom/ios-marconi-poc/tree/master/ios-marconi-framework/ios-marconi-framework/MarconiPlayer) inheriented from AVFoundation [AVPlayer](https://developer.apple.com/documentation/avfoundation/avplayer).
 
 Usage:
 Client code should use Marconi.Player instance, instead of AVPlayer, subscribing under states listed above, changing UI accordingly. 
 *Please note, if client is not subscribed, Marconi.Player will behave itself as regular AVPlayer*.
+
 
 
 - [x] **ios-marconi-app** - iOS target which aggregates all frameworks listed above.
