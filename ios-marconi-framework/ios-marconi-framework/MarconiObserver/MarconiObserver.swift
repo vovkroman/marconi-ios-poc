@@ -17,14 +17,17 @@ extension Marconi {
         private var _playbackLikelyToKeepUpKeyPathObserver: NSKeyValueObservation?
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
-        private var _playbackProgressObserver: Any?
         
+        private(set) var _timer: MarconiTimer?
         private weak var _player: AVPlayer?
         
         private(set) var _currentMetaItem: MetaData = .none {
             didSet {
                 if oldValue != _currentMetaItem {
                     _stateMachine.transition(with: .fetchedMetaData(_currentMetaItem))
+                    if case .readyToPlay = _player?.currentItem?.status {
+                        _startObserveProgress(_currentMetaItem)
+                    }
                 }
             }
         }
@@ -46,17 +49,21 @@ extension Marconi {
             }
         }
         
-        private func _observeProgress() {
+        private func _startObserveProgress(_ metadata: MetaData) {
             if case .digit = _stationType {
-                _playbackProgressObserver = _player?.addLinearPeriodicTimeObserver(every: 1.0, queue: .main){ [weak self] progress in
+                guard let duartion = metadata.duration else { return }
+                _timer?.invalidate()
+                _timer = .init(every: 1.0, with: metadata.offset, duration: duartion){ [weak self] progress in
                     self?._stateMachine.transition(with: .progressDidChanged(progress: progress.rounded()))
                 }
+                _timer?.start()
             }
         }
         
         private func _observeStatus(_ playerItem: AVPlayerItem) {
             switch playerItem.status {
             case .readyToPlay:
+                _startObserveProgress(_currentMetaItem)
                 _stateMachine.transition(with: .bufferingEnded(_currentMetaItem))
             case .failed:
                 _stateMachine.transition(with: .catchTheError(playerItem.error))
@@ -71,20 +78,10 @@ extension Marconi {
             playerItem.add(metadataCollector)
         }
         
-        private func _removeProgressObserver() {
-            _player?.removeTimeObserver(_playbackProgressObserver)
-            _playbackProgressObserver = nil
-        }
-        
         // Public methods
         
         deinit {
             stopMonitoring()
-        }
-        
-        public func discardProgressObserver() {
-            _removeProgressObserver()
-            _observeProgress()
         }
         
         public func setPlayer(_ player: AVPlayer) {
@@ -99,19 +96,17 @@ extension Marconi {
             _stationType = stationType
             _fetchMetaData(newPlayingItem)
             _observeBuffering(newPlayingItem)
-            _observeProgress()
         }
         
         public func stopMonitoring() {
             _player?.pause()
-            _player?.removeTimeObserver(_playbackProgressObserver)
+            _timer?.invalidate()
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
             _playbackBufferFullObserver?.invalidate()
             _playbackBufferEmptyObserver = nil
             _playbackLikelyToKeepUpKeyPathObserver = nil
             _playbackBufferFullObserver = nil
-            _playbackProgressObserver = nil
         }
         
         public func metadataCollector(_ metadataCollector: AVPlayerItemMetadataCollector,

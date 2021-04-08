@@ -29,11 +29,7 @@ struct DisplayItemNode {
 
 extension DisplayItemNode {
     mutating func updateProgress(value: TimeInterval) {
-        guard let offset = _metaData.offset else {
-            self._progress = value
-            return
-        }
-        self._progress = offset + value
+        _progress = value
     }
 }
 

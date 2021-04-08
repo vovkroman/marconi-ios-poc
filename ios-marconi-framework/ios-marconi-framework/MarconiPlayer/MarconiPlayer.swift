@@ -18,6 +18,16 @@ extension Marconi {
             return _observer?._currentMetaItem
         }
         
+        public override func play() {
+            super.play()
+            _observer?._timer?.start()
+        }
+        
+        public override func pause() {
+            super.pause()
+            _observer?._timer?.pause()
+        }
+        
         public func replaceCurrentURL(with url: URL, stationType: StationType) {
             _observer?.stopMonitoring()
             replaceCurrentItem(with: nil)

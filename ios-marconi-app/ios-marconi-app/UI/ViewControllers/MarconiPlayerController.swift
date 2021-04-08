@@ -109,6 +109,7 @@ class MarconiPlayerController: UIViewController, Containerable {
     private func _updateProgress(for metaData: Marconi.MetaData, progress: TimeInterval) {
         let controller = _playingItemViewController
         _playingItem?.updateProgress(value: progress)
+        print("Progress: \(_playingItem?._progress)")
         let progress = Float(_playingItem?._progress ?? 0.0)
         controller.updateProgress(progress)
     }
@@ -158,10 +159,6 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
 }
 
 extension MarconiPlayerController: MarconiPlayerControlsDelegate {
-    
-    func performSeek(value: Float) {
-        _player.seek(to: TimeInterval(value))
-    }
     
     func performSkip() {
         _onSkip?().observe(){ [weak self] result in
