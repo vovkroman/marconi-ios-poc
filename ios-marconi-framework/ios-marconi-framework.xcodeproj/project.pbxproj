@@ -7,10 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6F00155E261F0A4C002CB57A /* MarconiTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F00155D261F0A4C002CB57A /* MarconiTimer.swift */; };
-		6F001564261F3FB9002CB57A /* WeakTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F00155B261F0579002CB57A /* WeakTimer.swift */; };
+		6F00155E261F0A4C002CB57A /* TimingsObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F00155D261F0A4C002CB57A /* TimingsObserver.swift */; };
 		6F08E9CB2604AC74003D0E07 /* MarconiStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9CA2604AC74003D0E07 /* MarconiStateMachine.swift */; };
-		6F08E9D02604C596003D0E07 /* MarconiObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9CF2604C596003D0E07 /* MarconiObserver.swift */; };
+		6F08E9D02604C596003D0E07 /* PlayerObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9CF2604C596003D0E07 /* PlayerObserver.swift */; };
 		6F1517B325FFC66400AD9354 /* ios_marconi_framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F1517A925FFC66400AD9354 /* ios_marconi_framework.framework */; };
 		6F1517B825FFC66400AD9354 /* ios_marconi_frameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1517B725FFC66400AD9354 /* ios_marconi_frameworkTests.swift */; };
 		6F1517BA25FFC66400AD9354 /* ios_marconi_framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F1517AC25FFC66400AD9354 /* ios_marconi_framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -33,10 +32,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6F00155B261F0579002CB57A /* WeakTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakTimer.swift; sourceTree = "<group>"; };
-		6F00155D261F0A4C002CB57A /* MarconiTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiTimer.swift; sourceTree = "<group>"; };
+		6F00155D261F0A4C002CB57A /* TimingsObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimingsObserver.swift; sourceTree = "<group>"; };
 		6F08E9CA2604AC74003D0E07 /* MarconiStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiStateMachine.swift; sourceTree = "<group>"; };
-		6F08E9CF2604C596003D0E07 /* MarconiObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiObserver.swift; sourceTree = "<group>"; };
+		6F08E9CF2604C596003D0E07 /* PlayerObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerObserver.swift; sourceTree = "<group>"; };
 		6F1517A925FFC66400AD9354 /* ios_marconi_framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ios_marconi_framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F1517AC25FFC66400AD9354 /* ios_marconi_framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ios_marconi_framework.h; sourceTree = "<group>"; };
 		6F1517AD25FFC66400AD9354 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,14 +68,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6F00155F261F3C0E002CB57A /* MarconiTimer */ = {
-			isa = PBXGroup;
-			children = (
-				6F00155D261F0A4C002CB57A /* MarconiTimer.swift */,
-			);
-			path = MarconiTimer;
-			sourceTree = "<group>";
-		};
 		6F08E9D12604D239003D0E07 /* MarconiPlayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -90,7 +80,8 @@
 		6F08E9D22604D24D003D0E07 /* MarconiObserver */ = {
 			isa = PBXGroup;
 			children = (
-				6F08E9CF2604C596003D0E07 /* MarconiObserver.swift */,
+				6F00155D261F0A4C002CB57A /* TimingsObserver.swift */,
+				6F08E9CF2604C596003D0E07 /* PlayerObserver.swift */,
 			);
 			path = MarconiObserver;
 			sourceTree = "<group>";
@@ -116,13 +107,11 @@
 		6F1517AB25FFC66400AD9354 /* ios-marconi-framework */ = {
 			isa = PBXGroup;
 			children = (
-				6F00155F261F3C0E002CB57A /* MarconiTimer */,
 				6FF116C1260E44A300CBCA9C /* Extensions */,
 				6FE9B893260A075E0023F68D /* MetaDatas */,
 				6F08E9D22604D24D003D0E07 /* MarconiObserver */,
 				6F08E9D12604D239003D0E07 /* MarconiPlayer */,
 				6F1517AC25FFC66400AD9354 /* ios_marconi_framework.h */,
-				6F00155B261F0579002CB57A /* WeakTimer.swift */,
 				6F1517AD25FFC66400AD9354 /* Info.plist */,
 			);
 			path = "ios-marconi-framework";
@@ -267,11 +256,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FF0EEC6261473340023D2AD /* StationType.swift in Sources */,
-				6F001564261F3FB9002CB57A /* WeakTimer.swift in Sources */,
-				6F00155E261F0A4C002CB57A /* MarconiTimer.swift in Sources */,
+				6F00155E261F0A4C002CB57A /* TimingsObserver.swift in Sources */,
 				6FF116C3260E44C300CBCA9C /* Extensions+AVPlayer.swift in Sources */,
 				6F44B1272603C6EA0047A3E5 /* MarconiPlayer.swift in Sources */,
-				6F08E9D02604C596003D0E07 /* MarconiObserver.swift in Sources */,
+				6F08E9D02604C596003D0E07 /* PlayerObserver.swift in Sources */,
 				6FE9B895260A077B0023F68D /* MarconiMetaDatas.swift in Sources */,
 				6FF116B9260E34C500CBCA9C /* MetaDataParser.swift in Sources */,
 				6FF116B8260E34C500CBCA9C /* Identifiers.swift in Sources */,

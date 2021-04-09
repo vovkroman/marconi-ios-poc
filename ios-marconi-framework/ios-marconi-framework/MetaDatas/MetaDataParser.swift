@@ -48,7 +48,12 @@ extension Marconi.Digit {
         }
         
         var offset: TimeInterval? {
-            let value = _dict[Identifier.datumStartTime]
+            let value = _dict[Identifier.datumTime]
+            return value?.doubleValue
+        }
+        
+        var datumInterval: TimeInterval? {
+            let value = _dict[Identifier.playlistTrackStartTime]
             return value?.doubleValue
         }
         
@@ -71,6 +76,11 @@ extension Marconi.Digit {
                     _dict[identifier] = value
                 }
             }
+            print("----Got the meta data-------")
+            for key in _dict.keys {
+                print("\(key) ----- \(_dict[key])")
+            }
+            print("------end------------")
         }
     }
 }

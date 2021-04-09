@@ -17,17 +17,19 @@ struct StationWrapper {
 }
 
 extension StationWrapper {
-    func savePlayingItem(playingItem: DisplayItemNode) {
+    typealias ProgressData = (progress: TimeInterval?, playId: String?)
+    func saveCurrent(progressData: ProgressData) {
         if case .digit = type {
             
             // please user's seen none second of asset, repeated request will no return meta data
             // that's why set the default value 1.0s
             // TODO: Clarify this moment with Tony
-            let progress = playingItem._progress ?? 1.0 //else { return }
+            let progress = progressData.progress ?? 1.0 //else { return }
             UserDefaults.saveProgress(progress.stringValue, for: station)
             
-            if let playId = playingItem.playId {
+            if let playId = progressData.playId {
                 UserDefaults.savePlayId(playId, for: station)
+                Logger.debug("Saved \(progress) progress by playId: \(playId)", category: .default)
             }
         }
     }

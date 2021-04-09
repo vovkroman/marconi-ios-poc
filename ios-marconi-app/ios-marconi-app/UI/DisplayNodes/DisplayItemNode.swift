@@ -12,24 +12,17 @@ import FutureKit
 
 typealias NextAction = () -> Future<SkipEntity>
 
+// Plz notice, DisplayItemNode knows nothing about the current progress
 struct DisplayItemNode {
     
     private let _provider: SkipSongProvider = .init()
     private let _metaData: Marconi.MetaData
     private let _station: Station
-    
-    private(set) var _progress: TimeInterval?
-    
+        
     init?(_ metaData: Marconi.MetaData, station: Station?) {
         guard let station = station else { return nil }
         _metaData = metaData
         _station = station
-    }
-}
-
-extension DisplayItemNode {
-    mutating func updateProgress(value: TimeInterval) {
-        _progress = value
     }
 }
 
@@ -61,10 +54,6 @@ extension DisplayItemNode {
         case .none:
             return "Type: Unknown"
         }
-    }
-    
-    var playId: String? {
-        return _metaData.playId
     }
     
     var url: URL? {

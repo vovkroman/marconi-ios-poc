@@ -14,18 +14,13 @@ extension Marconi {
         
         private var _observer: PlayerObserver?
         
-        public var currentMetaData: MetaData? {
-            return _observer?._currentMetaItem
+        // TODO: Taken out of the player
+        public var streamProgress: TimeInterval? {
+            return _observer?._streamProgress
         }
         
-        public override func play() {
-            super.play()
-            _observer?._timer?.start()
-        }
-        
-        public override func pause() {
-            super.pause()
-            _observer?._timer?.pause()
+        public var playId: String? {
+            return _observer?._currentMetaItem.playId
         }
         
         public func replaceCurrentURL(with url: URL, stationType: StationType) {

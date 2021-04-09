@@ -78,9 +78,7 @@ class MarconiPlayerController: UIViewController, Containerable {
 //    // MARK: - Private methods
 //
     private func _willReplace(_ stationWrapper: StationWrapper?) {
-        let _displayItem = _playingItem ?? _player.currentMetaData.flatMap{ DisplayItemNode($0, station: _stationWrapper?.station) }
-        guard let displayItem = _displayItem else { return }
-        _stationWrapper?.savePlayingItem(playingItem: displayItem)
+        _stationWrapper?.saveCurrent(progressData: (_player.streamProgress, _player.playId))
     }
     
     // MARK: - UI is function of State Machine
@@ -107,11 +105,9 @@ class MarconiPlayerController: UIViewController, Containerable {
     }
     
     private func _updateProgress(for metaData: Marconi.MetaData, progress: TimeInterval) {
+        Logger.debug("Porgress has been changed: \(progress)")
         let controller = _playingItemViewController
-        _playingItem?.updateProgress(value: progress)
-        print("Progress: \(_playingItem?._progress)")
-        let progress = Float(_playingItem?._progress ?? 0.0)
-        controller.updateProgress(progress)
+        controller.updateProgress(Float(progress))
     }
     
     // MARK: - Handle State
