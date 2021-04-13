@@ -65,7 +65,8 @@ extension Marconi {
                 if case .continuePlaying = _state {
                     isContinuePlaying = true
                 }
-                _timerObsrever?.startObserving(metadata: _currentMetaItem, isContinuePlaying: isContinuePlaying)
+                _timerObsrever?.startObserving(metadata: _currentMetaItem,
+                                               isContinuePlaying: isContinuePlaying)
             }
         }
         

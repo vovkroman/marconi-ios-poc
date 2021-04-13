@@ -33,10 +33,15 @@ extension Marconi {
                 _playlistOffset = metadata.playlistStartTime
                 _counter = 0.0
             } else {
-                _playlistOffset = metadata.playlistOffset
-                _counter = metadata.playlistOffset - metadata.playlistStartTime
+                if metadata.playlistOffset < metadata.playlistStartTime {
+                    // TODO: Clarify this scenario
+                    _playlistOffset = metadata.playlistOffset + metadata.playlistStartTime
+                    _counter = metadata.playlistOffset
+                } else {
+                    _playlistOffset = metadata.playlistOffset
+                    _counter = metadata.playlistOffset - metadata.playlistStartTime
+                }
             }
-            print("PLAYLIST: \(_playlistOffset)")
             _progressObserver = _player?.addLinearPeriodicTimeObserver(every: _interval, queue: .main, using: _progressing)
         }
         

@@ -18,11 +18,13 @@ struct DisplayItemNode {
     private let _provider: SkipSongProvider = .init()
     private let _metaData: Marconi.MetaData
     private let _station: Station
+    private let _isPlaying: Bool
         
-    init?(_ metaData: Marconi.MetaData, station: Station?) {
+    init?(_ metaData: Marconi.MetaData, station: Station?, isPlaying: Bool) {
         guard let station = station else { return nil }
         _metaData = metaData
         _station = station
+        _isPlaying = isPlaying
     }
 }
 
@@ -33,6 +35,11 @@ extension DisplayItemNode: Equatable {
 }
 
 extension DisplayItemNode {
+    
+    var isPlaying: Bool {
+        return _isPlaying
+    }
+    
     var title: String {
         return _metaData.song ?? "Unknown"
     }

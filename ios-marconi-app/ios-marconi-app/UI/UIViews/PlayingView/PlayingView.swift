@@ -55,7 +55,7 @@ final class PlayingView: UIView, NibReusable {
     
     func startPlaying(_ playingItem: DisplayItemNode) {
         stopBuffering()
-        _playButton.isSelected = true
+        _playButton.isSelected = playingItem.isPlaying
         _titleOfView.text = "Now playing:"
         _skipButton.isEnabled = playingItem.isSkipSupportable
         _controlsView.isHidden = !playingItem.isShowPlayerControls

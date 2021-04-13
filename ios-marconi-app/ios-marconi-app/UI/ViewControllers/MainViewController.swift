@@ -32,7 +32,10 @@ class MainViewController: UIViewController, Containerable {
         let digitVC = Digital.ViewController(viewModel: Digital.ViewModel(_playerController))
         digitVC.tabBarItem.title = "Digital Stations"
         
-        tabBarController.viewControllers = [liveVC, digitVC]
+        let loggerVC = LoggerViewController()
+        loggerVC.tabBarItem.title = "Logger"
+        
+        tabBarController.viewControllers = [liveVC, digitVC, loggerVC]
         addController(tabBarController, onto: tabBarContainer)
     }
     

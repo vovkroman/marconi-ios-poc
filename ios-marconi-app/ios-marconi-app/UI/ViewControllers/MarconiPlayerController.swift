@@ -67,7 +67,7 @@ class MarconiPlayerController: UIViewController, Containerable {
         
     init() {
         super.init(nibName: nil, bundle: nil)
-        _applicationStateListener.delegate = self
+        _applicationStateListener.delegate = self // I'm your father, Luke
     }
     
     override func viewDidLoad() {
@@ -105,7 +105,6 @@ class MarconiPlayerController: UIViewController, Containerable {
     }
     
     private func _updateProgress(for metaData: Marconi.MetaData, progress: TimeInterval) {
-        Logger.debug("Porgress has been changed: \(progress)")
         let controller = _playingItemViewController
         controller.updateProgress(Float(progress))
     }
@@ -117,10 +116,13 @@ class MarconiPlayerController: UIViewController, Containerable {
         case .noPlaying:
             _noPlayingItem()
         case .buffering(_):
+            // to nullify _onSkip handler
             _playingItem = nil
             _buffering()
         case .startPlaying(let metaData):
-            let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
+            let playingItemDispaly = DisplayItemNode(metaData,
+                                                     station: _stationWrapper?.station,
+                                                     isPlaying: _player.isPlaying)
             _playingItem = playingItemDispaly
             _startPlaying(playingItemDispaly)
         case .continuePlaying(let metaData, let progress):
