@@ -51,7 +51,7 @@ extension Marconi {
             switch self {
             case .live(_, let artist, _):
                 return artist
-            case .digit(_, _, _, let artist, _, _, _, _, _, _, _):
+            case .digit(_, _, let artist, _, _, _, _, _, _, _, _):
                 return artist
             case .none:
                 return nil
