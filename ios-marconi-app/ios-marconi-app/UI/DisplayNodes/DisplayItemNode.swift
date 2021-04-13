@@ -86,6 +86,6 @@ extension DisplayItemNode {
     }
     
     var offset: Float {
-        return Float(_metaData.offset ?? 0.0)
+        return Float(_metaData.playlistOffset)
     }
 }
