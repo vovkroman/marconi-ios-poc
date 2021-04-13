@@ -29,6 +29,5 @@ protocol Selectable {
 
 protocol ListViewModelable: Selectable {
     associatedtype Model: Titlable
-    var count: Int { get }
-    subscript(index: Int) -> Model? { get }
+    var items: ContiguousArray<Model> { get set }
 }

@@ -35,29 +35,49 @@ extension StationWrapper {
     }
 }
 
-extension Live {
+class BaseListViewModel: ListViewModelable {
+    typealias Model = StationPlaceholder
     
-    class ViewModel: ListViewModelable {
-        
-        typealias Model = StationPlaceholder
-        
-        private let _items: ContiguousArray<Model>
-        private weak var _playerDelegate: MarconiPlayerDelegate?
-        private let _provider: StationProvider = .init()
-        
-        private func _fetchStation(by id: Int) {
-            _provider.fetch(by: id).observe { [weak self](result) in
-                switch result {
-                case .success(let station):
-                    self?._processTheStation(station)
-                case .failure(let error):
-                    Logger.error(error.localizedDescription, category: .api)
-                    self?._playerDelegate?.catchTheError(error)
-                }
+    var items: ContiguousArray<Model>
+    
+    private(set) weak var _playerDelegate: MarconiPlayerDelegate?
+    private let _provider: StationProvider = .init()
+    
+    private func _fetchStation(by id: Int) {
+        _provider.fetch(by: id).observe { [weak self](result) in
+            switch result {
+            case .success(let station):
+                self?.processTheStation(station)
+            case .failure(let error):
+                Logger.error(error.localizedDescription, category: .api)
+                self?._playerDelegate?.catchTheError(error)
             }
         }
-        
-        private func _processTheStation(_ station: Station) {
+    }
+    
+    func processTheStation(_ station: Station) {
+        //fatalError("method should be overrided")
+    }
+    
+    subscript(index: Int) -> Model? {
+        return items[safe: index]
+    }
+    
+    func didSelected(at indexPath: IndexPath) {
+        guard let stationPlaceHolder = items[safe: indexPath.row] else { return }
+        _fetchStation(by: stationPlaceHolder.id)
+    }
+    
+    required init(_ playerDelegate: MarconiPlayerDelegate?) {
+        self._playerDelegate = playerDelegate
+        self.items = []
+    }
+}
+
+extension Live {
+    
+    class ViewModel: BaseListViewModel {
+        override func processTheStation(_ station: Station) {
             // if hls is not present in streams so skip it
             guard let hls = station.streams?.first(where: { $0.type == .m3u8 }) else {
                 _playerDelegate?.catchTheError(ErrorType.noHls(stationName: station.name))
@@ -67,20 +87,9 @@ extension Live {
                                              with: URL(string: hls.url + "?udid=\(UserDefaults.udid)"))
         }
         
-        subscript(index: Int) -> Model? {
-            return _items[safe: index]
-        }
-
-        var count: Int { return _items.count }
-        
-        func didSelected(at indexPath: IndexPath) {
-            guard let stationPlaceHolder = _items[safe: indexPath.row] else { return }
-            _fetchStation(by: stationPlaceHolder.id)
-        }
-        
         required init(_ playerDelegate: MarconiPlayerDelegate?) {
-            _playerDelegate = playerDelegate
-            _items = [.init(id: 1005, name: "ALT 92.3"),
+            super.init(playerDelegate)
+            items = [.init(id: 1005, name: "ALT 92.3"),
                       .init(id: 395, name: "Your '70s Playlist"),
                       .init(id: 657, name: "The Cove")]
         }
@@ -88,27 +97,9 @@ extension Live {
 }
 
 extension Digital {
-    class ViewModel: ListViewModelable {
+    class ViewModel: BaseListViewModel {
         
-        typealias Model = StationPlaceholder
-        
-        private let _items: ContiguousArray<Model>
-        private weak var _playerDelegate: MarconiPlayerDelegate?
-        private let _provider: StationProvider = .init()
-        
-        private func _fetchStation(by id: Int) {
-            _provider.fetch(by: id).observe { [weak self](result) in
-                switch result {
-                case .success(let station):
-                    self?._processTheStation(station)
-                case .failure(let error):
-                    Logger.error(error.localizedDescription, category: .api)
-                    self?._playerDelegate?.catchTheError(error)
-                }
-            }
-        }
-        
-        private func _processTheStation(_ station: Station) {
+        override func processTheStation(_ station: Station) {
             var digitalUrl = "https://smartstreams.radio-stg.com/stream/\(station.id)/manifest/digitalstations/playlist.m3u8?udid=\(UserDefaults.udid)"
             if let playlistOffset = UserDefaults.progress(by: station) {
                 digitalUrl += "&playlistOffset=\(playlistOffset)"
@@ -121,20 +112,9 @@ extension Digital {
                                              with: URL(string: digitalUrl))
         }
         
-        subscript(index: Int) -> Model? {
-            return _items[safe: index]
-        }
-
-        var count: Int { return _items.count }
-        
-        func didSelected(at indexPath: IndexPath) {
-            guard let stationPlaceHolder = _items[safe: indexPath.row] else { return }
-            _fetchStation(by: stationPlaceHolder.id)
-        }
-        
         required init(_ playerDelegate: MarconiPlayerDelegate?) {
-            _playerDelegate = playerDelegate
-            _items = [.init(id: 2395, name: "Women of Alt"),
+            super.init(playerDelegate)
+            items = [.init(id: 2395, name: "Women of Alt"),
                       .init(id: 2396, name: "Ladies of Country"),
                       .init(id: 2401, name: "Slow Jams"),
                       .init(id: 2402, name: "Lighters in the Air"),
