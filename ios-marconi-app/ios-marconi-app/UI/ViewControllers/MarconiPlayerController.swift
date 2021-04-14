@@ -122,12 +122,14 @@ class MarconiPlayerController: UIViewController, Containerable {
             _playingItem = nil
             _buffering()
         case .startPlaying(let metaData):
-            logger?.emittedEvent(event: .metaDataItem(item: metaData))
             let playingItemDispaly = DisplayItemNode(metaData,
                                                      station: _stationWrapper?.station,
                                                      isPlaying: _player.isPlaying)
             _playingItem = playingItemDispaly
             _startPlaying(playingItemDispaly)
+            
+            // Log event
+            logger?.emittedEvent(event: .metaDataItem(item: metaData))
         case .continuePlaying(let metaData, let progress):
             _updateProgress(for: metaData, progress: progress)
         case .error(_):
@@ -154,9 +156,11 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
         guard let url = url else { return }
         _stationWrapper = wrapper
         _playingItem = nil
-        logger?.emittedEvent(event: .handleStreamURL(description: "\(url) to initialize \(wrapper.station.name)"))
         _player.replaceCurrentURL(with: url, stationType: wrapper.type)
         _player.play()
+        
+        // Log event
+        logger?.emittedEvent(event: .handleStreamURL(description: "\(url) to initialize \(wrapper.station.name)"))
     }
 }
 
