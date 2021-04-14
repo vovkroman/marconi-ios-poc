@@ -78,10 +78,8 @@ extension Marconi {
             case (.buffering, .fetchedMetaData(_)):
                 // fetched meta data but buffering still in progress
                 break
-            case (.startPlaying(let old), .fetchedMetaData(let new)):
-                if old != new {
-                    state = .startPlaying(new)
-                }
+            case (.startPlaying(_), .fetchedMetaData(let new)):
+                state = .startPlaying(new)
             case (_, .bufferingEnded(let new)):
                 state = .startPlaying(new)
             case (.noPlaying, .fetchedMetaData(_)): break
@@ -92,10 +90,8 @@ extension Marconi {
                 state = .startPlaying(newMetaData)
             case (.startPlaying(let playingItem), .progressDidChanged(let progress)):
                 state = .continuePlaying(playingItem, progress)
-            case (.continuePlaying(let old, _), .fetchedMetaData(let new)):
-                if old != new {
-                    state = .startPlaying(new)
-                }
+            case (.continuePlaying(_, _), .fetchedMetaData(let new)):
+                state = .startPlaying(new)
             case (.continuePlaying(let meta, _), .progressDidChanged(let progress)):
                 state = .continuePlaying(meta, progress)
             case (_, .progressDidChanged(_)):

@@ -70,6 +70,7 @@ final class MarconiImageView: UIImageView {
     func loadImage(from url: URL?) {
         guard let url = url else { return }
         let size = frame.size
+        if !isSkeletonActive { showAnimatedSkeleton() }
         _provider.fetchImage(by: url)
                   .loadInto(into: self, with: size)
     }

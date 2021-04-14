@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5D5736EE7E203CB28056DD20 /* Pods_ios_marconi_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E08A428D6213F00E85FCFC05 /* Pods_ios_marconi_app.framework */; };
+		6F04511A26260C560092E4A4 /* LoggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F04511926260C560092E4A4 /* LoggerViewController.swift */; };
+		6F04511E262614400092E4A4 /* LoggerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F04511D262614400092E4A4 /* LoggerViewModel.swift */; };
 		6F08E9D42605048F003D0E07 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9D32605048F003D0E07 /* MainViewController.swift */; };
 		6F08E9D62605093E003D0E07 /* ViewModelOwnable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F08E9D52605093E003D0E07 /* ViewModelOwnable.swift */; };
 		6F1517D025FFC6D800AD9354 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1517CF25FFC6D800AD9354 /* AppDelegate.swift */; };
@@ -49,6 +51,7 @@
 		6F9AF80E261DB4280034B8F0 /* MarconiSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116BF260E370300CBCA9C /* MarconiSlider.swift */; };
 		6F9AF811261DB8A50034B8F0 /* UIImage+SolidColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9AF810261DB8A50034B8F0 /* UIImage+SolidColor.swift */; };
 		6F9AF815261DEE900034B8F0 /* ApplicationStateListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9AF813261DED530034B8F0 /* ApplicationStateListener.swift */; };
+		6F9AF82B261DFC620034B8F0 /* Double+StringConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9AF82A261DFC620034B8F0 /* Double+StringConverter.swift */; };
 		6FA3C254260B2DAA0095D6AB /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C253260B2DAA0095D6AB /* Errors.swift */; };
 		6FA3C257260B38F90095D6AB /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C256260B38F90095D6AB /* ImageLoader.swift */; };
 		6FA3C25A260B39540095D6AB /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C259260B39540095D6AB /* ImageCache.swift */; };
@@ -67,6 +70,9 @@
 		6FED189A261B1BB4000D5E27 /* SkipEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FED1899261B1BB4000D5E27 /* SkipEntity.swift */; };
 		6FF0EECA2614D4670023D2AD /* UserDefaults+StorageSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0EEC92614D4670023D2AD /* UserDefaults+StorageSettings.swift */; };
 		6FF2C78426139E8A00707126 /* DisplayItemNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2C78326139E8A00707126 /* DisplayItemNode.swift */; };
+		6FFDB89426270A3700602F0A /* LogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFDB89226270A3700602F0A /* LogTableViewCell.swift */; };
+		6FFDB89526270A3700602F0A /* LogTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FFDB89326270A3700602F0A /* LogTableViewCell.xib */; };
+		6FFDB89726271B1D00602F0A /* LogPresentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFDB89626271B1D00602F0A /* LogPresentNode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +102,8 @@
 
 /* Begin PBXFileReference section */
 		2ED3931EB7DDB41FFAD74885 /* Pods-ios-marconi-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-marconi-app.debug.xcconfig"; path = "Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app.debug.xcconfig"; sourceTree = "<group>"; };
+		6F04511926260C560092E4A4 /* LoggerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerViewController.swift; sourceTree = "<group>"; };
+		6F04511D262614400092E4A4 /* LoggerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerViewModel.swift; sourceTree = "<group>"; };
 		6F08E9D32605048F003D0E07 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		6F08E9D52605093E003D0E07 /* ViewModelOwnable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelOwnable.swift; sourceTree = "<group>"; };
 		6F1517CC25FFC6D800AD9354 /* ios-marconi-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-marconi-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,6 +146,7 @@
 		6F6E22192608DDB80057D41F /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		6F9AF810261DB8A50034B8F0 /* UIImage+SolidColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SolidColor.swift"; sourceTree = "<group>"; };
 		6F9AF813261DED530034B8F0 /* ApplicationStateListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStateListener.swift; sourceTree = "<group>"; };
+		6F9AF82A261DFC620034B8F0 /* Double+StringConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+StringConverter.swift"; sourceTree = "<group>"; };
 		6FA3C253260B2DAA0095D6AB /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		6FA3C256260B38F90095D6AB /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		6FA3C259260B39540095D6AB /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
@@ -157,6 +166,9 @@
 		6FF0EEC92614D4670023D2AD /* UserDefaults+StorageSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StorageSettings.swift"; sourceTree = "<group>"; };
 		6FF116BF260E370300CBCA9C /* MarconiSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarconiSlider.swift; sourceTree = "<group>"; };
 		6FF2C78326139E8A00707126 /* DisplayItemNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayItemNode.swift; sourceTree = "<group>"; };
+		6FFDB89226270A3700602F0A /* LogTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogTableViewCell.swift; sourceTree = "<group>"; };
+		6FFDB89326270A3700602F0A /* LogTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogTableViewCell.xib; sourceTree = "<group>"; };
+		6FFDB89626271B1D00602F0A /* LogPresentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogPresentNode.swift; sourceTree = "<group>"; };
 		D8D8FB7978952A9704B8DFA8 /* Pods-ios-marconi-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios-marconi-app.release.xcconfig"; path = "Target Support Files/Pods-ios-marconi-app/Pods-ios-marconi-app.release.xcconfig"; sourceTree = "<group>"; };
 		E08A428D6213F00E85FCFC05 /* Pods_ios_marconi_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ios_marconi_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -352,6 +364,7 @@
 				6F44B11D2603C0C70047A3E5 /* LiveStationsViewController.swift */,
 				6F44B1242603C4EC0047A3E5 /* DigitalViewController.swift */,
 				6FE9B896260A0C940023F68D /* PlayerStateViewController.swift */,
+				6F04511926260C560092E4A4 /* LoggerViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -362,6 +375,7 @@
 				6F44B1192603B0F20047A3E5 /* ListViewModelable.swift */,
 				6F44B11B2603B9060047A3E5 /* ListViewModels.swift */,
 				6F08E9D52605093E003D0E07 /* ViewModelOwnable.swift */,
+				6F04511D262614400092E4A4 /* LoggerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -369,8 +383,8 @@
 		6F44B11F2603C1790047A3E5 /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
-				6F44B1202603C1B10047A3E5 /* StationTableViewCell.swift */,
-				6F44B1212603C1B10047A3E5 /* StationTableViewCell.xib */,
+				6FFDB89126270A1E00602F0A /* LogTableViewCell */,
+				6FFDB89026270A1200602F0A /* StationTableViewCell */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -415,6 +429,14 @@
 				6F9AF810261DB8A50034B8F0 /* UIImage+SolidColor.swift */,
 			);
 			path = "UIImage+SolidColor";
+			sourceTree = "<group>";
+		};
+		6F9AF829261DFC2D0034B8F0 /* Double+StringConverter */ = {
+			isa = PBXGroup;
+			children = (
+				6F9AF82A261DFC620034B8F0 /* Double+StringConverter.swift */,
+			);
+			path = "Double+StringConverter";
 			sourceTree = "<group>";
 		};
 		6FA3C252260B2D990095D6AB /* Errors */ = {
@@ -474,6 +496,7 @@
 		6FEC7E982600DAF700C55A2D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				6F9AF829261DFC2D0034B8F0 /* Double+StringConverter */,
 				6F9AF80F261DB88B0034B8F0 /* UIImage+SolidColor */,
 				6F6E221B2608EB710057D41F /* URL+Extensions */,
 				6F6E22162608BF270057D41F /* UIViewControllers */,
@@ -503,8 +526,27 @@
 			isa = PBXGroup;
 			children = (
 				6FF2C78326139E8A00707126 /* DisplayItemNode.swift */,
+				6FFDB89626271B1D00602F0A /* LogPresentNode.swift */,
 			);
 			path = DisplayNodes;
+			sourceTree = "<group>";
+		};
+		6FFDB89026270A1200602F0A /* StationTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				6F44B1202603C1B10047A3E5 /* StationTableViewCell.swift */,
+				6F44B1212603C1B10047A3E5 /* StationTableViewCell.xib */,
+			);
+			path = StationTableViewCell;
+			sourceTree = "<group>";
+		};
+		6FFDB89126270A1E00602F0A /* LogTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				6FFDB89226270A3700602F0A /* LogTableViewCell.swift */,
+				6FFDB89326270A3700602F0A /* LogTableViewCell.xib */,
+			);
+			path = LogTableViewCell;
 			sourceTree = "<group>";
 		};
 		C13276B8C996CB9794C642EE /* Pods */ = {
@@ -602,6 +644,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F1517DC25FFC6DB00AD9354 /* LaunchScreen.storyboard in Resources */,
+				6FFDB89526270A3700602F0A /* LogTableViewCell.xib in Resources */,
 				6FE9B89D260A136C0023F68D /* NoPlayingItemView.xib in Resources */,
 				6F1517D925FFC6DB00AD9354 /* Assets.xcassets in Resources */,
 				6F44B1232603C1B10047A3E5 /* StationTableViewCell.xib in Resources */,
@@ -689,6 +732,7 @@
 				6F44B103260387E10047A3E5 /* HTTPTask.swift in Sources */,
 				6F44B11A2603B0F20047A3E5 /* ListViewModelable.swift in Sources */,
 				6F44B105260387E10047A3E5 /* Router.swift in Sources */,
+				6FFDB89726271B1D00602F0A /* LogPresentNode.swift in Sources */,
 				6FF2C78426139E8A00707126 /* DisplayItemNode.swift in Sources */,
 				6FE9B8A4260A466C0023F68D /* ImageApi.swift in Sources */,
 				6F44B107260387E60047A3E5 /* Validation.swift in Sources */,
@@ -696,7 +740,11 @@
 				6F3CAC1826011AFF0058A72B /* ReusableCollectionView.swift in Sources */,
 				6F08E9D62605093E003D0E07 /* ViewModelOwnable.swift in Sources */,
 				6F44B101260387DE0047A3E5 /* StationApi.swift in Sources */,
+				6FFDB89426270A3700602F0A /* LogTableViewCell.swift in Sources */,
+				6F9AF82B261DFC620034B8F0 /* Double+StringConverter.swift in Sources */,
+				6F04511E262614400092E4A4 /* LoggerViewModel.swift in Sources */,
 				6FA3C254260B2DAA0095D6AB /* Errors.swift in Sources */,
+				6F04511A26260C560092E4A4 /* LoggerViewController.swift in Sources */,
 				6FF0EECA2614D4670023D2AD /* UserDefaults+StorageSettings.swift in Sources */,
 				6FA3C25A260B39540095D6AB /* ImageCache.swift in Sources */,
 				6FA3C25C260B58F80095D6AB /* Globals.swift in Sources */,

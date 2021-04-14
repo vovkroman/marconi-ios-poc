@@ -42,6 +42,7 @@ extension UserDefaults {
         } else {
             let id = UUID().uuidString
             standard.set(id, forKey: key)
+            standard.synchronize()
             return id
         }
     }
@@ -50,6 +51,7 @@ extension UserDefaults {
     static func saveProgress(_ value: String, for station: Station) {
         let key = Keys.offset(stationId: station.id)
         standard.set(value, forKey: key.prefixed)
+        standard.synchronize()
     }
     
     static func progress(by station: Station) -> String? {
@@ -61,6 +63,7 @@ extension UserDefaults {
     static func savePlayId(_ value: String, for station: Station) {
         let key = Keys.playId(stationId: station.id)
         standard.set(value, forKey: key.prefixed)
+        standard.synchronize()
     }
     
     static func playId(by station: Station) -> String? {
