@@ -14,7 +14,8 @@ extension Marconi {
         case none
         case live(id: String?,
                    artist: String?,
-                    song: String?)
+                   song: String?,
+                    image: URL?)
         case digit(trackId: String?,
                     playId: String?,
                     artist: String?,
@@ -29,7 +30,7 @@ extension Marconi {
         
         public var song: String? {
             switch self {
-            case .live(_, _, let song):
+            case .live(_, _, let song, _):
                 return song
             case .digit(_, _, _, _, let song, _, _, _, _, _, _):
                 return song
@@ -40,16 +41,18 @@ extension Marconi {
         
         public var imageUrl: URL? {
             switch self {
-            case .live, .none:
-                return nil
+            case .live(_, _, _, let url):
+                return url
             case .digit(_, _, _, _, _, _, _, _, let url, _, _):
                 return url
+            case .none:
+                return nil
             }
         }
         
         public var artist: String? {
             switch self {
-            case .live(_, let artist, _):
+            case .live(_, let artist, _, _):
                 return artist
             case .digit(_, _, let artist, _, _, _, _, _, _, _, _):
                 return artist
@@ -122,7 +125,10 @@ extension Marconi {
         }
         
         init(_ parser: Live.DataParser) {
-            self = .live(id: parser.Id, artist: parser.song, song: parser.artist)
+            self = .live(id: parser.Id,
+                         artist: parser.song,
+                         song: parser.artist,
+                         image: parser.image)
         }
         
         init(_ parser: Digit.DataParser) {
@@ -144,11 +150,12 @@ extension Marconi {
 extension Marconi.MetaData: Equatable {
     public static func == (lhs: Marconi.MetaData, rhs: Marconi.MetaData) -> Bool {
         switch (lhs, rhs) {
-        case (.live(let lId, let lArtist, let rArtist), .live(let rId, let lSong, let rSong)):
+        case (.live(let lId, let lArtist, let lSong, let lUrl), .live(let rId, let rArtist, let rSong, let rUrl)):
             return lId == rId &&
                     lArtist == rArtist &&
-                    lSong == rSong
-        case (.live(_,_, _), .digit(_, _, _, _, _, _, _, _, _, _, _)), (.digit(_ ,_ , _, _, _, _, _, _, _, _, _), .live(_ ,_ ,_ )):
+                    lSong == rSong &&
+                    lUrl == rUrl
+        case (.live, .digit), (.digit, .live):
             return false
         case (.digit(let lTrackId, let lPlayId, let lArtist, let lStatioId, let lSong, let lOffset, let lDuration,  let lDatumTime, let lUrl, let lSkips, let lisSkippable),
               .digit(let rTrackId, let rPlayId,  let rArtist, let rStatioId, let rSong, let rOffset, let rDuration,  let rDatumTime, let rUrl, let rSkips, let risSkippable)):
@@ -203,13 +210,15 @@ extension Marconi.MetaData: CustomStringConvertible {
             lsdr/X-SESSION-SKIPS: \(skips),
             lsdr/X-SONG-IS-SKIPPABLE: \(isSkippable),
             """
-        case .live(let id, let artist, let song):
+        case .live(let id, let artist, let song, let image):
             return """
             Metadata for Live Station has came with following list of properties:
             
             lsdr/X-TITLE: \(String(describing: song)),
             lsdr/X-ARTIST: \(String(describing: artist)),
             lsdr/X-PLAY-ID: \(String(describing: id)),
+            lsdr/X-IMAGE: \(String(describing: image))
+            
             """
         case .none:
             return "Metadata haven't came"

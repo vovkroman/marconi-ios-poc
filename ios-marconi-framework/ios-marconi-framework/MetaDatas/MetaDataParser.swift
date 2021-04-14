@@ -80,11 +80,6 @@ extension Marconi.Digit {
                     _dict[identifier] = value
                 }
             }
-            print("----Got the meta data-------")
-            for key in _dict.keys {
-                print("\(key) ----- \(_dict[key])")
-            }
-            print("------end------------")
         }
     }
 }
@@ -101,6 +96,13 @@ extension Marconi.Live {
         
         var song: String? {
             return _dict[Identifier.title] as? String
+        }
+        
+        var image: URL? {
+            guard let value = _dict[Identifier.image] as? String else {
+                return nil
+            }
+            return URL(string: value)
         }
         
         private var _dict: [AVMetadataIdentifier: AnyObject] = [:]

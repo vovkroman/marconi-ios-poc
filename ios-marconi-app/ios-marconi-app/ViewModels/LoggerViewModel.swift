@@ -62,12 +62,13 @@ extension Logger {
         }
         
         private func _processNewItem(event: LoggerEvent) {
+            let dateString = _dateFormatter.string(from: Date())
             if _items.isEmpty {
-                _items.append(.init(event: event, dateString: _dateFormatter.string(from: Date())))
+                _items.append(.init(event: event, dateString: dateString))
                 changeHandler?(.firstItem)
                 return
             }
-            let new = _items + [.init(event: event, dateString: _dateFormatter.string(from: Date()))]
+            let new = _items + [.init(event: event, dateString: dateString)]
             let indexPathes = (_items.count..<new.count).map{ IndexPath(row: $0, section: 0) }
             changeHandler?(.multiple(new: new, indexPathes: indexPathes))
         }
