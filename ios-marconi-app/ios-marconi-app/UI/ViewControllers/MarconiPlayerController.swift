@@ -34,6 +34,8 @@ class MarconiPlayerController: UIViewController, Containerable {
     typealias Player = Marconi.Player
     
     private weak var _controller: UIViewController?
+    
+    weak var logger: LoggerDelegate?
 
     private var _playingItemViewController: PlayingItemViewController {
         guard let controller = _controller as? PlayingItemViewController else {
@@ -67,7 +69,7 @@ class MarconiPlayerController: UIViewController, Containerable {
         
     init() {
         super.init(nibName: nil, bundle: nil)
-        _applicationStateListener.delegate = self
+        _applicationStateListener.delegate = self // I'm your father, Luke
     }
     
     override func viewDidLoad() {
@@ -78,9 +80,7 @@ class MarconiPlayerController: UIViewController, Containerable {
 //    // MARK: - Private methods
 //
     private func _willReplace(_ stationWrapper: StationWrapper?) {
-        let _displayItem = _player.currentMetaData.flatMap{ DisplayItemNode($0, station: _stationWrapper?.station) }
-        guard let displayItem = _displayItem else { return }
-        _stationWrapper?.savePlayingItem(playingItem: displayItem)
+        _stationWrapper?.saveCurrent(progressData: (_player.streamProgress, _player.playId))
     }
     
     // MARK: - UI is function of State Machine
@@ -118,10 +118,14 @@ class MarconiPlayerController: UIViewController, Containerable {
         case .noPlaying:
             _noPlayingItem()
         case .buffering(_):
+            // to nullify _onSkip handler
             _playingItem = nil
             _buffering()
         case .startPlaying(let metaData):
-            let playingItemDispaly = DisplayItemNode(metaData, station: _stationWrapper?.station)
+            logger?.emittedEvent(event: .metaDataItem(item: metaData))
+            let playingItemDispaly = DisplayItemNode(metaData,
+                                                     station: _stationWrapper?.station,
+                                                     isPlaying: _player.isPlaying)
             _playingItem = playingItemDispaly
             _startPlaying(playingItemDispaly)
         case .continuePlaying(let metaData, let progress):
@@ -150,16 +154,13 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
         guard let url = url else { return }
         _stationWrapper = wrapper
         _playingItem = nil
+        logger?.emittedEvent(event: .handleStreamURL(description: "\(url) to initialize \(wrapper.station.name)"))
         _player.replaceCurrentURL(with: url, stationType: wrapper.type)
         _player.play()
     }
 }
 
 extension MarconiPlayerController: MarconiPlayerControlsDelegate {
-    
-    func performSeek(value: Float) {
-        _player.seek(to: TimeInterval(value))
-    }
     
     func performSkip() {
         _onSkip?().observe(){ [weak self] result in
@@ -176,7 +177,6 @@ extension MarconiPlayerController: MarconiPlayerControlsDelegate {
         }
     }
     
-    
     func playToggle(isPlay: Bool) {
         if isPlay {
             _player.play()
@@ -192,9 +192,7 @@ extension MarconiPlayerController: MarconiPlayerControlsDelegate {
 
 extension MarconiPlayerController: MarconiSeekDelegate {
     func seekBegan(_ value: Float, slider: MarconiSlider) {}
-    
     func seekInProgress(_ value: Float, slider: MarconiSlider) {}
-    
     func seekEnded(_ value: Float, slider: MarconiSlider) {}
 }
 
@@ -202,7 +200,7 @@ extension MarconiPlayerController: ApplicationStateListenerDelegate {
     
     func onApplicationStateChanged(_ newState: ApplicationState) {
         if case .didEnterBackground = newState {
-            // To save progress when kill the app
+            // To save progress when enter Background the app
             _willReplace(_stationWrapper)
         }
     }

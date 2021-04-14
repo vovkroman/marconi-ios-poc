@@ -24,6 +24,10 @@ extension Marconi.Digit {
             return _dict[Identifier.sessionPlayID] as? String
         }
         
+        var stationId: String? {
+            return _dict[Identifier.stationID] as? String
+        }
+        
         var artist: String? {
             return _dict[Identifier.songArtist] as? String
         }
@@ -47,8 +51,13 @@ extension Marconi.Digit {
             return value?.doubleValue
         }
         
-        var offset: TimeInterval? {
-            let value = _dict[Identifier.datumStartTime]
+        var playlistOffset: TimeInterval? {
+            let value = _dict[Identifier.datumTime]
+            return value?.doubleValue
+        }
+        
+        var playlistStartTime: TimeInterval? {
+            let value = _dict[Identifier.playlistTrackStartTime]
             return value?.doubleValue
         }
         
@@ -87,6 +96,13 @@ extension Marconi.Live {
         
         var song: String? {
             return _dict[Identifier.title] as? String
+        }
+        
+        var image: URL? {
+            guard let value = _dict[Identifier.image] as? String else {
+                return nil
+            }
+            return URL(string: value)
         }
         
         private var _dict: [AVMetadataIdentifier: AnyObject] = [:]

@@ -20,15 +20,15 @@ open class AnyRouter<EndPoint: EndPointType>: NetworkRouter {
         let promise = Promise<Response>()
         do {
             let request = try buildRequest(from: route)
-            Logger.info("\(request) has been started", category: .api)
+            Log.info("\(request) has been started", category: .api)
             _task = _session.dataTask(with: request){ data, response, error in
                 if let error = error {
-                    Logger.error("\(request) failed with error \(error)", category: .api)
+                    Log.error("\(request) failed with error \(error)", category: .api)
                     promise.reject(with: error)
                     return
                 }
                 if let httpResponse = response as? HTTPURLResponse {
-                    Logger.debug("\(request) finished with status code \(httpResponse.statusCode)",
+                    Log.debug("\(request) finished with status code \(httpResponse.statusCode)",
                         category: .api)
                     promise.resolve(with: (data, httpResponse))
                     return

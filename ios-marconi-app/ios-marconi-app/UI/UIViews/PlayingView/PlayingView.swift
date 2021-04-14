@@ -55,13 +55,14 @@ final class PlayingView: UIView, NibReusable {
     
     func startPlaying(_ playingItem: DisplayItemNode) {
         stopBuffering()
-        _playButton.isSelected = true
+        _playButton.isSelected = playingItem.isPlaying
         _titleOfView.text = "Now playing:"
         _skipButton.isEnabled = playingItem.isSkipSupportable
         _controlsView.isHidden = !playingItem.isShowPlayerControls
         
         _progressBar.maximumValue = playingItem.maxValue
-        _progressBar.minimumValue = playingItem.minValue
+        _progressBar.minimumValue = 0.0
+        _progressBar.value = playingItem.offset
         
         _stationName.text = playingItem.stationName
         _titleSong.text = playingItem.title
@@ -91,7 +92,7 @@ final class PlayingView: UIView, NibReusable {
     }
     
     @IBAction func skipAction(_ sender: UIButton) {
-        Logger.debug("SKIP has been performed")
+        Log.debug("SKIP has been performed")
         playerControlsDelegate?.performSkip()
     }
 }

@@ -31,7 +31,7 @@ class PlayerStateViewController<View: Viewable>: UIViewController {
     }
     
     deinit {
-        Logger.debug("\(self) has been removed", category: .lifeCycle)
+        Log.debug("\(self) has been removed", category: .lifeCycle)
     }
 }
 

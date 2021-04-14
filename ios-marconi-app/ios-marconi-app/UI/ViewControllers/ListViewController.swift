@@ -22,12 +22,12 @@ class ListViewController<ViewModel: ListViewModelable>: UITableViewController, V
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return _viewModel.count
+        return _viewModel.items.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: StationTableViewCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.configure(_viewModel[indexPath.row])
+        cell.configure(_viewModel.items[safe: indexPath.row])
         return cell
     }
     
