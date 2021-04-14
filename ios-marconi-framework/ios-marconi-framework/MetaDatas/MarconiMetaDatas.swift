@@ -173,3 +173,46 @@ extension Marconi.MetaData: Equatable {
         }
     }
 }
+
+extension Marconi.MetaData: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .digit(let trackId,
+                    let playId,
+                    let artist,
+                    let stationId,
+                    let song,
+                    let offset,
+                    let duration,
+                    let playlistStartTime,
+                    let url,
+                    let skips,
+                    let isSkippable):
+            return """
+            Metadata for Digital Station has came with following list of properties:
+            
+            lsdr/X-SONG-ID: \(String(describing: trackId)),
+            lsdr/X-SESSION-PLAY-ID: \(String(describing: playId)),
+            lsdr/X-SONG-ARTIST: \(String(describing: artist)),
+            lsdr/X-SONG-STATION-ID: \(String(describing: stationId)),
+            lsdr/X-SONG-TITLE: \(String(describing: song)),
+            lsdr/X-DATUM-TIME: \(String(describing: offset)),
+            lsdr/X-SONG-DURATION: \(String(describing: duration)),
+            lsdr/X-PLAYLIST-TRACK-START-TIME: \(String(describing: playlistStartTime)),
+            lsdr/X-SONG-ALBUM-ART-URL: \(String(describing: url)),
+            lsdr/X-SESSION-SKIPS: \(skips),
+            lsdr/X-SONG-IS-SKIPPABLE: \(isSkippable),
+            """
+        case .live(let id, let artist, let song):
+            return """
+            Metadata for Live Station has came with following list of properties:
+            
+            lsdr/X-TITLE: \(String(describing: song)),
+            lsdr/X-ARTIST: \(String(describing: artist)),
+            lsdr/X-PLAY-ID: \(String(describing: id)),
+            """
+        case .none:
+            return "Metadata haven't came"
+        }
+    }
+}

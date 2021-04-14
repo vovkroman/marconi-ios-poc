@@ -26,13 +26,16 @@ class MainViewController: UIViewController, Containerable {
     private func _addTabBarController() {
         let tabBarController = UITabBarController()
         
+        let loggerViewModel = Logger.ViewModel()
+        _playerController?.logger = loggerViewModel
+        
         let liveVC = Live.ViewController(viewModel: Live.ViewModel(_playerController))
         liveVC.tabBarItem.title = "Live Stations"
         
         let digitVC = Digital.ViewController(viewModel: Digital.ViewModel(_playerController))
         digitVC.tabBarItem.title = "Digital Stations"
         
-        let loggerVC = LoggerViewController()
+        let loggerVC = Logger.ViewController(viewModel: loggerViewModel)
         loggerVC.tabBarItem.title = "Logger"
         
         tabBarController.viewControllers = [liveVC, digitVC, loggerVC]

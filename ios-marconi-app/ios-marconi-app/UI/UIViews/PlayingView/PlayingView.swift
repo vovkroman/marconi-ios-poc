@@ -92,7 +92,7 @@ final class PlayingView: UIView, NibReusable {
     }
     
     @IBAction func skipAction(_ sender: UIButton) {
-        Logger.debug("SKIP has been performed")
+        Log.debug("SKIP has been performed")
         playerControlsDelegate?.performSkip()
     }
 }

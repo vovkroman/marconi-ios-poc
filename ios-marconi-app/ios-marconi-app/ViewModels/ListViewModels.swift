@@ -8,6 +8,7 @@
 
 import Foundation
 
+// To distinguish by station type
 enum Live {}
 enum Digital {}
 
@@ -29,7 +30,7 @@ extension StationWrapper {
             
             if let playId = progressData.playId {
                 UserDefaults.savePlayId(playId, for: station)
-                Logger.debug("Saved \(progress) progress by playId: \(playId)", category: .default)
+                Log.debug("Saved \(progress) progress by playId: \(playId)", category: .default)
             }
         }
     }
@@ -49,7 +50,7 @@ class BaseListViewModel: ListViewModelable {
             case .success(let station):
                 self?.processTheStation(station)
             case .failure(let error):
-                Logger.error(error.localizedDescription, category: .api)
+                Log.error(error.localizedDescription, category: .api)
                 self?._playerDelegate?.catchTheError(error)
             }
         }
@@ -90,6 +91,7 @@ extension Live {
         required init(_ playerDelegate: MarconiPlayerDelegate?) {
             super.init(playerDelegate)
             items = [.init(id: 1005, name: "ALT 92.3"),
+                      .init(id: 349, name: "KROQ"),
                       .init(id: 395, name: "Your '70s Playlist"),
                       .init(id: 657, name: "The Cove")]
         }

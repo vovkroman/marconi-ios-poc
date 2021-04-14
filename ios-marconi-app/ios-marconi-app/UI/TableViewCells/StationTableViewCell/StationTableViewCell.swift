@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StationTableViewCell: UITableViewCell, NibReusable {
+final class StationTableViewCell: UITableViewCell, NibReusable {
     
     @IBOutlet private weak var _title: UILabel!
     

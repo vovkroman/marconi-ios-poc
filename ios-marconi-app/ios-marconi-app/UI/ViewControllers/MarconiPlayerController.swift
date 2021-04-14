@@ -34,6 +34,8 @@ class MarconiPlayerController: UIViewController, Containerable {
     typealias Player = Marconi.Player
     
     private weak var _controller: UIViewController?
+    
+    weak var logger: LoggerDelegate?
 
     private var _playingItemViewController: PlayingItemViewController {
         guard let controller = _controller as? PlayingItemViewController else {
@@ -120,6 +122,7 @@ class MarconiPlayerController: UIViewController, Containerable {
             _playingItem = nil
             _buffering()
         case .startPlaying(let metaData):
+            logger?.emittedEvent(event: .metaDataItem(item: metaData))
             let playingItemDispaly = DisplayItemNode(metaData,
                                                      station: _stationWrapper?.station,
                                                      isPlaying: _player.isPlaying)
@@ -151,6 +154,7 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
         guard let url = url else { return }
         _stationWrapper = wrapper
         _playingItem = nil
+        logger?.emittedEvent(event: .handleStreamURL(description: "\(url) to initialize \(wrapper.station.name)"))
         _player.replaceCurrentURL(with: url, stationType: wrapper.type)
         _player.play()
     }
@@ -172,7 +176,6 @@ extension MarconiPlayerController: MarconiPlayerControlsDelegate {
             }
         }
     }
-    
     
     func playToggle(isPlay: Bool) {
         if isPlay {

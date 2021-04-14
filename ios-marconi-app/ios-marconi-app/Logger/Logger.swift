@@ -1,7 +1,7 @@
 import Foundation
 import os.log
 
-public class Logger {
+public class Log {
 
     public enum Category {
         case `default`
@@ -31,7 +31,7 @@ public class Logger {
     }
 }
 
-extension Logger.Category: CustomStringConvertible {
+extension Log.Category: CustomStringConvertible {
     public var description: String {
         switch self {
         case .lifeCycle:

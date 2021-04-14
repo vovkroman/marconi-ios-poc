@@ -8,6 +8,10 @@
 
 import Foundation
 
+protocol DateSupportable {
+    var date: String { get }
+}
+
 protocol Titlable {
     var title: String { get }
 }
