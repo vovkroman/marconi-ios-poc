@@ -10,7 +10,7 @@ import Foundation
 
 enum Feedback: String {
     case like = "like"
-    case dilike = "dislike"
+    case dislike = "dislike"
 }
 
 struct Song {

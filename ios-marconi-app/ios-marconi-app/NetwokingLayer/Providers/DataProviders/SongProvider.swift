@@ -19,10 +19,11 @@ struct SongProvider: ResponseValidator {
                        .decoded()
     }
     
-    func feedback(stationId: Int, playId: String, trackId: String, preference: Feedback) -> Future<Data> {
+    func feedback(stationId: Int, playId: String, trackId: String, preference: Feedback) -> Future<PreferenceEntity> {
         return _router.doRequest(.preference(song: .init(stationId: stationId, playId: playId, trackId: trackId),
                                  feedback: preference))
                         .validateResponse(networkManager: self)
+                        .decoded()
     }
     
     func cancel() {

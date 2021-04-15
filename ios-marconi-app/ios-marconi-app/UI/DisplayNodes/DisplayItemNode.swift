@@ -98,11 +98,12 @@ extension DisplayItemNode {
 }
 
 extension DisplayItemNode {
-    func makeFeedback(_ type: Feedback) {
+    func leaveFeedback(_ type: Feedback) {
         guard let playId = _metaData.playId, let trackId = _metaData.trackId else {
             return
         }
-        _provider.feedback(stationId: _station.id,
+        
+        _ = _provider.feedback(stationId: _station.id,
                            playId: playId,
                            trackId: trackId,
                            preference: type)

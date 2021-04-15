@@ -217,6 +217,6 @@ extension MarconiPlayerController: ApplicationStateListenerDelegate {
 
 extension MarconiPlayerController: MarconiItemFeedbackDelegate {
     func makeFeedback(_ type: Feedback) {
-        _playingItem?.makeFeedback(type)
+        _playingItem?.leaveFeedback(type)
     }
 }
