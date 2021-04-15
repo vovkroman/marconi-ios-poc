@@ -9,7 +9,7 @@
 import UIKit
 import SkeletonView
 
-typealias ControlsDelegate = MarconiPlayerControlsDelegate & MarconiSeekDelegate
+typealias ControlsDelegate = MarconiPlayerControlsDelegate & MarconiSeekDelegate & MarconiItemFeedbackDelegate
 
 final class PlayingView: UIView, NibReusable {
     
@@ -32,9 +32,16 @@ final class PlayingView: UIView, NibReusable {
     @IBOutlet private weak var _playButton: UIButton!
     @IBOutlet private weak var _muteButton: UIButton!
     
+    @IBOutlet private weak var _preferenceView: UIView!
+    
+    // Constraints to hide/show _preferenceView
+    @IBOutlet private weak var _bottomPreferenceViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var _bottomProgressPanelConstraint: NSLayoutConstraint!
+    
     func startBuffering() {
         _titleOfView.text = "Buffering ..."
         let shimmedColor = UIColor.lightGray
+        _preferenceView.showAnimatedSkeleton(usingColor: shimmedColor)
         _muteButton.showAnimatedSkeleton(usingColor: shimmedColor)
         _imageView.showAnimatedSkeleton(usingColor: shimmedColor)
         _stationName.showAnimatedSkeleton(usingColor: shimmedColor)
@@ -51,6 +58,7 @@ final class PlayingView: UIView, NibReusable {
         _typeName.hideSkeleton()
         _controlsView.hideSkeleton()
         _muteButton.hideSkeleton()
+        _preferenceView.hideSkeleton()
     }
     
     func startPlaying(_ playingItem: DisplayItemNode) {
@@ -69,6 +77,11 @@ final class PlayingView: UIView, NibReusable {
         _artistName.text = playingItem.artistName
         _typeName.text = playingItem.type
         _imageView.loadImage(from: playingItem.url)
+        
+        _preferenceView.isHidden = !playingItem.isShowPlayerControls
+        _bottomProgressPanelConstraint.isActive = !playingItem.isShowPlayerControls
+        _bottomPreferenceViewConstraint.isActive = playingItem.isShowPlayerControls
+        layoutIfNeeded()
     }
     
     func updateProgress(_ value: Float) {
@@ -94,5 +107,12 @@ final class PlayingView: UIView, NibReusable {
     @IBAction func skipAction(_ sender: UIButton) {
         Log.debug("SKIP has been performed")
         playerControlsDelegate?.performSkip()
+    }
+    @IBAction func likeAction(_ sender: Any) {
+        playerControlsDelegate?.makeFeedback(.like)
+    }
+    
+    @IBAction func dislikeAction(_ sender: Any) {
+        playerControlsDelegate?.makeFeedback(.dislike)
     }
 }

@@ -8,13 +8,24 @@
 
 import Foundation
 
-struct SkipApi {
+enum Feedback: String {
+    case like = "like"
+    case dislike = "dislike"
+}
+
+struct Song {
     let stationId: Int
     let playId: String
     let trackId: String
 }
 
-extension SkipApi: EndPointType {
+enum SessionApi {
+    case skip(song: Song)
+    case preference(song: Song, feedback: Feedback)
+}
+
+
+extension SessionApi: EndPointType {
     var baseURL: URL {
         guard let url = URL("https://smartstreams.radio-stg.com") else {
             fatalError("Failed to load base URL")
@@ -23,7 +34,12 @@ extension SkipApi: EndPointType {
     }
     
     var path: String? {
-        return "session/\(playId)/\(stationId)/skip"
+        switch self {
+        case .skip(let song):
+            return "session/\(song.playId)/\(song.stationId)/skip"
+        case .preference(let song, let feedback):
+            return "session/\(song.playId)/\(song.stationId)/feedback/\(feedback)"
+        }
     }
     
     var authenticationHeaders: [String : String]? {
@@ -43,8 +59,11 @@ extension SkipApi: EndPointType {
     }
     
     var task: HTTPTask {
-        return .requestParameters(bodyParameters: nil,
-                                  bodyEncoding: .urlEncoding,
-                                  urlParameters: ["trackId": trackId])
+        switch self {
+        case .skip(let song), .preference(let song, _):
+            return .requestParameters(bodyParameters: nil,
+                                      bodyEncoding: .urlEncoding,
+                                      urlParameters: ["trackId": song.trackId])
+        }
     }
 }

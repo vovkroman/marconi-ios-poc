@@ -23,6 +23,10 @@ protocol MarconiPlayerControlsDelegate: class {
     func performSkip()
 }
 
+protocol MarconiItemFeedbackDelegate: class {
+    func makeFeedback(_ type: Feedback)
+}
+
 protocol MarconiSeekDelegate: class {
     func seekBegan(_ value: Float, slider: MarconiSlider)
     func seekInProgress(_ value: Float, slider: MarconiSlider)
@@ -53,9 +57,11 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     private lazy var _player: Player = .init(self)
     
+    private let _applicationStateListener = ApplicationStateListener()
+    
     private var _playingItem: DisplayItemNode? {
         didSet {
-            _onSkip = _playingItem?.next
+            _onSkip = _playingItem?.skip
         }
     }
     
@@ -64,8 +70,6 @@ class MarconiPlayerController: UIViewController, Containerable {
             _willReplace(_stationWrapper)
         }
     }
-    
-    private let _applicationStateListener = ApplicationStateListener()
         
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -150,7 +154,10 @@ extension MarconiPlayerController: MarconiPlayerObserver {
 
 extension MarconiPlayerController: MarconiPlayerDelegate {
     
-    func catchTheError(_ error: Error) {}
+    func catchTheError(_ error: Error) {
+        // Log error
+        logger?.emittedEvent(event: .caughtTheError(error))
+    }
     
     func willPlayStation(_ wrapper: StationWrapper, with url: URL?) {
         guard let url = url else { return }
@@ -174,9 +181,7 @@ extension MarconiPlayerController: MarconiPlayerControlsDelegate {
                     self?.willPlayStation(stationWrapper, with: URL(skipItem.newPlaybackUrl))
                 }
             case .failure(let error):
-                print(error)
-                break
-                // catch the error
+                self?.catchTheError(error)
             }
         }
     }
@@ -207,5 +212,11 @@ extension MarconiPlayerController: ApplicationStateListenerDelegate {
             // To save progress when enter Background the app
             _willReplace(_stationWrapper)
         }
+    }
+}
+
+extension MarconiPlayerController: MarconiItemFeedbackDelegate {
+    func makeFeedback(_ type: Feedback) {
+        _playingItem?.leaveFeedback(type)
     }
 }

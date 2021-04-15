@@ -18,7 +18,7 @@ extension LoggerEvent: Titlable {
     var title: String {
         switch self {
         case .caughtTheError(let error):
-            return "Caught the error: \(error.localizedDescription)"
+            return "Warrning: Error with the description: \(error.localizedDescription)"
         case .handleStreamURL(let description):
             return description
         case .metaDataItem(let item):
@@ -45,21 +45,38 @@ extension Logger {
         
         typealias ChangesHandler = (Changes) -> ()
         
-        var changeHandler: ChangesHandler?
-        
-        private(set) var _items: Items = []
+        private let _worker = DispatchQueue(label: "com.personal.com.personal.ios-marconi-app")
+        private var _items: Items = []
         
         lazy private var _dateFormatter: DateFormatter = {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "HH:mm:ss"
             return dateFormatter
         }()
-                
-        // MARK: - Private methods
+        
+        // MARK: - Public methods
+        
+        var changeHandler: ChangesHandler?
+        
+        subscript(index: Int) -> Model? {
+            var result: Model?
+            _worker.sync {
+                result = self._items[safe: index]
+            }
+            return result
+        }
+        
+        var count: Int {
+            var result = 0
+            _worker.sync { result = self._items.count }
+            return result
+        }
         
         func updateItems(newItems: Items) {
-            _items = newItems
+            _worker.async { self._items = newItems }
         }
+        
+        // MARK: - Private methods
         
         private func _processNewItem(event: LoggerEvent) {
             let dateString = _dateFormatter.string(from: Date())
@@ -77,6 +94,7 @@ extension Logger {
 
 extension Logger.ViewModel: LoggerDelegate {
     func emittedEvent(event: LoggerEvent) {
-        _processNewItem(event: event)
+        _worker.async(execute: combine(event,
+                                       with: _processNewItem))
     }
 }
