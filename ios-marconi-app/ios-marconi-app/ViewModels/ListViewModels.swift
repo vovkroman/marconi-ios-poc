@@ -11,6 +11,7 @@ import Foundation
 // To distinguish by station type
 enum Live {}
 enum Digital {}
+enum Rewind {}
 
 struct StationWrapper {    
     let station: Station
@@ -124,6 +125,17 @@ extension Digital {
                       .init(id: 2405, name: "New Wave Mix tape"),
                       .init(id: 2406, name: "One Hit Wonders")
             ]
+        }
+    }
+}
+
+extension Rewind {
+    class ViewModel: BaseListViewModel {
+        
+        override func processTheStation(_ station: Station) {}
+        
+        required init(_ playerDelegate: MarconiPlayerDelegate?) {
+            super.init(playerDelegate)
         }
     }
 }
