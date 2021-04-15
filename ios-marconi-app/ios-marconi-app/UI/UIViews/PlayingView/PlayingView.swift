@@ -70,7 +70,7 @@ final class PlayingView: UIView, NibReusable {
         
         _progressBar.maximumValue = playingItem.maxValue
         _progressBar.minimumValue = 0.0
-        _progressBar.value = playingItem.offset
+        _progressBar.value = playingItem.playlistOffset
         
         _stationName.text = playingItem.stationName
         _titleSong.text = playingItem.title
@@ -78,9 +78,14 @@ final class PlayingView: UIView, NibReusable {
         _typeName.text = playingItem.type
         _imageView.loadImage(from: playingItem.url)
         
-        _preferenceView.isHidden = !playingItem.isShowPlayerControls
-        _bottomProgressPanelConstraint.isActive = !playingItem.isShowPlayerControls
-        _bottomPreferenceViewConstraint.isActive = playingItem.isShowPlayerControls
+        if playingItem.isShowPlayerControls {
+            _bottomProgressPanelConstraint.isActive = false
+            _bottomPreferenceViewConstraint.isActive = true
+        } else {
+            _bottomPreferenceViewConstraint.isActive = false
+            _bottomProgressPanelConstraint.isActive = true
+        }
+         _preferenceView.isHidden = !playingItem.isShowPlayerControls
         layoutIfNeeded()
     }
     
@@ -94,25 +99,27 @@ final class PlayingView: UIView, NibReusable {
     
     // MARK: - Acions
     
-    @IBAction func playToggleAction(_ sender: UIButton) {
+    @IBAction private func playToggleAction(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         playerControlsDelegate?.playToggle(isPlay: sender.isSelected)
     }
     
-    @IBAction func muteToggleAction(_ sender: UIButton) {
+    @IBAction private func muteToggleAction(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         playerControlsDelegate?.muteToggle(isMuted: sender.isSelected)
     }
     
-    @IBAction func skipAction(_ sender: UIButton) {
+    @IBAction private func skipAction(_ sender: UIButton) {
         Log.debug("SKIP has been performed")
         playerControlsDelegate?.performSkip()
     }
-    @IBAction func likeAction(_ sender: Any) {
+    @IBAction private func likeAction(_ sender: Any) {
+        Log.debug("LIKE has been performed")
         playerControlsDelegate?.makeFeedback(.like)
     }
     
-    @IBAction func dislikeAction(_ sender: Any) {
+    @IBAction private func dislikeAction(_ sender: Any) {
+        Log.debug("DISLIKE has been performed")
         playerControlsDelegate?.makeFeedback(.dislike)
     }
 }
