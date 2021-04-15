@@ -9,7 +9,7 @@
 import UIKit
 import SkeletonView
 
-typealias ControlsDelegate = MarconiPlayerControlsDelegate & MarconiSeekDelegate
+typealias ControlsDelegate = MarconiPlayerControlsDelegate & MarconiSeekDelegate & MarconiItemFeedbackDelegate
 
 final class PlayingView: UIView, NibReusable {
     
@@ -32,9 +32,12 @@ final class PlayingView: UIView, NibReusable {
     @IBOutlet private weak var _playButton: UIButton!
     @IBOutlet private weak var _muteButton: UIButton!
     
+    @IBOutlet private weak var _preferenceView: UIView!
+    
     func startBuffering() {
         _titleOfView.text = "Buffering ..."
         let shimmedColor = UIColor.lightGray
+        _preferenceView.showAnimatedSkeleton(usingColor: shimmedColor)
         _muteButton.showAnimatedSkeleton(usingColor: shimmedColor)
         _imageView.showAnimatedSkeleton(usingColor: shimmedColor)
         _stationName.showAnimatedSkeleton(usingColor: shimmedColor)
@@ -95,4 +98,6 @@ final class PlayingView: UIView, NibReusable {
         Log.debug("SKIP has been performed")
         playerControlsDelegate?.performSkip()
     }
+    
+    
 }

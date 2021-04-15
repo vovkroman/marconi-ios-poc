@@ -15,7 +15,7 @@ typealias NextAction = () -> Future<SkipEntity>
 // Plz notice, DisplayItemNode knows nothing about the current progress
 struct DisplayItemNode {
     
-    private let _provider: SkipSongProvider = .init()
+    private let _provider: SongProvider = .init()
     private let _metaData: Marconi.MetaData
     private let _station: Station
     private let _isPlaying: Bool
@@ -81,7 +81,7 @@ extension DisplayItemNode {
         return false
     }
     
-    var next: NextAction? {
+    var skip: NextAction? {
         guard let playId = _metaData.playId, let trackId = _metaData.trackId else {
             return nil
         }
@@ -94,5 +94,17 @@ extension DisplayItemNode {
     
     var offset: Float {
         return Float(_metaData.playlistOffset)
+    }
+}
+
+extension DisplayItemNode {
+    func makeFeedback(_ type: Feedback) {
+        guard let playId = _metaData.playId, let trackId = _metaData.trackId else {
+            return
+        }
+        _provider.feedback(stationId: _station.id,
+                           playId: playId,
+                           trackId: trackId,
+                           preference: type)
     }
 }
