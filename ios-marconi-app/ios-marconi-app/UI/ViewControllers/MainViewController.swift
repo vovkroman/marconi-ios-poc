@@ -35,10 +35,13 @@ class MainViewController: UIViewController, Containerable {
         let digitVC = Digital.ViewController(viewModel: Digital.ViewModel(_playerController))
         digitVC.tabBarItem.title = "Digital Stations"
         
+        let rewindVC = Rewind.ViewController(viewModel: Rewind.ViewModel(_playerController))
+        rewindVC.tabBarItem.title = "Rewind Stations"
+        
         let loggerVC = Logger.ViewController(viewModel: loggerViewModel)
         loggerVC.tabBarItem.title = "Logger"
         
-        tabBarController.viewControllers = [liveVC, digitVC, loggerVC]
+        tabBarController.viewControllers = [liveVC, digitVC, rewindVC, loggerVC]
         addController(tabBarController, onto: tabBarContainer)
     }
     

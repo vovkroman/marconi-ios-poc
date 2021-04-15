@@ -44,6 +44,7 @@
 		6F44B1252603C4EC0047A3E5 /* DigitalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F44B1242603C4EC0047A3E5 /* DigitalViewController.swift */; };
 		6F46041226029326000E2BC3 /* ios_marconi_framework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F46041126029326000E2BC3 /* ios_marconi_framework.framework */; };
 		6F46041326029326000E2BC3 /* ios_marconi_framework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F46041126029326000E2BC3 /* ios_marconi_framework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F56490F2628681D00EA258D /* RewindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F56490E2628681D00EA258D /* RewindViewController.swift */; };
 		6F6E22132608A55F0057D41F /* Collections+SafeIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E22122608A55F0057D41F /* Collections+SafeIndex.swift */; };
 		6F6E22152608B5AE0057D41F /* MarconiPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E22142608B5AE0057D41F /* MarconiPlayerController.swift */; };
 		6F6E22182608BF510057D41F /* Containerable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E22172608BF510057D41F /* Containerable.swift */; };
@@ -140,6 +141,7 @@
 		6F44B1212603C1B10047A3E5 /* StationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationTableViewCell.xib; sourceTree = "<group>"; };
 		6F44B1242603C4EC0047A3E5 /* DigitalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigitalViewController.swift; sourceTree = "<group>"; };
 		6F46041126029326000E2BC3 /* ios_marconi_framework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_marconi_framework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F56490E2628681D00EA258D /* RewindViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewindViewController.swift; sourceTree = "<group>"; };
 		6F6E22122608A55F0057D41F /* Collections+SafeIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collections+SafeIndex.swift"; sourceTree = "<group>"; };
 		6F6E22142608B5AE0057D41F /* MarconiPlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiPlayerController.swift; sourceTree = "<group>"; };
 		6F6E22172608BF510057D41F /* Containerable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Containerable.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 				6F44B1242603C4EC0047A3E5 /* DigitalViewController.swift */,
 				6FE9B896260A0C940023F68D /* PlayerStateViewController.swift */,
 				6F04511926260C560092E4A4 /* LoggerViewController.swift */,
+				6F56490E2628681D00EA258D /* RewindViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -738,6 +741,7 @@
 				6F44B107260387E60047A3E5 /* Validation.swift in Sources */,
 				6F6E22152608B5AE0057D41F /* MarconiPlayerController.swift in Sources */,
 				6F3CAC1826011AFF0058A72B /* ReusableCollectionView.swift in Sources */,
+				6F56490F2628681D00EA258D /* RewindViewController.swift in Sources */,
 				6F08E9D62605093E003D0E07 /* ViewModelOwnable.swift in Sources */,
 				6F44B101260387DE0047A3E5 /* StationApi.swift in Sources */,
 				6FFDB89426270A3700602F0A /* LogTableViewCell.swift in Sources */,
