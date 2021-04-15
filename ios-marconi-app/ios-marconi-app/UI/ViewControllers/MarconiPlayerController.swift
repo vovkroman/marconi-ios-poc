@@ -150,7 +150,10 @@ extension MarconiPlayerController: MarconiPlayerObserver {
 
 extension MarconiPlayerController: MarconiPlayerDelegate {
     
-    func catchTheError(_ error: Error) {}
+    func catchTheError(_ error: Error) {
+        // Log error
+        logger?.emittedEvent(event: .caughtTheError(error))
+    }
     
     func willPlayStation(_ wrapper: StationWrapper, with url: URL?) {
         guard let url = url else { return }
@@ -174,9 +177,7 @@ extension MarconiPlayerController: MarconiPlayerControlsDelegate {
                     self?.willPlayStation(stationWrapper, with: URL(skipItem.newPlaybackUrl))
                 }
             case .failure(let error):
-                print(error)
-                break
-                // catch the error
+                self?.catchTheError(error)
             }
         }
     }

@@ -24,12 +24,12 @@ extension Logger {
         }
         
         override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return _viewModel._items.count
+            return _viewModel.count
         }
         
         override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell: LogTableViewCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.configure(_viewModel._items[safe: indexPath.row])
+            cell.configure(_viewModel[indexPath.row])
             return cell
         }
         
