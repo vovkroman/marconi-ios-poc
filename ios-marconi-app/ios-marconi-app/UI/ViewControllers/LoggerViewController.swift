@@ -19,8 +19,8 @@ extension Logger {
         override func viewDidLoad() {
             super.viewDidLoad()
             _viewSetup()
-            _tableViewConfig()
             _handlersSetup()
+            _tableViewConfig()
         }
         
         override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

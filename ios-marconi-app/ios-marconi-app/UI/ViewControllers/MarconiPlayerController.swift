@@ -97,6 +97,11 @@ class MarconiPlayerController: UIViewController, Containerable {
     }
     
     private func _buffering() {
+        // to cancel pending skip/feedback
+        //_playingItem?.cancelRequests()
+        
+        // to nullify _onSkip handler
+        _playingItem = nil
         let controller = _playingItemViewController
         controller.willReuseController()
         controller.buffering()
@@ -122,8 +127,6 @@ class MarconiPlayerController: UIViewController, Containerable {
         case .noPlaying:
             _noPlayingItem()
         case .buffering(_):
-            // to nullify _onSkip handler
-            _playingItem = nil
             _buffering()
         case .startPlaying(let metaData):
             let playingItemDispaly = DisplayItemNode(metaData,
@@ -217,6 +220,14 @@ extension MarconiPlayerController: ApplicationStateListenerDelegate {
 
 extension MarconiPlayerController: MarconiItemFeedbackDelegate {
     func makeFeedback(_ type: Feedback) {
-        _playingItem?.leaveFeedback(type)
+        let leaveFeedback = _playingItem?.leaveFeedback(type)
+        leaveFeedback?.observe() { [weak self] result in
+            switch result {
+            case .success(let entity):
+                self?.logger?.emittedEvent(event: .leaved(feedback: entity))
+            case .failure(let error):
+                self?.logger?.emittedEvent(event: .caughtTheError(error))
+            }
+        }
     }
 }

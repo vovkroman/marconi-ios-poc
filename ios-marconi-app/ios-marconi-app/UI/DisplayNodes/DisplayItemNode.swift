@@ -97,15 +97,23 @@ extension DisplayItemNode {
     }
 }
 
+// MARK: - To make like/dislike
 extension DisplayItemNode {
-    func leaveFeedback(_ type: Feedback) {
+    func leaveFeedback(_ type: Feedback) -> Future<PreferenceEntity>? {
         guard let playId = _metaData.playId, let trackId = _metaData.trackId else {
-            return
+            return nil
         }
         
-        _ = _provider.feedback(stationId: _station.id,
+        return _provider.feedback(stationId: _station.id,
                            playId: playId,
                            trackId: trackId,
                            preference: type)
+    }
+}
+
+// MARK: - Cancel all active requests, including (skip/feedback)
+extension DisplayItemNode {
+    func cancelRequests() {
+        _provider.cancel()
     }
 }

@@ -11,6 +11,10 @@ struct StationProvider: ResponseValidator {
                       .decoded()
     }
     
+    func cancel() {
+        _router.cancel()
+    }
+    
     init(_ router: AnyRouter<StationApi> = .init()) {
         _router = router
     }

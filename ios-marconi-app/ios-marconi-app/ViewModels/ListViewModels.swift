@@ -46,6 +46,7 @@ class BaseListViewModel: ListViewModelable {
     private let _provider: StationProvider = .init()
     
     private func _fetchStation(by id: Int) {
+        _provider.cancel()
         _provider.fetch(by: id).observe { [weak self](result) in
             switch result {
             case .success(let station):
