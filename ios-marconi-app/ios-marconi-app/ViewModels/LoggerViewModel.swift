@@ -76,7 +76,8 @@ extension Logger {
         }
         
         func updateItems(newItems: Items) {
-            _worker.async { self._items = newItems }
+            // since it's been updated on the main thread
+            self._items = newItems
         }
         
         // MARK: - Private methods
