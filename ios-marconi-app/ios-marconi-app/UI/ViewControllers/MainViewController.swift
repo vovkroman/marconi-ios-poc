@@ -39,6 +39,8 @@ class MainViewController: UIViewController, Containerable {
         rewindVC.tabBarItem.title = "Rewind Stations"
         
         let loggerVC = Logger.ViewController(viewModel: loggerViewModel)
+        // force call viewDidload
+        loggerVC.loadViewIfNeeded()
         loggerVC.tabBarItem.title = "Logger"
         
         tabBarController.viewControllers = [liveVC, digitVC, rewindVC, loggerVC]

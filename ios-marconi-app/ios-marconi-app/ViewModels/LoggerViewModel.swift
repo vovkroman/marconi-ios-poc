@@ -12,17 +12,20 @@ enum LoggerEvent {
     case handleStreamURL(description: String)
     case caughtTheError(Error)
     case metaDataItem(item: Marconi.MetaData)
+    case leaved(feedback: PreferenceEntity)
 }
 
 extension LoggerEvent: Titlable {
     var title: String {
         switch self {
         case .caughtTheError(let error):
-            return "Warrning: Error with the description: \(error.localizedDescription)"
+            return "[WARRNING]: Error with the description: \(error.localizedDescription)"
         case .handleStreamURL(let description):
-            return description
+            return "[STREAM INIT]: \(description)"
         case .metaDataItem(let item):
-            return "\(item)"
+            return "[METADATA]: \(item)"
+        case .leaved(let feedback):
+            return "[FEEDBACK]: \(feedback)"
         }
     }
 }
@@ -73,7 +76,8 @@ extension Logger {
         }
         
         func updateItems(newItems: Items) {
-            _worker.async { self._items = newItems }
+            // since it's been updated on the main thread
+            self._items = newItems
         }
         
         // MARK: - Private methods
