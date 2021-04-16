@@ -43,3 +43,20 @@ extension PreferenceEntity: Decodable {
                   data: data)
     }
 }
+
+extension PreferenceEntity: CustomStringConvertible {
+    var description: String {
+        return """
+        
+        Feedback has been left with list of data:
+        
+        'status': \(status),
+        'message': \(String(describing: message)),
+        'track': \(String(describing: track)),
+        'napsterPlaylistId': \(String(describing: napsterPlaylistId)),
+        'preference': \(String(describing: preference)),
+        
+        'data': \(String(describing: data)),
+        """
+    }
+}
