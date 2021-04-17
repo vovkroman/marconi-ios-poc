@@ -117,7 +117,7 @@ class MarconiPlayerController: UIViewController, Containerable {
     
     private func _updateProgress(for metaData: Marconi.MetaData, progress: TimeInterval) {
         let controller = _playingItemViewController
-        controller.updateProgress(Float(progress))
+        controller.updateProgress(progress)
     }
     
     // MARK: - Handle State

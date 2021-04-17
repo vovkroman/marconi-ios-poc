@@ -60,7 +60,7 @@ final class PlayingItemViewController: PlayerStateViewController<PlayingView> {
         }
     }
     
-    func updateProgress(_ value: Float) {
+    func updateProgress(_ value: TimeInterval) {
         if isViewLoaded {
             contentView.updateProgress(value)
         }

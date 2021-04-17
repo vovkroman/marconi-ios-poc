@@ -1,6 +1,6 @@
 import UIKit
 
-class MarconiSlider: UISlider {
+final class MarconiSlider: UISlider {
 
     weak var delegate: MarconiSeekDelegate?
     

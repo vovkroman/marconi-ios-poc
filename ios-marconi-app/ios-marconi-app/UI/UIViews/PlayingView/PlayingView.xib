@@ -18,6 +18,7 @@
                 <outlet property="_playButton" destination="2yK-P2-Dzc" id="ABl-ww-jcY"/>
                 <outlet property="_preferenceView" destination="2Ym-9l-S50" id="O7f-9F-sI4"/>
                 <outlet property="_progressBar" destination="PTp-JN-RzG" id="paW-S9-9dL"/>
+                <outlet property="_progressLabel" destination="8dT-af-ToV" id="5Rw-Nf-vCX"/>
                 <outlet property="_skipButton" destination="k8l-AC-9Pi" id="QH6-xF-y29"/>
                 <outlet property="_stationName" destination="cVp-e5-KSs" id="riW-lL-pAY"/>
                 <outlet property="_titleOfView" destination="OEe-1t-h92" id="Zkf-qY-tHb"/>
@@ -201,15 +202,26 @@
                                 <action selector="skipAction:" destination="-1" eventType="touchUpInside" id="ekv-bd-dYy"/>
                             </connections>
                         </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:01" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dT-af-ToV">
+                            <rect key="frame" x="51" y="4.5" width="22.5" height="10"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="10" id="Nnq-Ev-at7"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="2yK-P2-Dzc" secondAttribute="bottom" id="0aZ-0b-Zah"/>
                         <constraint firstItem="k8l-AC-9Pi" firstAttribute="top" secondItem="YEF-gv-0vy" secondAttribute="top" id="0fg-0g-Nmz"/>
+                        <constraint firstItem="8dT-af-ToV" firstAttribute="leading" secondItem="2yK-P2-Dzc" secondAttribute="trailing" id="GnU-Nc-qk4"/>
                         <constraint firstAttribute="height" constant="35" id="Pla-4N-zwv"/>
                         <constraint firstAttribute="bottom" secondItem="k8l-AC-9Pi" secondAttribute="bottom" id="WAr-oP-Hfv"/>
                         <constraint firstItem="PTp-JN-RzG" firstAttribute="centerY" secondItem="2yK-P2-Dzc" secondAttribute="centerY" id="b7n-yp-Uf9"/>
                         <constraint firstItem="2yK-P2-Dzc" firstAttribute="top" secondItem="YEF-gv-0vy" secondAttribute="top" id="g78-tb-Ldo"/>
+                        <constraint firstItem="PTp-JN-RzG" firstAttribute="top" secondItem="8dT-af-ToV" secondAttribute="bottom" constant="1" id="iUd-SY-ZBx"/>
                         <constraint firstItem="2yK-P2-Dzc" firstAttribute="leading" secondItem="YEF-gv-0vy" secondAttribute="leading" constant="16" id="kli-Jz-a74"/>
                         <constraint firstItem="PTp-JN-RzG" firstAttribute="leading" secondItem="2yK-P2-Dzc" secondAttribute="trailing" id="pVK-Hg-5t6"/>
                         <constraint firstAttribute="trailing" secondItem="k8l-AC-9Pi" secondAttribute="trailing" id="u4M-iU-rI0"/>
