@@ -31,6 +31,7 @@ final class PlayingView: UIView, NibReusable {
     @IBOutlet private weak var _progressBar: MarconiSlider!
     @IBOutlet private weak var _playButton: UIButton!
     @IBOutlet private weak var _muteButton: UIButton!
+    @IBOutlet private weak var _progressLabel: UILabel!
     
     @IBOutlet private weak var _preferenceView: UIView!
     
@@ -70,7 +71,10 @@ final class PlayingView: UIView, NibReusable {
         
         _progressBar.maximumValue = playingItem.maxValue
         _progressBar.minimumValue = 0.0
-        _progressBar.value = playingItem.playlistOffset
+        
+        let offsetValue = playingItem.playlistOffset
+        _progressBar.value = Float(offsetValue)
+        _progressLabel.text = offsetValue.asString(style: .positional)
         
         _stationName.text = playingItem.stationName
         _titleSong.text = playingItem.title
@@ -89,8 +93,10 @@ final class PlayingView: UIView, NibReusable {
         layoutIfNeeded()
     }
     
-    func updateProgress(_ value: Float) {
-        _progressBar.value = value
+    func updateProgress(_ value: TimeInterval) {
+        print("TimeInterval: \(value)")
+        _progressBar.value = Float(value)
+        _progressLabel.text = value.asString(style: .positional)
     }
     
     func willReuseView() {

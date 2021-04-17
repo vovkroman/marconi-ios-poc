@@ -23,8 +23,8 @@ extension Marconi {
         private weak var _player: AVPlayer?
         
         private func _progressing(_ progress: TimeInterval) {
-            _counter += _interval
             _progressBlock?(_counter.rounded(), (_playlistOffset + _counter).rounded())
+            _counter += _interval
         }
         
         func startObserving(metadata: MetaData, isContinuePlaying: Bool) {

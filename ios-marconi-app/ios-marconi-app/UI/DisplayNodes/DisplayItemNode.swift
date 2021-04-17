@@ -92,8 +92,8 @@ extension DisplayItemNode {
         return Float(_metaData.duration ?? 0.0)
     }
     
-    var playlistOffset: Float {
-        return Float(_metaData.playlistOffset)
+    var playlistOffset: TimeInterval {
+        return _metaData.playlistOffset
     }
 }
 
