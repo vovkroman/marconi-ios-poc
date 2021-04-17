@@ -14,3 +14,14 @@ extension Double {
         return formatter.string(from: NSNumber(value: self)) ?? "1"
     }
 }
+
+extension Double {
+  func asString(style: DateComponentsFormatter.UnitsStyle) -> String {
+    let formatter = DateComponentsFormatter()
+    formatter.allowedUnits = [.minute, .second]
+    formatter.zeroFormattingBehavior = .pad
+    formatter.unitsStyle = style
+    guard let formattedString = formatter.string(from: self) else { return "" }
+    return formattedString
+  }
+}
