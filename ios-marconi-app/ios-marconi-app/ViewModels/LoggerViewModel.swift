@@ -44,6 +44,7 @@ extension Logger {
             case empty
             case firstItem
             case multiple(new: Items, indexPathes: [IndexPath])
+            case clearAll
         }
         
         typealias ChangesHandler = (Changes) -> ()
@@ -78,6 +79,12 @@ extension Logger {
         func updateItems(newItems: Items) {
             // since it's been updated on the main thread
             self._items = newItems
+        }
+        
+        func clearLogs() {
+            guard !_items.isEmpty else { return }
+            _items = []
+            changeHandler?(.clearAll)
         }
         
         // MARK: - Private methods
