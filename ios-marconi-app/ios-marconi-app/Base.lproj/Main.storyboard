@@ -39,7 +39,20 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Hkd-1H-0oI"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Marconi Player Demo" id="e36-eg-bKh"/>
+                    <navigationItem key="navigationItem" title="Marconi Player Demo" id="e36-eg-bKh">
+                        <barButtonItem key="leftBarButtonItem" title="Clean stored" id="sC8-ub-3uk">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="cleanStoredAction:" destination="fcA-hc-kJF" id="KbI-Fd-blQ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Clear logs" id="BvM-aS-6EC">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="cleanLogsAction:" destination="fcA-hc-kJF" id="3lJ-cj-OpV"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="playerViewContainer" destination="7Rv-GY-45J" id="K73-Bf-YTa"/>
                         <outlet property="tabBarContainer" destination="94j-hi-nKJ" id="wVJ-wc-6Xo"/>

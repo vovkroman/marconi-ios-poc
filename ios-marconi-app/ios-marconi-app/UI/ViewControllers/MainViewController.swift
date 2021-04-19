@@ -14,6 +14,7 @@ class MainViewController: UIViewController, Containerable {
     @IBOutlet private weak var playerViewContainer: UIView!
     
     private(set) weak var _playerController: MarconiPlayerController?
+    private weak var _loggerViewModel: Logger.ViewModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +29,7 @@ class MainViewController: UIViewController, Containerable {
         
         let loggerViewModel = Logger.ViewModel()
         _playerController?.logger = loggerViewModel
+        _loggerViewModel = loggerViewModel
         
         let liveVC = Live.ViewController(viewModel: Live.ViewModel(_playerController))
         liveVC.tabBarItem.title = "Live Stations"
@@ -51,5 +53,15 @@ class MainViewController: UIViewController, Containerable {
         let playerController = MarconiPlayerController()
         addController(playerController, onto: playerViewContainer)
         _playerController = playerController
+    }
+    
+    // MARK: - Actions
+    
+    @IBAction func cleanLogsAction(_ sender: Any) {
+        _loggerViewModel?.clearLogs()
+    }
+    
+    @IBAction func cleanStoredAction(_ sender: Any) {
+        UserDefaults.removeAll()
     }
 }

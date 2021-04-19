@@ -15,7 +15,7 @@ extension Logger {
         typealias ViewModelType = ViewModel
         
         private var _viewModel: ViewModelType
-         
+        
         override func viewDidLoad() {
             super.viewDidLoad()
             _viewSetup()
@@ -50,15 +50,14 @@ extension Logger {
                 switch change {
                 case .empty:
                     break
-                case .firstItem:
+                case .firstItem, .clearAll:
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                     }
-                    
                 case .multiple(let new, let indexPathes):
                     if !indexPathes.isEmpty {
-                       DispatchQueue.main.async(execute: combine(new, indexPathes,
-                                                                 with: self._processChanges))
+                        DispatchQueue.main.async(execute: combine(new, indexPathes,
+                                                                  with: self._processChanges))
                     }
                 }
             }
