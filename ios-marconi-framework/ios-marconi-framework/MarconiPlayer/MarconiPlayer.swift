@@ -23,6 +23,10 @@ extension Marconi {
             return _observer?._currentMetaItem.playId
         }
         
+        public func startProgressObserving() {
+            _observer?.startObserveProgress()
+        }
+        
         public func replaceCurrentURL(with url: URL, stationType: StationType) {
             _observer?.stopMonitoring()
             replaceCurrentItem(with: nil)

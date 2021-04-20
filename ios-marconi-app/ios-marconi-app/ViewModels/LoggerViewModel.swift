@@ -50,7 +50,7 @@ extension Logger {
         typealias ChangesHandler = (Changes) -> ()
         
         private let _worker = DispatchQueue(label: "com.personal.com.personal.ios-marconi-app")
-        private var _items: Items = []
+        private(set) var _items: Items = []
         
         lazy private var _dateFormatter: DateFormatter = {
             let dateFormatter = DateFormatter()
@@ -93,19 +93,23 @@ extension Logger {
             let dateString = _dateFormatter.string(from: Date())
             if _items.isEmpty {
                 _items.append(.init(event: event, dateString: dateString))
-                changeHandler?(.firstItem)
-                return
+                DispatchQueue.main.async {
+                    self.changeHandler?(.firstItem)
+                    return
+                }
             }
             let new = _items + [.init(event: event, dateString: dateString)]
             let indexPathes = (_items.count..<new.count).map{ IndexPath(row: $0, section: 0) }
-            changeHandler?(.multiple(new: new, indexPathes: indexPathes))
+            DispatchQueue.main.async {
+                self.changeHandler?(.multiple(new: new, indexPathes: indexPathes))
+            }
         }
     }
 }
 
 extension Logger.ViewModel: LoggerDelegate {
     func emittedEvent(event: LoggerEvent) {
-        _worker.async(execute: combine(event,
+        _worker.sync(execute: combine(event,
                                        with: _processNewItem))
     }
 }

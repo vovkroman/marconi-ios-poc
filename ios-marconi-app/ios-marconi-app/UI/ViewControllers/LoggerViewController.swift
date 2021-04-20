@@ -51,13 +51,10 @@ extension Logger {
                 case .empty:
                     break
                 case .firstItem, .clearAll:
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
+                    self.tableView.reloadData()
                 case .multiple(let new, let indexPathes):
                     if !indexPathes.isEmpty {
-                        DispatchQueue.main.async(execute: combine(new, indexPathes,
-                                                                  with: self._processChanges))
+                        self._processChanges(new, indexes: indexPathes)
                     }
                 }
             }
@@ -74,7 +71,8 @@ extension Logger {
         }
         
         private func _processChanges(_ items: ViewModel.Items, indexes: [IndexPath]) {
-            tableView.tableFooterView = nil
+            if items.count == _viewModel.count { return }
+            
             tableView.beginUpdates()
             _viewModel.updateItems(newItems: items)
             tableView.insertRows(at: indexes, with: .bottom)

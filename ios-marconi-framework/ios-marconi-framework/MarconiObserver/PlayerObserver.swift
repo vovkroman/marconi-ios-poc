@@ -17,6 +17,7 @@ extension Marconi {
         private var _playbackLikelyToKeepUpKeyPathObserver: NSKeyValueObservation?
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
+        private var _tracksObserver: NSKeyValueObservation?
         
         private lazy var _timerObsrever: TimingsObserver? = { [weak self] in
             guard let self = self else { return nil }
@@ -32,8 +33,10 @@ extension Marconi {
         private(set) var _currentMetaItem: MetaData = .none {
             didSet {
                 if oldValue != _currentMetaItem {
-                    _startObserveProgress()
-                    _stateMachine.transition(with: .fetchedMetaData(_currentMetaItem))
+                    if case .live = _stationType {
+                        // update UI on new meta has came for live
+                        _stateMachine.transition(with: .trackWillStartPlaying(_currentMetaItem))
+                    }
                 }
             }
         }
@@ -58,7 +61,21 @@ extension Marconi {
             }
         }
         
-        private func _startObserveProgress() {
+        private func _trackChangeObserver(_ playerItem: AVPlayerItem) {
+            if case .digit = _stationType {
+                _tracksObserver = playerItem.observe(\.tracks, options: [.new]) { [weak self](playerItem, _) in
+                    let tracks = playerItem.tracks
+                    guard let metadata = self?._currentMetaItem, !tracks.isEmpty else { return }
+                    if playerItem.status == .readyToPlay {
+                        
+                        // will be triggered only when track has been changed
+                        self?._stateMachine.transition(with: .trackHasBeenChanged(metadata))
+                    }
+                }
+            }
+        }
+        
+        public func startObserveProgress() {
             if case .digit = _stationType {
                 _timerObsrever?.invalidate()
                 var isContinuePlaying = false
@@ -73,6 +90,11 @@ extension Marconi {
         private func _observeStatus(_ playerItem: AVPlayerItem) {
             switch playerItem.status {
             case .readyToPlay:
+                if playerItem.errorLog() != nil {
+                    // when stream fails with error
+                    _stateMachine.transition(with: .catchTheError(playerItem.error))
+                    return
+                }
                 _stateMachine.transition(with: .bufferingEnded(_currentMetaItem))
             case .failed:
                 _stateMachine.transition(with: .catchTheError(playerItem.error))
@@ -105,6 +127,7 @@ extension Marconi {
             _stationType = stationType
             _fetchMetaData(newPlayingItem)
             _observeBuffering(newPlayingItem)
+            _trackChangeObserver(newPlayingItem)
         }
         
         public func stopMonitoring() {
@@ -113,6 +136,8 @@ extension Marconi {
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
             _playbackBufferFullObserver?.invalidate()
+            _tracksObserver?.invalidate()
+            _tracksObserver = nil
             _playbackBufferEmptyObserver = nil
             _playbackLikelyToKeepUpKeyPathObserver = nil
             _playbackBufferFullObserver = nil
