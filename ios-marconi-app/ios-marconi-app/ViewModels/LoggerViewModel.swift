@@ -109,7 +109,6 @@ extension Logger {
 
 extension Logger.ViewModel: LoggerDelegate {
     func emittedEvent(event: LoggerEvent) {
-        _worker.sync(execute: combine(event,
-                                       with: _processNewItem))
+        _worker.async(execute: combine(event, with: _processNewItem))
     }
 }

@@ -22,27 +22,35 @@ extension Marconi {
         private(set) var _progressObserver: Any?
         private weak var _player: AVPlayer?
         
-        private func _progressing(_ progress: TimeInterval) {
+        private func _progressing() {
             _progressBlock?(_counter.rounded(), (_playlistOffset + _counter).rounded())
             _counter += _interval
         }
         
-        func startObserving(metadata: MetaData, isContinuePlaying: Bool) {
-            // we are distinguishing 2 states, because depands on state initila progress is calculated in differnt way
-            if isContinuePlaying {
-                _playlistOffset = metadata.playlistStartTime
-                _counter = 0.0
+        // MARK: - Public methods
+        
+        func updateTimings(metadata: MetaData) {
+            guard let duration = metadata.duration else { return }
+            _playlistOffset = metadata.playlistStartTime
+            _counter = 0.0
+            _progressObserver = _player?.addBoundaryTimeObserver(duration: duration,
+                                                                 queue: .main,
+                                                                 body: _progressing)
+        }
+        
+        func startObserveTimings(metadata: MetaData) {
+            guard let duration = metadata.duration else { return }
+            if metadata.playlistOffset < metadata.playlistStartTime {
+                // TODO: Clarify this scenario
+                _playlistOffset = metadata.playlistOffset + metadata.playlistStartTime
+                _counter = metadata.playlistOffset
             } else {
-                if metadata.playlistOffset < metadata.playlistStartTime {
-                    // TODO: Clarify this scenario
-                    _playlistOffset = metadata.playlistOffset + metadata.playlistStartTime
-                    _counter = metadata.playlistOffset
-                } else {
-                    _playlistOffset = metadata.playlistOffset
-                    _counter = metadata.playlistOffset - metadata.playlistStartTime
-                }
+                _playlistOffset = metadata.playlistOffset
+                _counter = metadata.playlistOffset - metadata.playlistStartTime
             }
-            _progressObserver = _player?.addLinearPeriodicTimeObserver(every: _interval, queue: .main, using: _progressing)
+            _progressObserver = _player?.addBoundaryTimeObserver(duration: duration - _counter,
+                                                                 queue: .main,
+                                                                 body: _progressing)
         }
         
         func invalidate() {

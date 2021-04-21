@@ -54,7 +54,7 @@ extension Marconi {
             case bufferingEnded(MetaData)
             // Progress is rounded
             
-            case trackWillStartPlaying(MetaData)
+            case newMetaHasCame(MetaData)
             case trackHasBeenChanged(MetaData)
             case progressDidChanged(progress: TimeInterval)
             
@@ -78,22 +78,25 @@ extension Marconi {
                 state = .buffering(playerItem)
             case (.buffering, .bufferingEnded(let playingItem)):
                 state = .startPlaying(playingItem)
-            case (.buffering, .trackWillStartPlaying(_)):
+            case (.buffering, .newMetaHasCame(_)):
                 // fetched meta data but buffering still in progress
                 break
-            case (.startPlaying(_), .trackWillStartPlaying(let new)):
-                state = .startPlaying(new)
+            case (.startPlaying(let old), .newMetaHasCame(let new)):
+                if old != new {
+                    state = .startPlaying(new)
+                }
             case (_, .bufferingEnded(let new)):
                 state = .startPlaying(new)
-            case (.noPlaying, .trackWillStartPlaying(_)): break
+            case (.noPlaying, .newMetaHasCame(_)): break
             case (_, .startPlaying): break
+            case (.error, .catchTheError(_)): break
             case (_, .catchTheError(let error)):
                 state = .error(.playerError(description: error?.localizedDescription))
-            case (.error(_), .trackWillStartPlaying(let new)):
+            case (.error(_), .newMetaHasCame(let new)):
                 state = .startPlaying(new)
             case (.startPlaying(let playingItem), .progressDidChanged(let progress)):
                 state = .continuePlaying(playingItem, progress)
-            case (.continuePlaying(_, _), .trackWillStartPlaying(let new)):
+            case (.continuePlaying(_, _), .newMetaHasCame(let new)):
                 state = .startPlaying(new)
             case (.continuePlaying(let meta, _), .progressDidChanged(let progress)):
                 state = .continuePlaying(meta, progress)
