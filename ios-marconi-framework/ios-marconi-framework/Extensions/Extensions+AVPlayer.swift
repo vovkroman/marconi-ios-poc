@@ -31,11 +31,12 @@ extension AVPlayer {
 
 extension AVPlayer {
     
-    public func addBoundaryTimeObserver(duration: TimeInterval, queue: DispatchQueue, body: @escaping () -> Void) -> Any {
+    public func addBoundaryTimeObserver(duration: TimeInterval, interval: TimeInterval, queue: DispatchQueue, body: @escaping () -> Void) -> Any? {
         var times: [NSValue] = []
-        for value in stride(from: 0.0, to: duration, by: 1.0) {
+        for value in stride(from: 0.0, through: duration, by: interval) {
             times.append( NSValue(time: CMTime(seconds: value, preferredTimescale: 1)) )
         }
+        guard !times.isEmpty else { return nil }
         return addBoundaryTimeObserver(forTimes: times, queue: queue, using: body)
     }
     

@@ -21,9 +21,14 @@ extension Marconi {
         
         private lazy var _timerObsrever: TimingsObserver? = { [weak self] in
             guard let self = self else { return nil }
-            return .init(every: 1.0, player: self._player) { (itemProgress, streamProgress) in
+            return .init(every: 1.0, player: self._player, progress: { (itemProgress, streamProgress) in
                 self._streamProgress = streamProgress
                 self._stateMachine.transition(with: .progressDidChanged(progress: itemProgress))
+            }) {
+                self._updateProgressObserver()
+                
+                // will be triggered only when track has been changed
+                self._stateMachine.transition(with: .trackHasBeenChanged(self._currentMetaItem))
             }
         }()
         
@@ -92,11 +97,6 @@ extension Marconi {
         private func _observeStatus(_ playerItem: AVPlayerItem) {
             switch playerItem.status {
             case .readyToPlay:
-                if playerItem.errorLog() != nil {
-                    // when stream fails with error
-                    _stateMachine.transition(with: .catchTheError(playerItem.error))
-                    return
-                }
                 _startObserveProgress()
                 _stateMachine.transition(with: .bufferingEnded(_currentMetaItem))
             case .failed:
@@ -130,7 +130,6 @@ extension Marconi {
             _stationType = stationType
             _fetchMetaData(newPlayingItem)
             _observeBuffering(newPlayingItem)
-            _trackChangeObserver(newPlayingItem)
         }
         
         public func stopMonitoring() {
@@ -139,8 +138,6 @@ extension Marconi {
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
             _playbackBufferFullObserver?.invalidate()
-            _tracksObserver?.invalidate()
-            _tracksObserver = nil
             _playbackBufferEmptyObserver = nil
             _playbackLikelyToKeepUpKeyPathObserver = nil
             _playbackBufferFullObserver = nil

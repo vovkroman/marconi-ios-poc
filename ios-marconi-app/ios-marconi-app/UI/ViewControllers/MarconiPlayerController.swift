@@ -139,9 +139,9 @@ class MarconiPlayerController: UIViewController, Containerable {
             logger?.emittedEvent(event: .metaDataItem(item: metaData))
         case .continuePlaying(let metaData, let progress):
             _updateProgress(for: metaData, progress: progress)
-        case .error(_):
+        case .error(let error):
             
-            // To save progress
+            // To save progress on caught the error
             _willReplace(_stationWrapper)
             Log.error("[Error]: Marconi.Player throws the error", category: .default)
         }
