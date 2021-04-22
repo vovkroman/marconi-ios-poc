@@ -21,35 +21,46 @@ extension Marconi {
         
         private lazy var _timerObsrever: TimingsObserver? = { [weak self] in
             guard let self = self else { return nil }
-            return .init(every: 1.0, player: self._player, progress: { (itemProgress, streamProgress) in
+            return .init(every: 1.0) { (itemProgress, streamProgress) in
                 self._streamProgress = streamProgress
                 self._stateMachine.transition(with: .progressDidChanged(progress: itemProgress))
-            }) {
-                self._updateProgressObserver()
-                
-                // will be triggered only when track has been changed
-                self._stateMachine.transition(with: .trackHasBeenChanged(self._currentMetaItem))
             }
         }()
         
         private weak var _player: AVPlayer?
         private(set) var _streamProgress: TimeInterval?
         
+        private var _workItem: DispatchWorkItem?
+        
         private(set) var _currentMetaItem: MetaData = .none {
             didSet {
+                _workItem?.cancel()
                 if oldValue != _currentMetaItem {
-                    if case .live = _stationType {
-                        // update UI on new meta has came for live
+                    switch _currentMetaItem {
+                    case .live(_):
                         _stateMachine.transition(with: .newMetaHasCame(_currentMetaItem))
+                    case .digit(_, let startDate):
+                        print("STARTED TIME: \(startDate)")
+                        guard let timeInterval = startDate?.timeIntervalSinceNow, timeInterval > 0.0 else {
+                            return
+                        }
+                        let workItem = DispatchWorkItem(block: _nextSongStartedPlaying)
+                        self._workItem = workItem
+                        DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval, execute: workItem)
+                    case .none:
+                        break
                     }
                 }
             }
         }
         
-        private(set) var _stateMachine: StateMachine = .init()
-        private var _state: StateMachine.State {
-            return _stateMachine.state
+        private func _nextSongStartedPlaying() {
+            print("STARTED TIME: NEXT SONG HAS BEEN INVOKED: at time \(Date())")
+            _updateProgressObserver()
+            _stateMachine.transition(with: .trackHasBeenChanged(_currentMetaItem))
         }
+        
+        private(set) var _stateMachine: StateMachine = .init()
         
         private func _observeBuffering(_ playerItem: AVPlayerItem) {
             _stateMachine.transition(with: .bufferingStarted(playerItem))
@@ -66,32 +77,16 @@ extension Marconi {
             }
         }
         
-        private func _trackChangeObserver(_ playerItem: AVPlayerItem) {
-            if case .digit = _stationType {
-                _tracksObserver = playerItem.observe(\.tracks, options: [.new]) { [weak self](playerItem, _) in
-                    let tracks = playerItem.tracks
-                    guard let metadata = self?._currentMetaItem, !tracks.isEmpty else { return }
-                    if playerItem.status == .readyToPlay && playerItem.accessLog() == nil {
-                        
-                        self?._updateProgressObserver()
-                        
-                        // will be triggered only when track has been changed
-                        self?._stateMachine.transition(with: .trackHasBeenChanged(metadata))
-                    }
-                }
-            }
-        }
-        
         private func _startObserveProgress() {
             if case .digit = _stationType {
                 _timerObsrever?.invalidate()
-                _timerObsrever?.startObserveTimings(metadata: _currentMetaItem)
+                _timerObsrever?.startObserveTimings(metadata: _currentMetaItem, for: _player)
             }
         }
         
         private func _updateProgressObserver() {
             _timerObsrever?.invalidate()
-            _timerObsrever?.updateTimings(metadata: _currentMetaItem)
+            _timerObsrever?.updateTimings(metadata: _currentMetaItem, for: _player)
         }
         
         private func _observeStatus(_ playerItem: AVPlayerItem) {
@@ -145,14 +140,16 @@ extension Marconi {
         
         public func metadataCollector(_ metadataCollector: AVPlayerItemMetadataCollector,
                                       didCollect metadataGroups: [AVDateRangeMetadataGroup],
-                                      indexesOfNewGroups: IndexSet, indexesOfModifiedGroups: IndexSet) {
+                                      indexesOfNewGroups: IndexSet,
+                                      indexesOfModifiedGroups: IndexSet) {
             let metadataItems = metadataGroups.flatMap{ $0.items }
             switch _stationType {
             case .live:
                 let item = MetaData(Live.DataParser(metadataItems))
                 _currentMetaItem = item
             case .digit:
-                let item = MetaData(Digit.DataParser(metadataItems))
+                let startDate = metadataGroups.first?.startDate
+                let item = MetaData(Digit.DataParser(metadataItems), date: startDate)
                 _currentMetaItem = item
             }
         }
