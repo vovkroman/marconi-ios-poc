@@ -12,37 +12,50 @@ extension Marconi {
     public class TimingsObserver {
         
         typealias ProgressBlock = (_ currentItem: TimeInterval, _ stream: TimeInterval) -> ()
+        typealias EndBlock = () -> ()
         
-        private var _progressBlock: ProgressBlock?
+        private let _progressBlock: ProgressBlock?
         
         private let _interval: TimeInterval
-        private var _playlistOffset: TimeInterval
-        private var _counter: TimeInterval
+        private var _playlistOffset: TimeInterval = 0.0
+        private var _counter: TimeInterval = 0.0
         
-        private(set) var _progressObserver: Any?
+        private var _progressObserver: Any?
         private weak var _player: AVPlayer?
         
-        private func _progressing(_ progress: TimeInterval) {
-            _progressBlock?(_counter.rounded(), (_playlistOffset + _counter).rounded())
+        private func _trackIsProgressing() {
             _counter += _interval
+            _progressBlock?(_counter.rounded(), (_playlistOffset + _counter).rounded())
         }
         
-        func startObserving(metadata: MetaData, isContinuePlaying: Bool) {
-            // we are distinguishing 2 states, because depands on state initila progress is calculated in differnt way
-            if isContinuePlaying {
-                _playlistOffset = metadata.playlistStartTime
-                _counter = 0.0
+        // MARK: - Public methods
+        
+        func updateTimings(metadata: MetaData, for player: AVPlayer?) {
+            guard let duration = metadata.duration else { return }
+            _player = player
+            _playlistOffset = metadata.playlistStartTime
+            _counter = 0.0
+            _progressObserver = _player?.addBoundaryTimeObserver(duration: duration + metadata.playlistStartTime,
+                                                                 interval: 1.0,
+                                                                 queue: .main,
+                                                                 body: _trackIsProgressing)
+        }
+        
+        func startObserveTimings(metadata: MetaData, for player: AVPlayer?) {
+            guard let duration = metadata.duration else { return }
+            _player = player
+            if metadata.playlistOffset < metadata.playlistStartTime {
+                // TODO: Clarify this scenario
+                _playlistOffset = metadata.playlistOffset + metadata.playlistStartTime
+                _counter = metadata.playlistOffset
             } else {
-                if metadata.playlistOffset < metadata.playlistStartTime {
-                    // TODO: Clarify this scenario
-                    _playlistOffset = metadata.playlistOffset + metadata.playlistStartTime
-                    _counter = metadata.playlistOffset
-                } else {
-                    _playlistOffset = metadata.playlistOffset
-                    _counter = metadata.playlistOffset - metadata.playlistStartTime
-                }
+                _playlistOffset = metadata.playlistOffset
+                _counter = metadata.playlistOffset - metadata.playlistStartTime
             }
-            _progressObserver = _player?.addLinearPeriodicTimeObserver(every: _interval, queue: .main, using: _progressing)
+            _progressObserver = _player?.addBoundaryTimeObserver(duration: duration - _counter,
+                                                                 interval: 1.0,
+                                                                 queue: .main,
+                                                                 body: _trackIsProgressing)
         }
         
         func invalidate() {
@@ -50,12 +63,9 @@ extension Marconi {
             _progressObserver = nil
         }
         
-        init(every interval: TimeInterval, player: AVPlayer?, block: ProgressBlock? = nil) {
+        init(every interval: TimeInterval, progress: ProgressBlock? = nil) {
             _interval = interval
-            _progressBlock = block
-            _counter = 0.0
-            _playlistOffset = 0.0
-            _player = player
+            _progressBlock = progress
         }
         
         deinit {
