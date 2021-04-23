@@ -32,35 +32,58 @@ extension Marconi {
         
         private var _workItem: DispatchWorkItem?
         
+        private(set) var _stateMachine: StateMachine = .init()
+        
+        // MARK: - Methods to handle new meta item has come
+        
+        private var _queue: MetaDataQueue = .init()
+        
         private(set) var _currentMetaItem: MetaData = .none {
             didSet {
-                _workItem?.cancel()
                 if oldValue != _currentMetaItem {
-                    switch _currentMetaItem {
-                    case .live(_):
-                        _stateMachine.transition(with: .newMetaHasCame(_currentMetaItem))
-                    case .digit(_, let startDate):
-                        print("STARTED TIME: \(startDate)")
-                        guard let timeInterval = startDate?.timeIntervalSinceNow, timeInterval > 0.0 else {
-                            return
-                        }
-                        let workItem = DispatchWorkItem(block: _nextSongStartedPlaying)
-                        self._workItem = workItem
-                        DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval, execute: workItem)
-                    case .none:
-                        break
-                    }
+                    _processNew(metaItem: _currentMetaItem)
                 }
             }
         }
         
-        private func _nextSongStartedPlaying() {
-            print("STARTED TIME: NEXT SONG HAS BEEN INVOKED: at time \(Date())")
-            _updateProgressObserver()
-            _stateMachine.transition(with: .trackHasBeenChanged(_currentMetaItem))
+        private func _processNew(metaItem: MetaData) {
+            _workItem?.cancel()
+            _workItem = nil
+            switch _stationType {
+            case .live:
+                _stateMachine.transition(with: .newMetaHasCame(_currentMetaItem))
+            case .digit:
+                _scheduleNextTrackInvoke(metaItem: _currentMetaItem)
+            }
         }
         
-        private(set) var _stateMachine: StateMachine = .init()
+        private func _scheduleNextTrackInvoke(metaItem: MetaData) {
+            guard let timeInterval = metaItem.startTrackDate?.timeIntervalSinceNow, timeInterval > 0.0 else {
+                // current item has started playing, but will need to schedule next track invocation
+                if let item = _queue.head(), item != _currentMetaItem  {
+                    _scheduleNextTrackInvoke(metaItem: item)
+                }
+                return
+            }
+            print("NEXT TRACK HAS BEEN SCHEDULED ON: \(String(describing: metaItem.startTrackDate))")
+            _workItem = DispatchWorkItem() { [weak self] in
+                guard let self = self else { return }
+                self._nextSongStartedPlaying(with: metaItem)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval, execute: _workItem!)
+        }
+        
+        private func _nextSongStartedPlaying(with metaData: MetaData) {
+            print("NEXT SONG METHOD HAS BEEN INVOKED: at time \(Date())")
+            _stateMachine.transition(with: .trackHasBeenChanged(metaData))
+            _updateProgressObserver(metaData: metaData)
+            guard let item = _queue.head(), _currentMetaItem != item else {
+                _queue.dequeue()
+                return
+            }
+            // force unwrapped is ok, since head guarantee that first item exists
+            _currentMetaItem = _queue.dequeue()!
+        }
         
         private func _observeBuffering(_ playerItem: AVPlayerItem) {
             _stateMachine.transition(with: .bufferingStarted(playerItem))
@@ -84,9 +107,9 @@ extension Marconi {
             }
         }
         
-        private func _updateProgressObserver() {
+        private func _updateProgressObserver(metaData: MetaData) {
             _timerObsrever?.invalidate()
-            _timerObsrever?.updateTimings(metadata: _currentMetaItem, for: _player)
+            _timerObsrever?.updateTimings(metadata: metaData, for: _player)
         }
         
         private func _observeStatus(_ playerItem: AVPlayerItem) {
@@ -129,6 +152,9 @@ extension Marconi {
         
         public func stopMonitoring() {
             _player?.pause()
+            _workItem?.cancel()
+            _queue.removeAll()
+            _workItem = nil
             _timerObsrever?.invalidate()
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
@@ -148,9 +174,17 @@ extension Marconi {
                 let item = MetaData(Live.DataParser(metadataItems))
                 _currentMetaItem = item
             case .digit:
-                let startDate = metadataGroups.first?.startDate
-                let item = MetaData(Digit.DataParser(metadataItems), date: startDate)
-                _currentMetaItem = item
+                for group in metadataGroups {
+                    let startDate = group.startDate
+                    let items = MetaData(Digit.DataParser(group.items), date: startDate)
+                    _queue.enqueue(items)
+                }
+                guard let item = _queue.head(), _currentMetaItem != item else {
+                    _queue.dequeue()
+                    return
+                }
+                // force unwrapped is ok, since head guarantee that first item exists
+                _currentMetaItem = _queue.dequeue()!
             }
         }
         

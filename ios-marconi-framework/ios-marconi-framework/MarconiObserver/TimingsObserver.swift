@@ -35,7 +35,7 @@ extension Marconi {
             _player = player
             _playlistOffset = metadata.playlistStartTime
             _counter = 0.0
-            _progressObserver = _player?.addBoundaryTimeObserver(duration: duration,
+            _progressObserver = _player?.addBoundaryTimeObserver(duration: duration + metadata.playlistStartTime,
                                                                  interval: 1.0,
                                                                  queue: .main,
                                                                  body: _trackIsProgressing)
