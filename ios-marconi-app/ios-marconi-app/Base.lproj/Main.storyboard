@@ -39,7 +39,20 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Hkd-1H-0oI"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Marconi Player Demo" id="e36-eg-bKh"/>
+                    <navigationItem key="navigationItem" title="Marconi Player Demo" id="e36-eg-bKh">
+                        <barButtonItem key="leftBarButtonItem" title="Clean stored" id="sC8-ub-3uk">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="cleanStoredAction:" destination="fcA-hc-kJF" id="KbI-Fd-blQ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Clear logs" id="BvM-aS-6EC">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="cleanLogsAction:" destination="fcA-hc-kJF" id="3lJ-cj-OpV"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="playerViewContainer" destination="7Rv-GY-45J" id="K73-Bf-YTa"/>
                         <outlet property="tabBarContainer" destination="94j-hi-nKJ" id="wVJ-wc-6Xo"/>
@@ -47,7 +60,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BgU-md-zWo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-397.10144927536237" y="-654.24107142857144"/>
+            <point key="canvasLocation" x="-512" y="-654"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="xcM-rY-wFk">
@@ -57,6 +70,11 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="sGJ-hh-C9C">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.92159587139999999" green="0.92154115439999995" blue="0.92157012220000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>

@@ -70,6 +70,12 @@ extension UserDefaults {
         let key = Keys.playId(stationId: station.id)
         return standard.string(forKey: key.prefixed)
     }
+    
+    static func removeAll() {
+        let domain = Bundle.main.bundleIdentifier!
+        standard.removePersistentDomain(forName: domain)
+        standard.synchronize()
+    }
 }
 
 

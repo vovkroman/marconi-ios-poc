@@ -31,7 +31,9 @@ final class PlayingView: UIView, NibReusable {
     @IBOutlet private weak var _progressBar: MarconiSlider!
     @IBOutlet private weak var _playButton: UIButton!
     @IBOutlet private weak var _muteButton: UIButton!
+    
     @IBOutlet private weak var _progressLabel: UILabel!
+    @IBOutlet private weak var _durationLabel: UILabel!
     
     @IBOutlet private weak var _preferenceView: UIView!
     
@@ -69,12 +71,14 @@ final class PlayingView: UIView, NibReusable {
         _skipButton.isEnabled = playingItem.isSkipSupportable
         _controlsView.isHidden = !playingItem.isShowPlayerControls
         
-        _progressBar.maximumValue = playingItem.maxValue
+        let duration = playingItem.maxValue
+        _progressBar.maximumValue = Float(duration)
         _progressBar.minimumValue = 0.0
         
         let offsetValue = playingItem.playlistOffset
         _progressBar.value = Float(offsetValue)
         _progressLabel.text = offsetValue.asString(style: .positional)
+        _durationLabel.text = duration.asString(style: .positional)
         
         _stationName.text = playingItem.stationName
         _titleSong.text = playingItem.title

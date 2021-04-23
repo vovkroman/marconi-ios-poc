@@ -13,6 +13,7 @@
                 <outlet property="_bottomPreferenceViewConstraint" destination="se5-l7-TFM" id="fkh-K3-1uf"/>
                 <outlet property="_bottomProgressPanelConstraint" destination="56r-ZD-bRv" id="rl7-ye-O1e"/>
                 <outlet property="_controlsView" destination="YEF-gv-0vy" id="iHV-bg-oCp"/>
+                <outlet property="_durationLabel" destination="ym9-Jd-BPz" id="cXp-hd-7PA"/>
                 <outlet property="_imageView" destination="TVG-MR-vyV" id="ByO-m4-3CH"/>
                 <outlet property="_muteButton" destination="kSP-wg-arJ" id="R7w-xD-Gjv"/>
                 <outlet property="_playButton" destination="2yK-P2-Dzc" id="ABl-ww-jcY"/>
@@ -204,11 +205,22 @@
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:01" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dT-af-ToV">
                             <rect key="frame" x="51" y="4.5" width="22.5" height="10"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="10" id="Nnq-Ev-at7"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="8"/>
-                            <nil key="textColor"/>
+                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:01" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ym9-Jd-BPz">
+                            <rect key="frame" x="323.5" y="4.5" width="22.5" height="10"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="10" id="zCC-nH-NVA"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
@@ -220,7 +232,9 @@
                         <constraint firstAttribute="height" constant="35" id="Pla-4N-zwv"/>
                         <constraint firstAttribute="bottom" secondItem="k8l-AC-9Pi" secondAttribute="bottom" id="WAr-oP-Hfv"/>
                         <constraint firstItem="PTp-JN-RzG" firstAttribute="centerY" secondItem="2yK-P2-Dzc" secondAttribute="centerY" id="b7n-yp-Uf9"/>
+                        <constraint firstItem="PTp-JN-RzG" firstAttribute="top" secondItem="ym9-Jd-BPz" secondAttribute="bottom" constant="1" id="fiC-6S-9Gc"/>
                         <constraint firstItem="2yK-P2-Dzc" firstAttribute="top" secondItem="YEF-gv-0vy" secondAttribute="top" id="g78-tb-Ldo"/>
+                        <constraint firstItem="k8l-AC-9Pi" firstAttribute="leading" secondItem="ym9-Jd-BPz" secondAttribute="trailing" id="hH4-75-UQW"/>
                         <constraint firstItem="PTp-JN-RzG" firstAttribute="top" secondItem="8dT-af-ToV" secondAttribute="bottom" constant="1" id="iUd-SY-ZBx"/>
                         <constraint firstItem="2yK-P2-Dzc" firstAttribute="leading" secondItem="YEF-gv-0vy" secondAttribute="leading" constant="16" id="kli-Jz-a74"/>
                         <constraint firstItem="PTp-JN-RzG" firstAttribute="leading" secondItem="2yK-P2-Dzc" secondAttribute="trailing" id="pVK-Hg-5t6"/>

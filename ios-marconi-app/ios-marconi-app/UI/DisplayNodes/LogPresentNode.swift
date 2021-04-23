@@ -27,3 +27,11 @@ extension LogPresentNode: Titlable, DateSupportable {
         return _dateString
     }
 }
+
+extension LogPresentNode: Equatable {
+    static func == (lhs: LogPresentNode, rhs: LogPresentNode) -> Bool {
+        return lhs.title == rhs.title && lhs._dateString == rhs._dateString
+    }
+    
+    
+}

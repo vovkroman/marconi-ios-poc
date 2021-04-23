@@ -26,7 +26,7 @@ extension StationWrapper {
             // please user's seen none second of asset, repeated request will no return meta data
             // that's why set the default value 1.0s
             // TODO: Clarify this moment with Tony
-            let progress = progressData.progress ?? 1.0 //else { return }
+            let progress = progressData.progress ?? 0.0 //else { return }
             UserDefaults.saveProgress(progress.stringValue, for: station)
             
             if let playId = progressData.playId {

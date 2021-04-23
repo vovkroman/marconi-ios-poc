@@ -88,8 +88,8 @@ extension DisplayItemNode {
         return combine(_station.id, playId, trackId, with: _provider.skip)
     }
     
-    var maxValue: Float {
-        return Float(_metaData.duration ?? 0.0)
+    var maxValue: TimeInterval {
+        return _metaData.duration ?? 0.0
     }
     
     var playlistOffset: TimeInterval {
