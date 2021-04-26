@@ -34,7 +34,7 @@ extension Marconi {
     public enum MetaData {
         case none
         case live(LiveItem)
-        case digit(DigitaItem, Date?)
+        case digit(DigitaItem, Date)
         
         public var song: String? {
             switch self {
@@ -148,7 +148,7 @@ extension Marconi {
                          image: parser.image))
         }
         
-        init(_ parser: Digit.DataParser, date: Date?) {
+        init(_ parser: Digit.DataParser, startDate: Date) {
             self = .digit(.init(trackId: parser.trackId,
                           playId: parser.playId,
                           artist: parser.artist,
@@ -160,7 +160,7 @@ extension Marconi {
                           url: parser.url,
                           skips: parser.skips ?? 0,
                           isSkippable: parser.isSkippable ?? false),
-                          date)
+                          startDate)
         }
     }
 }

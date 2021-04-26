@@ -42,6 +42,20 @@ extension Marconi {
             _observer?.setPlayer(self)
         }
         
+        public override func play() {
+            if !isPlaying {
+                _observer?.scheduler?.resume()
+            }
+            super.play()
+        }
+        
+        public override func pause() {
+            if isPlaying {
+                _observer?.scheduler?.pause()
+            }
+            super.pause()
+        }
+        
         deinit {
             print("\(self) has been removed")
         }

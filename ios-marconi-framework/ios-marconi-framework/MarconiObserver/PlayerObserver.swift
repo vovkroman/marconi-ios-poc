@@ -30,7 +30,7 @@ extension Marconi {
         private weak var _player: AVPlayer?
         private(set) var _streamProgress: TimeInterval?
         
-        private var _workItem: DispatchWorkItem?
+        private(set) var scheduler: Scheduler?
         
         private(set) var _stateMachine: StateMachine = .init()
         
@@ -47,8 +47,7 @@ extension Marconi {
         }
         
         private func _processNew(metaItem: MetaData) {
-            _workItem?.cancel()
-            _workItem = nil
+            scheduler?.cancel()
             switch _stationType {
             case .live:
                 _stateMachine.transition(with: .newMetaHasCame(_currentMetaItem))
@@ -58,30 +57,33 @@ extension Marconi {
         }
         
         private func _scheduleNextTrackInvoke(metaItem: MetaData) {
-            guard let timeInterval = metaItem.startTrackDate?.timeIntervalSinceNow, timeInterval > 0.0 else {
+            guard let scheduleDate = metaItem.startTrackDate, scheduleDate > Date() else {
                 // current item has started playing, but will need to schedule next track invocation
-                if let item = _queue.head(), item != _currentMetaItem  {
+                if let item = _queue.peek(), item != _currentMetaItem  {
                     _scheduleNextTrackInvoke(metaItem: item)
+                    _queue.dequeue()
                 }
                 return
             }
-            print("NEXT TRACK HAS BEEN SCHEDULED ON: \(String(describing: metaItem.startTrackDate))")
-            _workItem = DispatchWorkItem() { [weak self] in
+            print("NEXT TRACK HAS BEEN SCHEDULED ON: \(String(describing: scheduleDate))")
+            scheduler = .init()
+            scheduler?.start(at: scheduleDate)
+            scheduler?.fire = { [weak self] in
                 guard let self = self else { return }
                 self._nextSongStartedPlaying(with: metaItem)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval, execute: _workItem!)
         }
         
         private func _nextSongStartedPlaying(with metaData: MetaData) {
             print("NEXT SONG METHOD HAS BEEN INVOKED: at time \(Date())")
             _stateMachine.transition(with: .trackHasBeenChanged(metaData))
             _updateProgressObserver(metaData: metaData)
-            guard let item = _queue.head(), _currentMetaItem != item else {
-                _queue.dequeue()
+            _queue.dequeue()
+            guard let item = _queue.peek(), _currentMetaItem != item else {
                 return
             }
-            // force unwrapped is ok, since head guarantee that first item exists
+            
+            // force unwrapped is ok, since peek guarantee that first item exists
             _currentMetaItem = _queue.dequeue()!
         }
         
@@ -152,9 +154,10 @@ extension Marconi {
         
         public func stopMonitoring() {
             _player?.pause()
-            _workItem?.cancel()
+            scheduler?.cancel()
+            scheduler = nil
+            
             _queue.removeAll()
-            _workItem = nil
             _timerObsrever?.invalidate()
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
@@ -171,19 +174,21 @@ extension Marconi {
             let metadataItems = metadataGroups.flatMap{ $0.items }
             switch _stationType {
             case .live:
+//                let startDate = metadataGroups.first.startDate
                 let item = MetaData(Live.DataParser(metadataItems))
                 _currentMetaItem = item
             case .digit:
                 for group in metadataGroups {
                     let startDate = group.startDate
-                    let items = MetaData(Digit.DataParser(group.items), date: startDate)
+                    let items = MetaData(Digit.DataParser(group.items),
+                                         startDate: startDate)
                     _queue.enqueue(items)
                 }
-                guard let item = _queue.head(), _currentMetaItem != item else {
-                    _queue.dequeue()
+                guard let item = _queue.peek(), _currentMetaItem != item else {
                     return
                 }
-                // force unwrapped is ok, since head guarantee that first item exists
+                
+                // force unwrapped is ok, since peek guarantee that first item exists
                 _currentMetaItem = _queue.dequeue()!
             }
         }
