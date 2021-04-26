@@ -48,6 +48,8 @@ extension Marconi {
         
         private func _processNew(metaItem: MetaData) {
             scheduler?.cancel()
+            scheduler = nil
+            
             switch _stationType {
             case .live:
                 _stateMachine.transition(with: .newMetaHasCame(_currentMetaItem))
@@ -59,9 +61,11 @@ extension Marconi {
         private func _scheduleNextTrackInvoke(metaItem: MetaData) {
             guard let scheduleDate = metaItem.startTrackDate, scheduleDate > Date() else {
                 // current item has started playing, but will need to schedule next track invocation
-                if let item = _queue.peek(), item != _currentMetaItem  {
-                    _scheduleNextTrackInvoke(metaItem: item)
+                if scheduler == nil {
                     _queue.dequeue()
+                    if let item = _queue.peek(), item != _currentMetaItem  {
+                        _scheduleNextTrackInvoke(metaItem: item)
+                    } 
                 }
                 return
             }
