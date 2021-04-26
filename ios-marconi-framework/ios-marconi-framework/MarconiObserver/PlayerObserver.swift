@@ -88,7 +88,7 @@ extension Marconi {
             }
             
             // force unwrapped is ok, since peek guarantee that first item exists
-            _currentMetaItem = _queue.dequeue()!
+            _currentMetaItem = item
         }
         
         private func _observeBuffering(_ playerItem: AVPlayerItem) {
@@ -192,8 +192,7 @@ extension Marconi {
                     return
                 }
                 
-                // force unwrapped is ok, since peek guarantee that first item exists
-                _currentMetaItem = _queue.dequeue()!
+                _currentMetaItem = item
             }
         }
         
