@@ -31,7 +31,6 @@ extension Marconi {
         private(set) var _streamProgress: TimeInterval?
         
         private(set) var scheduler: Scheduler?
-        
         private(set) var _stateMachine: StateMachine = .init()
         
         // MARK: - Methods to handle new meta item has come
@@ -65,7 +64,9 @@ extension Marconi {
                     _queue.dequeue()
                     if let item = _queue.peek(), item != _currentMetaItem  {
                         _scheduleNextTrackInvoke(metaItem: item)
-                    } 
+                    } else {
+                        // new asset will come
+                    }
                 }
                 return
             }
@@ -80,14 +81,13 @@ extension Marconi {
         
         private func _nextSongStartedPlaying(with metaData: MetaData) {
             print("NEXT SONG METHOD HAS BEEN INVOKED: at time \(Date())")
-            _stateMachine.transition(with: .trackHasBeenChanged(metaData))
             _updateProgressObserver(metaData: metaData)
+            _stateMachine.transition(with: .trackHasBeenChanged(metaData))
             _queue.dequeue()
             guard let item = _queue.peek(), _currentMetaItem != item else {
                 return
             }
-            
-            // force unwrapped is ok, since peek guarantee that first item exists
+
             _currentMetaItem = item
         }
         
@@ -162,6 +162,7 @@ extension Marconi {
             scheduler = nil
             
             _queue.removeAll()
+            
             _timerObsrever?.invalidate()
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()

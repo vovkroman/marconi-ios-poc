@@ -95,6 +95,10 @@ extension DisplayItemNode {
     var playlistOffset: TimeInterval {
         return _metaData.playlistOffset
     }
+    
+    var playId: String? {
+        return _metaData.playId
+    }
 }
 
 // MARK: - To make like/dislike

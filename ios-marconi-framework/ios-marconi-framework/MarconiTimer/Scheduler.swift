@@ -72,6 +72,7 @@ extension Marconi {
         
         private func _reset() {
             _timer?.invalidate()
+            _timer = nil
         }
     }
 }
