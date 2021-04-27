@@ -22,25 +22,25 @@ extension Marconi {
         private lazy var _timerObsrever: TimingsObserver? = { [weak self] in
             guard let self = self else { return nil }
             return .init(every: 1.0) { (itemProgress, streamProgress) in
-                self._streamProgress = streamProgress
-                self._stateMachine.transition(with: .progressDidChanged(progress: itemProgress))
+                self.streamProgress = streamProgress
+                self.stateMachine.transition(with: .progressDidChanged(progress: itemProgress))
             }
         }()
         
         private weak var _player: AVPlayer?
-        private(set) var _streamProgress: TimeInterval?
+        private(set) var streamProgress: TimeInterval?
         
         private(set) var scheduler: Scheduler?
-        private(set) var _stateMachine: StateMachine = .init()
+        private(set) var stateMachine: StateMachine = .init()
         
         // MARK: - Methods to handle new meta item has come
         
         private var _queue: MetaDataQueue = .init()
         
-        private(set) var _currentMetaItem: MetaData = .none {
+        private(set) var currentMetaItem: MetaData = .none {
             didSet {
-                if oldValue != _currentMetaItem {
-                    _processNew(metaItem: _currentMetaItem)
+                if oldValue != currentMetaItem {
+                    _processNew(metaItem: currentMetaItem)
                 }
             }
         }
@@ -51,9 +51,9 @@ extension Marconi {
             
             switch _stationType {
             case .live:
-                _stateMachine.transition(with: .newMetaHasCame(_currentMetaItem))
+                stateMachine.transition(with: .newMetaHasCame(currentMetaItem))
             case .digit:
-                _scheduleNextTrackInvoke(metaItem: _currentMetaItem)
+                _scheduleNextTrackInvoke(metaItem: currentMetaItem)
             }
         }
         
@@ -62,7 +62,7 @@ extension Marconi {
                 // current item has started playing, but will need to schedule next track invocation
                 if scheduler == nil {
                     _queue.dequeue()
-                    if let item = _queue.peek(), item != _currentMetaItem  {
+                    if let item = _queue.peek(), item != currentMetaItem  {
                         _scheduleNextTrackInvoke(metaItem: item)
                     } else {
                         // new asset will come
@@ -82,19 +82,19 @@ extension Marconi {
         private func _nextSongStartedPlaying(with metaData: MetaData) {
             print("NEXT SONG METHOD HAS BEEN INVOKED: at time \(Date())")
             _updateProgressObserver(metaData: metaData)
-            _stateMachine.transition(with: .trackHasBeenChanged(metaData))
+            stateMachine.transition(with: .trackHasBeenChanged(metaData))
             _queue.dequeue()
-            guard let item = _queue.peek(), _currentMetaItem != item else {
+            guard let item = _queue.peek(), currentMetaItem != item else {
                 return
             }
 
-            _currentMetaItem = item
+            currentMetaItem = item
         }
         
         private func _observeBuffering(_ playerItem: AVPlayerItem) {
-            _stateMachine.transition(with: .bufferingStarted(playerItem))
+            stateMachine.transition(with: .bufferingStarted(playerItem))
             _playbackBufferEmptyObserver = playerItem.observe(\.isPlaybackBufferEmpty, options: [.new]) { [weak self](playerItem, _) in
-                self?._stateMachine.transition(with: .bufferingStarted(playerItem))
+                self?.stateMachine.transition(with: .bufferingStarted(playerItem))
             }
             
             _playbackLikelyToKeepUpKeyPathObserver = playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self](playerItem, _) in
@@ -109,7 +109,7 @@ extension Marconi {
         private func _startObserveProgress() {
             if case .digit = _stationType {
                 _timerObsrever?.invalidate()
-                _timerObsrever?.startObserveTimings(metadata: _currentMetaItem, for: _player)
+                _timerObsrever?.startObserveTimings(metadata: currentMetaItem, for: _player)
             }
         }
         
@@ -122,9 +122,9 @@ extension Marconi {
             switch playerItem.status {
             case .readyToPlay:
                 _startObserveProgress()
-                _stateMachine.transition(with: .bufferingEnded(_currentMetaItem))
+                stateMachine.transition(with: .bufferingEnded(currentMetaItem))
             case .failed:
-                _stateMachine.transition(with: .catchTheError(playerItem.error))
+                stateMachine.transition(with: .catchTheError(playerItem.error))
             default:
                 break
             }
@@ -147,13 +147,17 @@ extension Marconi {
         }
         
         public func startMonitoring(_ playerItem: AVPlayerItem?, stationType: StationType) {
-            _currentMetaItem = .none
+            currentMetaItem = .none
             guard let newPlayingItem = playerItem else {
                 return
             }
             _stationType = stationType
             _fetchMetaData(newPlayingItem)
             _observeBuffering(newPlayingItem)
+        }
+        
+        public func startMonitoring(_ playerItem: AVPlayerItem?) {
+            startMonitoring(playerItem, stationType: _stationType)
         }
         
         public func stopMonitoring() {
@@ -181,7 +185,7 @@ extension Marconi {
             case .live:
 //                let startDate = metadataGroups.first.startDate
                 let item = MetaData(Live.DataParser(metadataItems))
-                _currentMetaItem = item
+                currentMetaItem = item
             case .digit:
                 for group in metadataGroups {
                     let startDate = group.startDate
@@ -189,16 +193,16 @@ extension Marconi {
                                          startDate: startDate)
                     _queue.enqueue(items)
                 }
-                guard let item = _queue.peek(), _currentMetaItem != item else {
+                guard let item = _queue.peek(), currentMetaItem != item else {
                     return
                 }
                 
-                _currentMetaItem = item
+                currentMetaItem = item
             }
         }
         
         public init(_ observer: MarconiPlayerObserver?) {
-            _stateMachine.observer = observer
+            stateMachine.observer = observer
         }
     }
 }

@@ -17,6 +17,7 @@
 		6F7AA2FD2636BFA200B7BBC2 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7AA2FC2636BFA200B7BBC2 /* Scheduler.swift */; };
 		6F7AA31E2637293A00B7BBC2 /* WeakTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7AA31D2637293A00B7BBC2 /* WeakTimer.swift */; };
 		6F8016A02632E75E00F37065 /* MetaDataQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F80169F2632E75E00F37065 /* MetaDataQueue.swift */; };
+		6FE4D5F026380DDC00ED3728 /* URL+Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE4D5EF26380DDC00ED3728 /* URL+Query.swift */; };
 		6FE9B895260A077B0023F68D /* MarconiMetaDatas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B894260A077B0023F68D /* MarconiMetaDatas.swift */; };
 		6FF0EEC6261473340023D2AD /* StationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0EEC5261473340023D2AD /* StationType.swift */; };
 		6FF116B8260E34C500CBCA9C /* Identifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF116B6260E34C500CBCA9C /* Identifiers.swift */; };
@@ -48,6 +49,7 @@
 		6F7AA2FC2636BFA200B7BBC2 /* Scheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		6F7AA31D2637293A00B7BBC2 /* WeakTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakTimer.swift; sourceTree = "<group>"; };
 		6F80169F2632E75E00F37065 /* MetaDataQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaDataQueue.swift; sourceTree = "<group>"; };
+		6FE4D5EF26380DDC00ED3728 /* URL+Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Query.swift"; sourceTree = "<group>"; };
 		6FE9B894260A077B0023F68D /* MarconiMetaDatas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiMetaDatas.swift; sourceTree = "<group>"; };
 		6FF0EEC5261473340023D2AD /* StationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationType.swift; sourceTree = "<group>"; };
 		6FF116B6260E34C500CBCA9C /* Identifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Identifiers.swift; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				6FF116C2260E44C300CBCA9C /* Extensions+AVPlayer.swift */,
+				6FE4D5EF26380DDC00ED3728 /* URL+Query.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -290,6 +293,7 @@
 				6FE9B895260A077B0023F68D /* MarconiMetaDatas.swift in Sources */,
 				6FF116B9260E34C500CBCA9C /* MetaDataParser.swift in Sources */,
 				6F7AA2FD2636BFA200B7BBC2 /* Scheduler.swift in Sources */,
+				6FE4D5F026380DDC00ED3728 /* URL+Query.swift in Sources */,
 				6FF116B8260E34C500CBCA9C /* Identifiers.swift in Sources */,
 				6F08E9CB2604AC74003D0E07 /* MarconiStateMachine.swift in Sources */,
 			);

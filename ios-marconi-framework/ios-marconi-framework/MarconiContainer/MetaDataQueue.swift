@@ -29,6 +29,7 @@ extension Marconi {
         
         mutating func removeAll() {
             _storage.removeAll()
+            print("ALL ITEMs IN QUEUE HAS BEEN REMOVED: \(_storage.count)")
         }
         
         @discardableResult
@@ -60,7 +61,6 @@ extension Marconi {
             }
             let index = findInsertionPoint(for: newElement)
             if index >= 0, index < _storage.count, _storage[index] == newElement {
-                print("ITEM can't be added since it exist")
                 return
             }
             var insertIndex = index
