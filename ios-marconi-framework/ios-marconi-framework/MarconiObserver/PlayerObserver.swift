@@ -19,9 +19,9 @@ extension Marconi {
         private var _playbackBufferFullObserver: NSKeyValueObservation?
         private var _tracksObserver: NSKeyValueObservation?
         
-        private lazy var _timerObsrever: TimingsObserver? = { [weak self] in
-            guard let self = self else { return nil }
+        private lazy var _timerObsrever: TimingsObserver = { [weak self] in
             return .init(every: 1.0) { (itemProgress, streamProgress) in
+                guard let self = self else { return }
                 self.streamProgress = streamProgress
                 self.stateMachine.transition(with: .progressDidChanged(progress: itemProgress))
             }
@@ -108,14 +108,14 @@ extension Marconi {
         
         private func _startObserveProgress() {
             if case .digit = _stationType {
-                _timerObsrever?.invalidate()
-                _timerObsrever?.startObserveTimings(metadata: currentMetaItem, for: _player)
+                _timerObsrever.invalidate()
+                _timerObsrever.startObserveTimings(metadata: currentMetaItem, for: _player)
             }
         }
         
         private func _updateProgressObserver(metaData: MetaData) {
-            _timerObsrever?.invalidate()
-            _timerObsrever?.updateTimings(metadata: metaData, for: _player)
+            _timerObsrever.invalidate()
+            _timerObsrever.updateTimings(metadata: metaData, for: _player)
         }
         
         private func _observeStatus(_ playerItem: AVPlayerItem) {
@@ -167,7 +167,7 @@ extension Marconi {
             
             _queue.removeAll()
             
-            _timerObsrever?.invalidate()
+            _timerObsrever.invalidate()
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
             _playbackBufferFullObserver?.invalidate()

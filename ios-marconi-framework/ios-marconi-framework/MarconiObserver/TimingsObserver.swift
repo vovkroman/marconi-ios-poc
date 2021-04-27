@@ -17,16 +17,17 @@ extension Marconi {
         private let _progressBlock: ProgressBlock?
         
         private let _interval: TimeInterval
-        private var _playlistOffset: TimeInterval = 0.0
-        private var _counter: TimeInterval = 0.0
+        
+        private(set) var playlistOffset: TimeInterval = 0.0
+        private(set) var counter: TimeInterval = 0.0
         
         private var _progressObserver: Any?
         private weak var _player: AVPlayer?
         
         private func _trackIsProgressing() {
-            _counter += _interval
-            _playlistOffset += _interval
-            _progressBlock?(_counter.rounded(), _playlistOffset.rounded())
+            counter += _interval
+            playlistOffset += _interval
+            _progressBlock?(counter.rounded(), playlistOffset.rounded())
         }
         
         // MARK: - Public methods
@@ -34,10 +35,10 @@ extension Marconi {
         func updateTimings(metadata: MetaData, for player: AVPlayer?) {
             guard let duration = metadata.duration else { return }
             _player = player
-            _playlistOffset = metadata.playlistStartTime
-            _counter = 0.0
+            playlistOffset = metadata.playlistStartTime
+            counter = 0.0
             _progressObserver = _player?.addBoundaryTimeObserver(duration: duration + metadata.playlistStartTime,
-                                                                 interval: 1.0,
+                                                                 interval: _interval,
                                                                  queue: .main,
                                                                  body: _trackIsProgressing)
         }
@@ -47,14 +48,14 @@ extension Marconi {
             _player = player
             if metadata.datumTime < metadata.playlistStartTime {
                 // TODO: Clarify this scenario
-                _playlistOffset = metadata.datumTime + metadata.playlistStartTime
-                _counter = metadata.datumTime
+                playlistOffset = metadata.datumTime + metadata.playlistStartTime
+                counter = metadata.datumTime
             } else {
-                _playlistOffset = metadata.datumTime
-                _counter = metadata.datumTime - metadata.playlistStartTime
+                playlistOffset = metadata.datumTime
+                counter = metadata.datumTime - metadata.playlistStartTime
             }
-            _progressObserver = _player?.addBoundaryTimeObserver(duration: duration - _counter,
-                                                                 interval: 1.0,
+            _progressObserver = _player?.addBoundaryTimeObserver(duration: duration - counter,
+                                                                 interval: _interval,
                                                                  queue: .main,
                                                                  body: _trackIsProgressing)
         }
