@@ -213,7 +213,7 @@ extension Marconi.MetaData: Equatable {
 extension Marconi.MetaData: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .digit(let item, _):
+        case .digit(let item, let startDate):
             return """
             Metadata for Digital Station has came with following list of properties:
             
@@ -228,6 +228,8 @@ extension Marconi.MetaData: CustomStringConvertible {
             lsdr/X-SONG-ALBUM-ART-URL: \(String(describing: item.url)),
             lsdr/X-SESSION-SKIPS: \(item.skips),
             lsdr/X-SONG-IS-SKIPPABLE: \(item.isSkippable),
+            START-DATE: \(startDate)
+            
             """
         case .live(let item):
             return """
