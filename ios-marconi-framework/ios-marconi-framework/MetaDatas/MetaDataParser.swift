@@ -51,7 +51,12 @@ extension Marconi.Digit {
             return value?.doubleValue
         }
         
-        var playlistOffset: TimeInterval? {
+        var datumStartTime: TimeInterval? {
+            let value = _dict[Identifier.datumStartTime]
+            return value?.doubleValue
+        }
+        
+        var datumTime: TimeInterval? {
             let value = _dict[Identifier.datumTime]
             return value?.doubleValue
         }

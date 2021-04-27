@@ -93,7 +93,11 @@ extension DisplayItemNode {
     }
     
     var playlistOffset: TimeInterval {
-        return _metaData.playlistOffset
+        return _metaData.datumTime
+    }
+    
+    var playId: String? {
+        return _metaData.playId
     }
 }
 

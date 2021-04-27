@@ -14,22 +14,34 @@ extension Marconi {
         
         private var _observer: PlayerObserver?
         
-        // TODO: Taken out of the player
-        public var streamProgress: TimeInterval? {
-            return _observer?._streamProgress
+        public var streamProgress: TimeInterval {
+            return _observer?.streamProgress ?? 0.0
         }
         
         public var playId: String? {
-            return _observer?._currentMetaItem.playId
+            return _observer?.currentMetaItem.playId
         }
         
+        public var currentURL: URL?
+        
         public func replaceCurrentURL(with url: URL, stationType: StationType) {
+            currentURL = url
             _observer?.stopMonitoring()
             replaceCurrentItem(with: nil)
             let playingItem = AVPlayerItem(url: url)
             
             // we need to know *station type* to know how to map paylaod
             _observer?.startMonitoring(playingItem, stationType: stationType)
+            super.replaceCurrentItem(with: playingItem)
+            super.play()
+        }
+        
+        public func restartCurrent(_ url: URL) {
+            let url = url.updateQueryParams(key: "playlistOffset", value: "\(streamProgress)")
+            _observer?.stopMonitoring()
+            
+            let playingItem = AVPlayerItem(url: url)
+            _observer?.startMonitoring(playingItem)
             super.replaceCurrentItem(with: playingItem)
         }
         
@@ -40,6 +52,22 @@ extension Marconi {
             }
             super.init()
             _observer?.setPlayer(self)
+        }
+        
+        public override func play() {
+            if !isPlaying {
+                _observer?.scheduler?.resume()
+                currentURL.flatMap(restartCurrent)
+            }
+            super.play()
+        }
+        
+        public override func pause() {
+            if isPlaying {
+                _observer?.scheduler?.pause()
+                replaceCurrentItem(with: nil)
+            }
+            super.pause()
         }
         
         deinit {

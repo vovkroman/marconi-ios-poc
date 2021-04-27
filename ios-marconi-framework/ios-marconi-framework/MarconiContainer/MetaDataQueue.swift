@@ -27,9 +27,9 @@ extension Marconi {
             return _storage.count
         }
         
-        
         mutating func removeAll() {
             _storage.removeAll()
+            print("ALL ITEMs IN QUEUE HAS BEEN REMOVED: \(_storage.count)")
         }
         
         @discardableResult
@@ -40,7 +40,7 @@ extension Marconi {
             return _storage.removeFirst()
         }
         
-        mutating func head() -> MetaData? {
+        mutating func peek() -> MetaData? {
             if isEmpty {
                 return nil
             }
@@ -60,12 +60,15 @@ extension Marconi {
                 return
             }
             let index = findInsertionPoint(for: newElement)
-            if index >= 0, index < _storage.count, _storage[index] == newElement { return }
+            if index >= 0, index < _storage.count, _storage[index] == newElement {
+                return
+            }
             var insertIndex = index
             if _storage[index].startTrackDate! < newStartDate { insertIndex += 1 }
             _storage.insert(newElement, at: insertIndex)
         }
         
+        // Using binary search define index to insert item at position
         private func findInsertionPoint(for element: MetaData) -> Int {
             var startIndex = 0
             var endIndex = _storage.count - 1

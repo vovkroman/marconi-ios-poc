@@ -25,7 +25,8 @@ extension Marconi {
         
         private func _trackIsProgressing() {
             _counter += _interval
-            _progressBlock?(_counter.rounded(), (_playlistOffset + _counter).rounded())
+            _playlistOffset += _interval
+            _progressBlock?(_counter.rounded(), _playlistOffset.rounded())
         }
         
         // MARK: - Public methods
@@ -44,13 +45,13 @@ extension Marconi {
         func startObserveTimings(metadata: MetaData, for player: AVPlayer?) {
             guard let duration = metadata.duration else { return }
             _player = player
-            if metadata.playlistOffset < metadata.playlistStartTime {
+            if metadata.datumTime < metadata.playlistStartTime {
                 // TODO: Clarify this scenario
-                _playlistOffset = metadata.playlistOffset + metadata.playlistStartTime
-                _counter = metadata.playlistOffset
+                _playlistOffset = metadata.datumTime + metadata.playlistStartTime
+                _counter = metadata.datumTime
             } else {
-                _playlistOffset = metadata.playlistOffset
-                _counter = metadata.playlistOffset - metadata.playlistStartTime
+                _playlistOffset = metadata.datumTime
+                _counter = metadata.datumTime - metadata.playlistStartTime
             }
             _progressObserver = _player?.addBoundaryTimeObserver(duration: duration - _counter,
                                                                  interval: 1.0,

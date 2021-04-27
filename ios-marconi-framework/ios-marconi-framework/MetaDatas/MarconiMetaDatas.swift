@@ -23,7 +23,8 @@ extension Marconi {
         let artist: String?
         let stationId: String?
         let song: String?
-        let offset: TimeInterval
+        let datumTime: TimeInterval
+        let datumStartTime: TimeInterval
         let duration: TimeInterval?
         let playlistStartTime: TimeInterval
         let url: URL?
@@ -34,7 +35,7 @@ extension Marconi {
     public enum MetaData {
         case none
         case live(LiveItem)
-        case digit(DigitaItem, Date?)
+        case digit(DigitaItem, Date)
         
         public var song: String? {
             switch self {
@@ -87,12 +88,12 @@ extension Marconi {
             }
         }
         
-        public var playlistOffset: TimeInterval {
+        public var datumTime: TimeInterval {
             switch self {
             case .live, .none:
                 return 0.0
             case .digit(let item, _):
-                return item.offset
+                return item.datumTime
             }
         }
         
@@ -111,6 +112,15 @@ extension Marconi {
                 return nil
             case .digit(let item, _):
                 return item.playId
+            }
+        }
+        
+        public var datumStartTime: TimeInterval {
+            switch self {
+            case .live, .none:
+                return 0.0
+            case .digit(let item, _):
+                return item.datumStartTime
             }
         }
         
@@ -148,19 +158,20 @@ extension Marconi {
                          image: parser.image))
         }
         
-        init(_ parser: Digit.DataParser, date: Date?) {
+        init(_ parser: Digit.DataParser, startDate: Date) {
             self = .digit(.init(trackId: parser.trackId,
                           playId: parser.playId,
                           artist: parser.artist,
                           stationId: parser.stationId,
                           song: parser.song,
-                          offset: parser.playlistOffset ?? 0.0,
+                          datumTime: parser.datumTime ?? 0.0,
+                          datumStartTime: parser.datumStartTime ?? 0.0,
                           duration: parser.duration,
                           playlistStartTime: parser.playlistStartTime ?? 0.0,
                           url: parser.url,
                           skips: parser.skips ?? 0,
                           isSkippable: parser.isSkippable ?? false),
-                          date)
+                          startDate)
         }
     }
 }
@@ -181,7 +192,7 @@ extension Marconi.MetaData: Equatable {
                     lhs.artist == rhs.artist &&
                     lhs.stationId == rhs.stationId &&
                     lhs.song == rhs.song &&
-                    lhs.offset == rhs.offset &&
+                    lhs.datumTime == rhs.datumTime &&
                     lhs.skips == rhs.skips &&
                     lhs.isSkippable == rhs.isSkippable &&
                     lhs.duration == rhs.duration &&
@@ -211,7 +222,7 @@ extension Marconi.MetaData: CustomStringConvertible {
             lsdr/X-SONG-ARTIST: \(String(describing: item.artist)),
             lsdr/X-SONG-STATION-ID: \(String(describing: item.stationId)),
             lsdr/X-SONG-TITLE: \(String(describing: item.song)),
-            lsdr/X-DATUM-TIME: \(String(describing: item.offset)),
+            lsdr/X-DATUM-TIME: \(String(describing: item.datumTime)),
             lsdr/X-SONG-DURATION: \(String(describing: item.duration)),
             lsdr/X-PLAYLIST-TRACK-START-TIME: \(String(describing: item.playlistStartTime)),
             lsdr/X-SONG-ALBUM-ART-URL: \(String(describing: item.url)),
