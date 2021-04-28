@@ -61,7 +61,7 @@ extension Marconi {
                 guard let self = self else { return }
                 self.counter += 1.0
                 self.playlistOffset += 1.0
-                self._delegate?.trackProgressing(self.counter.rounded(), self.playlistOffset.rounded())
+                self._delegate?.trackProgressing(self.counter, self.playlistOffset)
             }
             _progressTrackObserver?.start()
         }
