@@ -10,86 +10,44 @@ import AVFoundation
 
 extension Marconi {
     
-    public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate {
+    public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate, TrackTimimgsDelegate {
         
         private(set) var _stationType: StationType = .live
         
         private var _playbackLikelyToKeepUpKeyPathObserver: NSKeyValueObservation?
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
-        private var _tracksObserver: NSKeyValueObservation?
         
-        private lazy var _timerObsrever: TimingsObserver? = { [weak self] in
-            guard let self = self else { return nil }
-            return .init(every: 1.0) { (itemProgress, streamProgress) in
-                self.streamProgress = streamProgress
-                self.stateMachine.transition(with: .progressDidChanged(progress: itemProgress))
-            }
-        }()
+        private(set) lazy var timerObserver: TrackTimingsObserver = .init(self)
         
         private weak var _player: AVPlayer?
         private(set) var streamProgress: TimeInterval?
         
-        private(set) var scheduler: Scheduler?
         private(set) var stateMachine: StateMachine = .init()
         
         // MARK: - Methods to handle new meta item has come
         
         private var _queue: MetaDataQueue = .init()
         
-        private(set) var currentMetaItem: MetaData = .none {
-            didSet {
-                if oldValue != currentMetaItem {
-                    _processNew(metaItem: currentMetaItem)
-                }
-            }
-        }
+        private(set) var currentMetaItem: MetaData = .none
         
-        private func _processNew(metaItem: MetaData) {
-            scheduler?.cancel()
-            scheduler = nil
-            
-            switch _stationType {
-            case .live:
-                stateMachine.transition(with: .newMetaHasCame(currentMetaItem))
-            case .digit:
-                _scheduleNextTrackInvoke(metaItem: currentMetaItem)
-            }
-        }
-        
-        private func _scheduleNextTrackInvoke(metaItem: MetaData) {
-            guard let scheduleDate = metaItem.startTrackDate, scheduleDate > Date() else {
-                // current item has started playing, but will need to schedule next track invocation
-                if scheduler == nil {
-                    _queue.dequeue()
-                    if let item = _queue.peek(), item != currentMetaItem  {
-                        _scheduleNextTrackInvoke(metaItem: item)
-                    } else {
-                        // new asset will come
-                    }
-                }
-                return
-            }
-            print("NEXT TRACK HAS BEEN SCHEDULED ON: \(String(describing: scheduleDate))")
-            scheduler = .init()
-            scheduler?.start(at: scheduleDate)
-            scheduler?.fire = { [weak self] in
-                guard let self = self else { return }
-                self._nextSongStartedPlaying(with: metaItem)
-            }
-        }
-        
-        private func _nextSongStartedPlaying(with metaData: MetaData) {
-            print("NEXT SONG METHOD HAS BEEN INVOKED: at time \(Date())")
-            _updateProgressObserver(metaData: metaData)
-            stateMachine.transition(with: .trackHasBeenChanged(metaData))
+        private func _currentTrackFinished() {
+            // dequeue current track
             _queue.dequeue()
-            guard let item = _queue.peek(), currentMetaItem != item else {
+            
+            guard let item = _queue.peek() else {
+                let nextMeta: MetaData = .none
+                currentMetaItem = nextMeta
+                stateMachine.transition(with: .trackHasBeenChanged(nextMeta))
                 return
             }
-
+            
             currentMetaItem = item
+            _updateProgressObserver(metaData: item)
+            stateMachine.transition(with: .trackHasBeenChanged(item))
         }
+        
+        // MARK: - Observe buffering
         
         private func _observeBuffering(_ playerItem: AVPlayerItem) {
             stateMachine.transition(with: .bufferingStarted(playerItem))
@@ -106,18 +64,6 @@ extension Marconi {
             }
         }
         
-        private func _startObserveProgress() {
-            if case .digit = _stationType {
-                _timerObsrever?.invalidate()
-                _timerObsrever?.startObserveTimings(metadata: currentMetaItem, for: _player)
-            }
-        }
-        
-        private func _updateProgressObserver(metaData: MetaData) {
-            _timerObsrever?.invalidate()
-            _timerObsrever?.updateTimings(metadata: metaData, for: _player)
-        }
-        
         private func _observeStatus(_ playerItem: AVPlayerItem) {
             switch playerItem.status {
             case .readyToPlay:
@@ -130,6 +76,24 @@ extension Marconi {
             }
         }
         
+        // MARK: - Observe progressing
+        
+        private func _startObserveProgress() {
+            if case .digit = _stationType {
+                timerObserver.invalidate()
+                timerObserver.startObserveTimings(metadata: currentMetaItem)
+            }
+        }
+        
+        private func _updateProgressObserver(metaData: MetaData) {
+            if case .digit = _stationType {
+                timerObserver.invalidate()
+                timerObserver.updateTimings(metadata: metaData)
+            }
+        }
+        
+        // MARK: - Fetch meta
+        
         private func _fetchMetaData(_ playerItem: AVPlayerItem) {
             let metadataCollector = AVPlayerItemMetadataCollector()
             metadataCollector.setDelegate(self, queue: .main)
@@ -140,10 +104,6 @@ extension Marconi {
         
         deinit {
             stopMonitoring()
-        }
-        
-        public func setPlayer(_ player: AVPlayer) {
-            _player = player
         }
         
         public func startMonitoring(_ playerItem: AVPlayerItem?, stationType: StationType) {
@@ -161,13 +121,12 @@ extension Marconi {
         }
         
         public func stopMonitoring() {
-            _player?.pause()
-            scheduler?.cancel()
-            scheduler = nil
+            //_player?.pause()
             
             _queue.removeAll()
             
-            _timerObsrever?.invalidate()
+            timerObserver.invalidate()
+            
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
             _playbackBufferFullObserver?.invalidate()
@@ -176,16 +135,29 @@ extension Marconi {
             _playbackBufferFullObserver = nil
         }
         
+        // MARK: - TimimgsDelegate implementation
+        
+        func trackProgressing(_ currentItemInterval: TimeInterval, _ streamProgress: TimeInterval) {
+            self.streamProgress = streamProgress
+            self.stateMachine.transition(with: .progressDidChanged(progress: currentItemInterval))
+        }
+        
+        func trackDidFinish() {
+            _currentTrackFinished()
+        }
+        
+        // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
+        
         public func metadataCollector(_ metadataCollector: AVPlayerItemMetadataCollector,
                                       didCollect metadataGroups: [AVDateRangeMetadataGroup],
                                       indexesOfNewGroups: IndexSet,
                                       indexesOfModifiedGroups: IndexSet) {
-            let metadataItems = metadataGroups.flatMap{ $0.items }
             switch _stationType {
             case .live:
-//                let startDate = metadataGroups.first.startDate
+                let metadataItems = metadataGroups.flatMap{ $0.items }
                 let item = MetaData(Live.DataParser(metadataItems))
                 currentMetaItem = item
+                stateMachine.transition(with: .newMetaHasCame(currentMetaItem))
             case .digit:
                 for group in metadataGroups {
                     let startDate = group.startDate
@@ -194,10 +166,11 @@ extension Marconi {
                     _queue.enqueue(items)
                 }
                 guard let item = _queue.peek(), currentMetaItem != item else {
+                    // current asset's still playing
                     return
                 }
-                
                 currentMetaItem = item
+                stateMachine.transition(with: .newMetaHasCame(item))
             }
         }
         

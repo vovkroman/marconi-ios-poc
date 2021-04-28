@@ -19,12 +19,14 @@ struct DisplayItemNode {
     private let _metaData: Marconi.MetaData
     private let _station: Station
     private let _isPlaying: Bool
+    private let _isNextTrack: Bool
         
-    init?(_ metaData: Marconi.MetaData, station: Station?, isPlaying: Bool) {
+    init?(_ metaData: Marconi.MetaData, station: Station?, isPlaying: Bool, isNextTrack: Bool) {
         guard let station = station else { return nil }
         _metaData = metaData
         _station = station
         _isPlaying = isPlaying
+        _isNextTrack = isNextTrack
     }
 }
 
@@ -93,7 +95,10 @@ extension DisplayItemNode {
     }
     
     var playlistOffset: TimeInterval {
-        return _metaData.datumTime
+        if _isNextTrack {
+            return 0.0
+        }
+        return _metaData.datumTime - _metaData.playlistStartTime
     }
     
     var playId: String? {

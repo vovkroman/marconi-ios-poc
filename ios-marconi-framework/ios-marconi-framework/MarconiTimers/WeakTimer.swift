@@ -46,6 +46,6 @@ final class WeakTimer {
     }
     
     deinit {
-        print("Weak Timer has been removed")
+        timer?.invalidate()
     }
 }

@@ -26,7 +26,7 @@ extension Marconi {
         public enum State: Equatable {
             case noPlaying
             case buffering(AVPlayerItem)
-            case startPlaying(MetaData)
+            case startPlaying(MetaData, Bool)
             case continuePlaying(MetaData, TimeInterval)
             case error(MError)
             
@@ -40,8 +40,8 @@ extension Marconi {
                     return lhs == rhs
                 case (.continuePlaying(let lhsMeta, let lhsProgress), .continuePlaying(let rhsMeta, let rhsProgress)):
                     return lhsMeta == rhsMeta && lhsProgress.isEqual(to: rhsProgress)
-                case (.startPlaying(let lhsMeta), .startPlaying(let rhsMeta)):
-                    return lhsMeta == rhsMeta
+                case (.startPlaying(let lhsMeta, let lhsIsNextTrack), .startPlaying(let rhsMeta, let rhsIsNextTrack)):
+                    return lhsMeta == rhsMeta && lhsIsNextTrack == rhsIsNextTrack
                 default:
                     return false
                 }
@@ -77,27 +77,27 @@ extension Marconi {
             case (_, .bufferingStarted(let playerItem)):
                 state = .buffering(playerItem)
             case (.buffering, .bufferingEnded(let playingItem)):
-                state = .startPlaying(playingItem)
+                state = .startPlaying(playingItem, false)
             case (.buffering, .newMetaHasCame(_)):
                 // fetched meta data but buffering still in progress
                 break
-            case (.startPlaying(let old), .newMetaHasCame(let new)):
+            case (.startPlaying(let old, _), .newMetaHasCame(let new)):
                 if old != new {
-                    state = .startPlaying(new)
+                    state = .startPlaying(new, false)
                 }
             case (_, .bufferingEnded(let new)):
-                state = .startPlaying(new)
+                state = .startPlaying(new, false)
             case (.noPlaying, .newMetaHasCame(_)): break
             case (_, .startPlaying): break
             case (.error, .catchTheError(_)): break
             case (_, .catchTheError(let error)):
                 state = .error(.playerError(description: error?.localizedDescription))
             case (.error(_), .newMetaHasCame(let new)):
-                state = .startPlaying(new)
-            case (.startPlaying(let playingItem), .progressDidChanged(let progress)):
+                state = .startPlaying(new, false)
+            case (.startPlaying(let playingItem, _), .progressDidChanged(let progress)):
                 state = .continuePlaying(playingItem, progress)
             case (.continuePlaying(_, _), .newMetaHasCame(let new)):
-                state = .startPlaying(new)
+                state = .startPlaying(new, false)
             case (.continuePlaying(let meta, _), .progressDidChanged(let progress)):
                 state = .continuePlaying(meta, progress)
             case (_, .progressDidChanged(_)):
@@ -105,7 +105,7 @@ extension Marconi {
                 break
             case (.continuePlaying(let old, _), .trackHasBeenChanged(let new)):
                 if old != new {
-                    state = .startPlaying(new)
+                    state = .startPlaying(new, true)
                 }
             case (_, .trackHasBeenChanged(_)): break
             }

@@ -17,7 +17,7 @@ extension Marconi {
         private var _timer: Timer?
         private var _currentDuration: TimeInterval = 0.0
         
-        var fire: Action?
+        private var _fire: Action?
         
         // MARK: - Operate
         
@@ -58,7 +58,7 @@ extension Marconi {
         }
         
         private func _invoke(timer: Timer) {
-            fire?()
+            _fire?()
         }
         
         // MARK: - Timer
@@ -73,6 +73,10 @@ extension Marconi {
         private func _reset() {
             _timer?.invalidate()
             _timer = nil
+        }
+        
+        init(_ fireAction: Action? = nil) {
+            _fire = fireAction
         }
     }
 }

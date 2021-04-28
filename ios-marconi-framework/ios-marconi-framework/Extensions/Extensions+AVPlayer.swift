@@ -56,5 +56,14 @@ extension AVPlayer {
     }
 }
 
+extension AVPlayer {
+    func stop() {
+        guard let currentItem = currentItem else { return }
+        currentItem.asset.cancelLoading()
+        currentItem.cancelPendingSeeks()
+        replaceCurrentItem(with: nil)
+    }
+}
+
 
 

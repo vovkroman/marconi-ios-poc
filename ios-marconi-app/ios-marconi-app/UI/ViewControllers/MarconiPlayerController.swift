@@ -129,10 +129,12 @@ class MarconiPlayerController: UIViewController, Containerable {
             _noPlayingItem()
         case .buffering(_):
             _buffering()
-        case .startPlaying(let metaData):
+        case .startPlaying(let metaData, let isNextTrack):
             let playingItemDispaly = DisplayItemNode(metaData,
                                                      station: _stationWrapper?.station,
-                                                     isPlaying: _player.isPlaying)
+                                                     
+                                                     isPlaying: _player.isPlaying,
+                                                     isNextTrack: isNextTrack)
             _playingItem = playingItemDispaly
             _startPlaying(playingItemDispaly)
             
