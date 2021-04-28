@@ -18,9 +18,7 @@ extension Marconi {
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
         
-        private(set) lazy var timerObserver: TrackTimingsObserver = .init(every: 1.0,
-                                                                          _player,
-                                                                          delegate: self)
+        private(set) lazy var timerObserver: TrackTimingsObserver = .init(self)
         
         private weak var _player: AVPlayer?
         private(set) var streamProgress: TimeInterval?
@@ -106,10 +104,6 @@ extension Marconi {
         
         deinit {
             stopMonitoring()
-        }
-        
-        public func setPlayer(_ player: AVPlayer) {
-            _player = player
         }
         
         public func startMonitoring(_ playerItem: AVPlayerItem?, stationType: StationType) {

@@ -51,7 +51,6 @@ extension Marconi {
                 _observer = .init(observer)
             }
             super.init()
-            _observer?.setPlayer(self)
         }
         
         public override func play() {
