@@ -115,7 +115,7 @@
 		6F1517AB25FFC66400AD9354 /* ios-marconi-framework */ = {
 			isa = PBXGroup;
 			children = (
-				6F7AA2FB2636BF7900B7BBC2 /* MarconiTimer */,
+				6F7AA2FB2636BF7900B7BBC2 /* MarconiTimers */,
 				6F8016962632E1FE00F37065 /* MarconiContainer */,
 				6FF116C1260E44A300CBCA9C /* Extensions */,
 				6FE9B893260A075E0023F68D /* MetaDatas */,
@@ -136,13 +136,13 @@
 			path = "ios-marconi-frameworkTests";
 			sourceTree = "<group>";
 		};
-		6F7AA2FB2636BF7900B7BBC2 /* MarconiTimer */ = {
+		6F7AA2FB2636BF7900B7BBC2 /* MarconiTimers */ = {
 			isa = PBXGroup;
 			children = (
 				6F7AA31D2637293A00B7BBC2 /* WeakTimer.swift */,
 				6F7AA2FC2636BFA200B7BBC2 /* Scheduler.swift */,
 			);
-			path = MarconiTimer;
+			path = MarconiTimers;
 			sourceTree = "<group>";
 		};
 		6F8016962632E1FE00F37065 /* MarconiContainer */ = {

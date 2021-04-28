@@ -12,10 +12,6 @@ extension Marconi {
     
     public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate, TrackTimimgsDelegate {
         
-        var scheduler: Scheduler? {
-            return timerObserver.scheduler
-        }
-        
         private(set) var _stationType: StationType = .live
         
         private var _playbackLikelyToKeepUpKeyPathObserver: NSKeyValueObservation?

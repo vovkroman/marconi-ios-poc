@@ -23,7 +23,7 @@ extension Marconi {
         private(set) var counter: TimeInterval = 0.0
         
         private var _progressObserver: Any?
-        private(set) var scheduler: Scheduler?
+        private var _nextTrackObserver: Scheduler?
         
         private weak var _player: AVPlayer?
         
@@ -34,6 +34,10 @@ extension Marconi {
         }
         
         // MARK: - Public methods
+        
+        func pause() {
+            _nextTrackObserver?.pause()
+        }
         
         func updateTimings(metadata: MetaData) {
             guard let duration = metadata.duration else { return }
@@ -68,19 +72,17 @@ extension Marconi {
         }
         
         private func _setupScheduler(with interval: TimeInterval) {
-            scheduler = Scheduler(){ [weak self] in
+            _nextTrackObserver = Scheduler(){ [weak self] in
                 self?._delegate?.trackDidFinish()
             }
-            scheduler?.start(at: Date().addingTimeInterval(interval))
-            print("scheduler has been setup")
+            _nextTrackObserver?.start(at: Date().addingTimeInterval(interval))
         }
         
         func invalidate() {
             _player?.removeTimeObserver(_progressObserver)
             _progressObserver = nil
-            print("Timings has been invalidated")
-            scheduler?.cancel()
-            scheduler = nil
+            _nextTrackObserver?.cancel()
+            _nextTrackObserver = nil
         }
         
         init(every interval: TimeInterval, _ player: AVPlayer?, delegate: TrackTimimgsDelegate?) {

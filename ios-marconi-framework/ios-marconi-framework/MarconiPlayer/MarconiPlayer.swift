@@ -56,7 +56,6 @@ extension Marconi {
         
         public override func play() {
             if !isPlaying {
-                _observer?.scheduler?.resume()
                 currentURL.flatMap(restartCurrent)
             }
             super.play()
@@ -64,8 +63,8 @@ extension Marconi {
         
         public override func pause() {
             if isPlaying {
-                _observer?.scheduler?.pause()
-                replaceCurrentItem(with: nil)
+                _observer?.timerObserver.pause()
+                stop()
             }
             super.pause()
         }
