@@ -29,7 +29,6 @@ extension Marconi {
         
         mutating func removeAll() {
             _storage.removeAll()
-            print("ALL ITEMs IN QUEUE HAS BEEN REMOVED: \(_storage.count)")
         }
         
         @discardableResult
