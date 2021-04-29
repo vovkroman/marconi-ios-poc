@@ -9,8 +9,7 @@
 import AVFoundation
 
 protocol TrackTimimgsDelegate: class {
-    func trackProgressing(_ currentItemInterval: TimeInterval, _ streamProgress: TimeInterval)
-    func trackDidFinish()
+    func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval)
 }
 
 extension Marconi {
@@ -18,67 +17,53 @@ extension Marconi {
         
         private weak var _delegate: TrackTimimgsDelegate?
         
-        private(set) var playlistOffset: TimeInterval = 0.0
-        private(set) var counter: TimeInterval = 0.0
+        private var _playlistOffset: TimeInterval = 0.0
+        private var _counter: TimeInterval = 0.0
         
-        private var _progressTrackObserver: Repeater?
-        private var _nextTrackObserver: Scheduler?
+        private(set) var progressTrackObserver: Repeater?
         
         // MARK: - Public methods
         
         func pause() {
-            _progressTrackObserver?.pause()
-            _nextTrackObserver?.pause()
+            progressTrackObserver?.pause()
         }
         
-        func updateTimings(metadata: MetaData) {
-            guard let duration = metadata.duration else { return }
+        func updateTimings(current: MetaData) {
+            guard let duration = current.duration else { return }
             
-            playlistOffset = metadata.playlistStartTime
-            counter = 0.0
+            _playlistOffset = current.playlistStartTime
+            _counter = 0.0
             
             _setupProgressObserver(duration)
-            _setupScheduler(with: duration)
         }
         
         func startObserveTimings(metadata: MetaData) {
             guard let duration = metadata.duration else { return }
             if metadata.datumTime < metadata.playlistStartTime {
                 // TODO: Clarify this scenario
-                playlistOffset = metadata.datumTime + metadata.playlistStartTime
-                counter = metadata.datumTime
+                _playlistOffset = metadata.datumTime + metadata.playlistStartTime
+                _counter = metadata.datumTime
             } else {
-                playlistOffset = metadata.datumTime
-                counter = metadata.datumTime - metadata.playlistStartTime
+                _playlistOffset = metadata.datumTime
+                _counter = metadata.datumTime - metadata.playlistStartTime
             }
-            let length = duration - counter
+            let length = duration - _counter
             _setupProgressObserver(length)
-            _setupScheduler(with: length)
         }
         
         private func _setupProgressObserver(_ duration: TimeInterval) {
-            _progressTrackObserver = Repeater(every: 1.0, duration: duration) { [weak self] in
+            progressTrackObserver = Repeater(every: 1.0, duration: duration) { [weak self] in
                 guard let self = self else { return }
-                self.counter += 1.0
-                self.playlistOffset += 1.0
-                self._delegate?.trackProgressing(self.counter, self.playlistOffset)
+                self._counter += 1.0
+                self._playlistOffset += 1.0
+                self._delegate?.trackProgress(self._counter, self._playlistOffset)
             }
-            _progressTrackObserver?.start()
-        }
-        
-        private func _setupScheduler(with interval: TimeInterval) {
-            _nextTrackObserver = Scheduler(){ [weak self] in
-                guard let self = self else { return }
-                self._delegate?.trackDidFinish()
-            }
-            _nextTrackObserver?.start(at: Date().addingTimeInterval(interval))
+            progressTrackObserver?.start()
         }
         
         func invalidate() {
-            _progressTrackObserver?.cancel()
-            _nextTrackObserver?.cancel()
-            _nextTrackObserver = nil
-            _progressTrackObserver = nil
+            progressTrackObserver?.cancel()
+            progressTrackObserver = nil
         }
         
         init(_ delegate: TrackTimimgsDelegate?) {

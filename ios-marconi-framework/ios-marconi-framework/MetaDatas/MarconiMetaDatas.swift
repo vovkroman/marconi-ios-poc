@@ -186,7 +186,7 @@ extension Marconi.MetaData: Equatable {
                 lhs.image == rhs.image
         case (.live, .digit), (.digit, .live):
             return false
-        case (.digit(let lhs, let lDate), .digit(let rhs, let rDate)):
+        case (.digit(let lhs, _), .digit(let rhs, _)):
             return lhs.trackId == rhs.trackId &&
                     lhs.playId == rhs.playId &&
                     lhs.artist == rhs.artist &&
@@ -197,8 +197,7 @@ extension Marconi.MetaData: Equatable {
                     lhs.isSkippable == rhs.isSkippable &&
                     lhs.duration == rhs.duration &&
                     lhs.playlistStartTime == rhs.playlistStartTime &&
-                    lhs.url == rhs.url &&
-                    lDate == rDate
+                    lhs.url == rhs.url
         case (.none, .none):
             return true
         case (_, .none):
