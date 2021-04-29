@@ -35,7 +35,7 @@ extension Marconi {
             // dequeue current track
             _queue.dequeue()
             
-            guard let item = _queue.peek() else {
+            guard let item = _queue.head() else {
                 let nextMeta: MetaData = .none
                 currentMetaItem = nextMeta
                 stateMachine.transition(with: .trackHasBeenChanged(nextMeta))
@@ -88,7 +88,7 @@ extension Marconi {
         private func _updateProgressObserver(metaData: MetaData) {
             if case .digit = _stationType {
                 timerObserver.invalidate()
-                timerObserver.updateTimings(metadata: metaData)
+                timerObserver.updateTimings(current: metaData)
             }
         }
         
@@ -137,13 +137,16 @@ extension Marconi {
         
         // MARK: - TimimgsDelegate implementation
         
-        func trackProgressing(_ currentItemInterval: TimeInterval, _ streamProgress: TimeInterval) {
-            self.streamProgress = streamProgress
-            self.stateMachine.transition(with: .progressDidChanged(progress: currentItemInterval))
-        }
-        
-        func trackDidFinish() {
-            _currentTrackFinished()
+        func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval) {
+            if let duration = currentMetaItem.duration {
+                let nextSongStartTime = _queue.next()?.playlistStartTime ?? (currentMetaItem.playlistStartTime + duration)
+                if currentMetaItem.playlistStartTime <= streamProgress && streamProgress <= nextSongStartTime {
+                    self.streamProgress = streamProgress
+                    self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
+                } else {
+                    _currentTrackFinished()
+                }
+            }
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
@@ -165,11 +168,16 @@ extension Marconi {
                                          startDate: startDate)
                     _queue.enqueue(items)
                 }
-                guard let item = _queue.peek(), currentMetaItem != item else {
+                guard let item = _queue.head(), currentMetaItem != item else {
                     // current asset's still playing
                     return
                 }
                 currentMetaItem = item
+                
+                // Clarify current scenario
+                if case .startPlaying = stateMachine.state {
+                    if  timerObserver.progressTrackObserver == nil { _startObserveProgress() }
+                }
                 stateMachine.transition(with: .newMetaHasCame(item))
             }
         }

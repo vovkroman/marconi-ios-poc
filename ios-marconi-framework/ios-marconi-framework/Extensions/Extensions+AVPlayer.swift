@@ -30,33 +30,6 @@ extension AVPlayer {
 }
 
 extension AVPlayer {
-    
-    public func addBoundaryTimeObserver(duration: TimeInterval, interval: TimeInterval, queue: DispatchQueue, body: @escaping () -> Void) -> Any? {
-        var times: [NSValue] = []
-        for value in stride(from: 0.0, through: duration, by: interval) {
-            times.append( NSValue(time: CMTime(seconds: value, preferredTimescale: 1)) )
-        }
-        guard !times.isEmpty else { return nil }
-        return addBoundaryTimeObserver(forTimes: times, queue: queue, using: body)
-    }
-    
-    public func addLinearPeriodicTimeObserver(every seconds: TimeInterval,
-                                              queue: DispatchQueue,
-                                              using block: @escaping (TimeInterval) -> Void) -> Any {
-        let interval = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        return addPeriodicTimeObserver(forInterval: interval, queue: queue) { time in
-            block(time.seconds)
-        }
-    }
-    
-    public func removeTimeObserver(_ observer: Any?) {
-        if let observer = observer {
-            removeTimeObserver(observer)
-        }
-    }
-}
-
-extension AVPlayer {
     func stop() {
         guard let currentItem = currentItem else { return }
         currentItem.asset.cancelLoading()

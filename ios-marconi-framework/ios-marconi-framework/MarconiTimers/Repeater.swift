@@ -15,7 +15,6 @@ extension Marconi {
         
         private var _timer: Timer?
         private let _interval: TimeInterval
-        private var _duration: TimeInterval
         
         private var _fire: Action?
         
@@ -45,12 +44,7 @@ extension Marconi {
         }
         
         private func _invoke(timer: Timer) {
-            if _duration > 0.0 {
-                _fire?()
-                _duration -= _interval
-            } else {
-                cancel()
-            }
+            _fire?()
         }
         
         // MARK: - Timer
@@ -69,7 +63,6 @@ extension Marconi {
         
         init(every timeInterval: TimeInterval, duration: TimeInterval, fireAction: Action? = nil) {
             _interval = timeInterval
-            _duration = duration
             _fire = fireAction
         }
     }

@@ -39,11 +39,18 @@ extension Marconi {
             return _storage.removeFirst()
         }
         
-        mutating func peek() -> MetaData? {
+        func head() -> MetaData? {
             if isEmpty {
                 return nil
             }
             return _storage.first
+        }
+        
+        func next() -> MetaData? {
+            if _storage.count > 1 {
+                return _storage[1]
+            }
+            return nil
         }
         
         mutating func enqueue(_ items: MetaData...) {
@@ -59,7 +66,7 @@ extension Marconi {
                 return
             }
             let index = findInsertionPoint(for: newElement)
-            if index >= 0, index < _storage.count, _storage[index] == newElement {
+            if index >= 0, index < _storage.count, _storage[index].startTrackDate! == newStartDate {
                 return
             }
             var insertIndex = index

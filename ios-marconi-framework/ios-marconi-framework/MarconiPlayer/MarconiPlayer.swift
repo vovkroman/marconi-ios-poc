@@ -13,6 +13,7 @@ extension Marconi {
     public class Player: AVPlayer {
         
         private var _observer: PlayerObserver?
+        public var _currentURL: URL?
         
         public var streamProgress: TimeInterval {
             return _observer?.streamProgress ?? 0.0
@@ -22,10 +23,8 @@ extension Marconi {
             return _observer?.currentMetaItem.playId
         }
         
-        public var currentURL: URL?
-        
         public func replaceCurrentURL(with url: URL, stationType: StationType) {
-            currentURL = url
+            _currentURL = url
             _observer?.stopMonitoring()
             replaceCurrentItem(with: nil)
             let playingItem = AVPlayerItem(url: url)
@@ -55,7 +54,7 @@ extension Marconi {
         
         public override func play() {
             if !isPlaying {
-                currentURL.flatMap(restartCurrent)
+                _currentURL.flatMap(restartCurrent)
             }
             super.play()
         }

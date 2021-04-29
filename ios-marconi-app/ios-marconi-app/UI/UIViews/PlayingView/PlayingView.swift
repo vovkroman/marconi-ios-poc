@@ -99,7 +99,7 @@ final class PlayingView: UIView, NibReusable {
     
     func updateProgress(_ value: TimeInterval) {
         print("TimeInterval: \(value)")
-        _progressBar.value = Float(value)
+        _progressBar.value = Float(value.rounded())
         _progressLabel.text = value.asString(style: .positional)
     }
     

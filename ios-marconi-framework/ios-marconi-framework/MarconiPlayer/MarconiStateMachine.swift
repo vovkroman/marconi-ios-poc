@@ -52,7 +52,7 @@ extension Marconi {
             case startPlaying
             case bufferingStarted(AVPlayerItem)
             case bufferingEnded(MetaData)
-            // Progress is rounded
+            // Progress is not rounded
             
             case newMetaHasCame(MetaData)
             case trackHasBeenChanged(MetaData)
