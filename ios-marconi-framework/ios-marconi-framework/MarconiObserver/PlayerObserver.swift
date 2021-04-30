@@ -143,16 +143,20 @@ extension Marconi {
         // MARK: - TimimgsDelegate implementation
         
         func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval) {
-            if let duration = currentMetaItem.duration {
-                let nextSongStartTime = _queue.next()?.playlistStartTime ?? (currentMetaItem.playlistStartTime + duration)
-                let isCurrentPlaying = currentMetaItem.playlistStartTime <= streamProgress && streamProgress <= nextSongStartTime
-                
-                if !isCurrentPlaying {
+            let playlistStartTime = currentMetaItem.playlistStartTime
+            if let nextItem = _queue.next() {
+                if !(playlistStartTime..<nextItem.playlistStartTime ~= streamProgress) {
                     _currentTrackFinished()
                     return
                 }
             }
-            self.streamProgress = currentItemProgress
+            if let duartion = currentMetaItem.duration {
+                if !(playlistStartTime...playlistStartTime + duartion ~= streamProgress) {
+                    _currentTrackFinished()
+                    return
+                }
+            }
+            self.streamProgress = streamProgress
             self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
         }
         

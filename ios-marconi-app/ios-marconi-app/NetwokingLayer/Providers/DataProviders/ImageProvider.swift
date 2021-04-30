@@ -15,13 +15,13 @@ struct ImageProvider: ResponseValidator {
     private let _imageLoader: ImageLoader = .shared
     
     func fetchImage(by url: URL) -> Future<UIImage> {
-        guard let future = _imageLoader.loadFromCache(from: url) else {
+        //guard let future = _imageLoader.loadFromCache(from: url) else {
             return _router.doRequest(.init(url: url))
                             .validateResponse(networkManager: self)
                             .decodeImage()
-                        .cacheImage(into: _imageLoader.cache, by: url)
-        }
-        return future
+                        //.cacheImage(into: _imageLoader.cache, by: url)
+//        }
+//        return future
     }
     
     func cancel() {
