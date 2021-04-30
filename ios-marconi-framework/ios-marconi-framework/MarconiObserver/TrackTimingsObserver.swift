@@ -16,29 +16,25 @@ extension Marconi {
     public class TrackTimingsObserver {
         
         private weak var _delegate: TrackTimimgsDelegate?
+        private weak var _player: AVPlayer?
         
         private var _playlistOffset: TimeInterval = 0.0
         private var _counter: TimeInterval = 0.0
+        private let _interval: TimeInterval
         
-        private(set) var progressTrackObserver: Repeater?
+        private var _currentProgress: TimeInterval = 0.0
+        
+        private(set) var progressTrackObserver: Any?
         
         // MARK: - Public methods
         
-        func pause() {
-            progressTrackObserver?.pause()
-        }
-        
         func updateTimings(current: MetaData) {
-            guard let duration = current.duration else { return }
-            
             _playlistOffset = current.playlistStartTime
-            _counter = 0.0
-            
-            _setupProgressObserver(duration)
+            _counter = -_currentProgress
+            _setupProgressObserver()
         }
         
         func startObserveTimings(metadata: MetaData) {
-            guard let duration = metadata.duration else { return }
             if metadata.datumTime < metadata.playlistStartTime {
                 // TODO: Clarify this scenario
                 _playlistOffset = metadata.datumTime + metadata.playlistStartTime
@@ -47,27 +43,29 @@ extension Marconi {
                 _playlistOffset = metadata.datumTime
                 _counter = metadata.datumTime - metadata.playlistStartTime
             }
-            let length = duration - _counter
-            _setupProgressObserver(length)
+            _setupProgressObserver()
         }
         
-        private func _setupProgressObserver(_ duration: TimeInterval) {
-            progressTrackObserver = Repeater(every: 1.0, duration: duration) { [weak self] in
-                guard let self = self else { return }
-                self._counter += 1.0
-                self._playlistOffset += 1.0
-                self._delegate?.trackProgress(self._counter, self._playlistOffset)
+        private func _setupProgressObserver() {
+            progressTrackObserver = _player?.addLinearPeriodicTimeObserver(every: _interval, queue: .main){ [weak self] (progress) in
+                self?._updateProgress(progress)
             }
-            progressTrackObserver?.start()
+        }
+        
+        private func _updateProgress(_ progress: TimeInterval) {
+            _delegate?.trackProgress(_counter + progress, _playlistOffset + progress)
+            _currentProgress = progress
         }
         
         func invalidate() {
-            progressTrackObserver?.cancel()
+            _player?.removeTimeObserver(progressTrackObserver)
             progressTrackObserver = nil
         }
         
-        init(_ delegate: TrackTimimgsDelegate?) {
+        init(every interval: TimeInterval, player: AVPlayer?, delegate: TrackTimimgsDelegate?) {
+            _player = player
             _delegate = delegate
+            _interval = interval
         }
         
         deinit {

@@ -18,7 +18,9 @@ extension Marconi {
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
         
-        private(set) lazy var timerObserver: TrackTimingsObserver = .init(self)
+        private(set) lazy var timerObserver: TrackTimingsObserver = .init(every: 1.0,
+                                                                          player: _player,
+                                                                          delegate: self)
         
         private weak var _player: AVPlayer?
         private(set) var streamProgress: TimeInterval?
@@ -32,7 +34,6 @@ extension Marconi {
         private(set) var currentMetaItem: MetaData = .none
         
         private func _currentTrackFinished() {
-            // dequeue current track
             _queue.dequeue()
             
             guard let item = _queue.head() else {
@@ -106,6 +107,10 @@ extension Marconi {
             stopMonitoring()
         }
         
+        public func setPlayer(_ player: AVPlayer) {
+            _player = player
+        }
+        
         public func startMonitoring(_ playerItem: AVPlayerItem?, stationType: StationType) {
             currentMetaItem = .none
             guard let newPlayingItem = playerItem else {
@@ -140,13 +145,15 @@ extension Marconi {
         func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval) {
             if let duration = currentMetaItem.duration {
                 let nextSongStartTime = _queue.next()?.playlistStartTime ?? (currentMetaItem.playlistStartTime + duration)
-                if currentMetaItem.playlistStartTime <= streamProgress && streamProgress <= nextSongStartTime {
-                    self.streamProgress = streamProgress
-                    self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
-                } else {
+                let isCurrentPlaying = currentMetaItem.playlistStartTime <= streamProgress && streamProgress <= nextSongStartTime
+                
+                if !isCurrentPlaying {
                     _currentTrackFinished()
+                    return
                 }
             }
+            self.streamProgress = currentItemProgress
+            self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation

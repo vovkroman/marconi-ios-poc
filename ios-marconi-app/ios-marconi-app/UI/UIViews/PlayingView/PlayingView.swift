@@ -71,11 +71,11 @@ final class PlayingView: UIView, NibReusable {
         _skipButton.isEnabled = playingItem.isSkipSupportable
         _controlsView.isHidden = !playingItem.isShowPlayerControls
         
-        let duration = playingItem.maxValue
+        let duration = playingItem.maxValue.rounded(.toNearestOrEven)
         _progressBar.maximumValue = Float(duration)
         _progressBar.minimumValue = 0.0
         
-        let offsetValue = playingItem.playlistOffset
+        let offsetValue = playingItem.playlistOffset.rounded(.toNearestOrEven)
         _progressBar.value = Float(offsetValue)
         _progressLabel.text = offsetValue.asString(style: .positional)
         _durationLabel.text = duration.asString(style: .positional)
@@ -99,7 +99,7 @@ final class PlayingView: UIView, NibReusable {
     
     func updateProgress(_ value: TimeInterval) {
         print("TimeInterval: \(value)")
-        _progressBar.value = Float(value.rounded())
+        _progressBar.value = Float(value.rounded(.toNearestOrEven))
         _progressLabel.text = value.asString(style: .positional)
     }
     

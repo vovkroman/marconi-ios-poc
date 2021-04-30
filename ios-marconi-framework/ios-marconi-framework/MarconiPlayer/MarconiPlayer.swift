@@ -35,8 +35,9 @@ extension Marconi {
             super.play()
         }
         
-        public func restartCurrent(_ url: URL) {
+        public func restore(with url: URL) {
             let url = url.updateQueryParams(key: "playlistOffset", value: "\(streamProgress)")
+            print(url)
             _observer?.stopMonitoring()
             
             let playingItem = AVPlayerItem(url: url)
@@ -50,18 +51,16 @@ extension Marconi {
                 _observer = .init(observer)
             }
             super.init()
+            _observer?.setPlayer(self)
         }
         
         public override func play() {
-            if !isPlaying {
-                _currentURL.flatMap(restartCurrent)
-            }
+            _currentURL.flatMap(restore)
             super.play()
         }
         
         public override func pause() {
             if isPlaying {
-                _observer?.timerObserver.pause()
                 stop()
             }
             super.pause()

@@ -30,6 +30,24 @@ extension AVPlayer {
 }
 
 extension AVPlayer {
+    
+    public func addLinearPeriodicTimeObserver(every seconds: TimeInterval,
+                                              queue: DispatchQueue,
+                                              using block: @escaping (TimeInterval) -> Void) -> Any {
+        let interval = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        return addPeriodicTimeObserver(forInterval: interval, queue: queue) { time in
+            block(time.seconds)
+        }
+    }
+    
+    public func removeTimeObserver(_ observer: Any?) {
+        if let observer = observer {
+            removeTimeObserver(observer)
+        }
+    }
+}
+
+extension AVPlayer {
     func stop() {
         guard let currentItem = currentItem else { return }
         currentItem.asset.cancelLoading()
