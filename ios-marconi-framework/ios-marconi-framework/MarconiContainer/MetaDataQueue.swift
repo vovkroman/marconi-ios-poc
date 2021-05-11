@@ -31,6 +31,7 @@ extension Marconi {
             _storage.removeAll()
         }
         
+        @discardableResult
         func dequeue() -> MetaData? {
             if isEmpty {
                 return nil
