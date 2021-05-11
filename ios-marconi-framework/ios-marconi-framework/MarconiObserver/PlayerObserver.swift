@@ -18,8 +18,9 @@ extension Marconi {
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
         
-        private(set) lazy var timerObserver: TrackTimingsObserver = TrackTimingsObserver(every: 1.0,
+        private(set) lazy var timerObserver: TrackTimingsObserver = .init(every: 1.0,
                                                                           player: _player,
+                                                                          queue: _queue,
                                                                           delegate: self)
         
         private weak var _player: AVPlayer?
@@ -147,24 +148,13 @@ extension Marconi {
         // MARK: - TimimgsDelegate implementation
         
         func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval) {
-            let playlistStartTime = currentMetaItem.playlistStartTime
-            if let nextItem = _queue.next() {
-                if !(playlistStartTime..<nextItem.playlistStartTime ~= streamProgress) {
-                    _currentTrackFinished()
-                    return
-                }
-            }
-            if let duartion = currentMetaItem.duration {
-                let upperBound = playlistStartTime + duartion
-                if !(playlistStartTime...upperBound ~= streamProgress) {
-                    _currentTrackFinished()
-                    return
-                }
-            }
             self.streamProgress = streamProgress
-            if currentItemProgress > 0.0 {
-                self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
-            }
+            print("TimeInterval: \(currentItemProgress)")
+            self.stateMachine.transition(with: .progressDidChanged(progress: round(currentItemProgress, toNearest: 1.0)))
+        }
+        
+        func trackHasBeenChanged() {
+            _currentTrackFinished()
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
@@ -191,6 +181,9 @@ extension Marconi {
                     return
                 }
                 currentMetaItem = item
+                if case .continuePlaying = stateMachine.state {
+                    _updateProgressObserver(metaData: item)
+                }
                 stateMachine.transition(with: .newMetaHasCame(item))
             }
         }

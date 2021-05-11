@@ -10,6 +10,7 @@ import AVFoundation
 
 protocol TrackTimimgsDelegate: class {
     func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval)
+    func trackHasBeenChanged()
 }
 
 extension Marconi {
@@ -20,15 +21,21 @@ extension Marconi {
         
         private var _playlistOffset: TimeInterval = 0.0
         private let _interval: TimeInterval
+        private var _queue: MetaDataQueue
                 
         private(set) var progressTrackObserver: Any?
-        private var _currentItem: MetaData = .none
+        private(set) var currentMetaItem: MetaData = .none {
+            didSet {
+                if oldValue != currentMetaItem {
+                    _setupProgressObserver()
+                }
+            }
+        }
         
         // MARK: - Public methods
         
         func updateTimings(current: MetaData) {
-            _currentItem = current
-            _setupProgressObserver()
+            currentMetaItem = current
         }
         
         func startObserveTimings(metadata: MetaData) {
@@ -38,8 +45,7 @@ extension Marconi {
             } else {
                 _playlistOffset = metadata.datumTime
             }
-            _currentItem = metadata
-            _setupProgressObserver()
+            currentMetaItem = metadata
         }
         
         private func _setupProgressObserver() {
@@ -50,7 +56,21 @@ extension Marconi {
         
         private func _updateProgress(_ progress: TimeInterval) {
             let currentProgress = _playlistOffset + progress
-            _delegate?.trackProgress(currentProgress - _currentItem.playlistStartTime, currentProgress)
+            let playlistStartTime = currentMetaItem.playlistStartTime
+            if let nextItem = _queue.next() {
+                if !(playlistStartTime..<nextItem.playlistStartTime ~= currentProgress) {
+                    _delegate?.trackHasBeenChanged()
+                    return
+                }
+            }
+            if let duartion = currentMetaItem.duration {
+                let upperBound = playlistStartTime + duartion
+                if !(playlistStartTime...upperBound ~= currentProgress) {
+                    _delegate?.trackHasBeenChanged()
+                    return
+                }
+            }
+            _delegate?.trackProgress(currentProgress - currentMetaItem.playlistStartTime, currentProgress)
         }
         
         func invalidate() {
@@ -58,8 +78,9 @@ extension Marconi {
             progressTrackObserver = nil
         }
         
-        init(every interval: TimeInterval, player: AVPlayer?, delegate: TrackTimimgsDelegate?) {
+        init(every interval: TimeInterval, player: AVPlayer?, queue: MetaDataQueue, delegate: TrackTimimgsDelegate?) {
             _player = player
+            _queue = queue
             _delegate = delegate
             _interval = interval
         }
