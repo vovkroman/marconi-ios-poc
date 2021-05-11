@@ -60,17 +60,16 @@ extension Marconi {
         }
 
         mutating private func insert(newElement: MetaData) {
-            guard let newStartDate = newElement.startTrackDate else { return }
             if _storage.isEmpty {
                 _storage.append(newElement)
                 return
             }
             let index = findInsertionPoint(for: newElement)
-            if index >= 0, index < _storage.count, _storage[index].startTrackDate! == newStartDate {
+            if index >= 0, index < _storage.count, _storage[index].playlistStartTime == newElement.playlistStartTime {
                 return
             }
             var insertIndex = index
-            if _storage[index].startTrackDate! < newStartDate { insertIndex += 1 }
+            if _storage[index].playlistStartTime < newElement.playlistStartTime { insertIndex += 1 }
             _storage.insert(newElement, at: insertIndex)
         }
         
@@ -83,7 +82,7 @@ extension Marconi {
                 let midIndex = startIndex + (endIndex - startIndex) / 2
                 if _storage[midIndex] == element {
                     return midIndex
-                } else if _storage[midIndex].startTrackDate! < element.startTrackDate! {
+                } else if _storage[midIndex].playlistStartTime < element.playlistStartTime {
                     startIndex = midIndex + 1
                 } else {
                     endIndex = midIndex

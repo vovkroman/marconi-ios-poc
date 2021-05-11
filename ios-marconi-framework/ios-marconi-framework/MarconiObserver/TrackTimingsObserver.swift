@@ -19,18 +19,15 @@ extension Marconi {
         private weak var _player: AVPlayer?
         
         private var _playlistOffset: TimeInterval = 0.0
-        private var _counter: TimeInterval = 0.0
         private let _interval: TimeInterval
-        
-        private var _currentProgress: TimeInterval = 0.0
-        
+                
         private(set) var progressTrackObserver: Any?
+        private var _currentItem: MetaData = .none
         
         // MARK: - Public methods
         
         func updateTimings(current: MetaData) {
-            _playlistOffset = current.playlistStartTime
-            _counter = -_currentProgress
+            _currentItem = current
             _setupProgressObserver()
         }
         
@@ -38,11 +35,10 @@ extension Marconi {
             if metadata.datumTime < metadata.playlistStartTime {
                 // TODO: Clarify this scenario
                 _playlistOffset = metadata.datumTime + metadata.playlistStartTime
-                _counter = metadata.datumTime
             } else {
                 _playlistOffset = metadata.datumTime
-                _counter = metadata.datumTime - metadata.playlistStartTime
             }
+            _currentItem = metadata
             _setupProgressObserver()
         }
         
@@ -53,8 +49,8 @@ extension Marconi {
         }
         
         private func _updateProgress(_ progress: TimeInterval) {
-            _delegate?.trackProgress(_counter + progress, _playlistOffset + progress)
-            _currentProgress = progress
+            let currentProgress = _playlistOffset + progress
+            _delegate?.trackProgress(currentProgress - _currentItem.playlistStartTime, currentProgress)
         }
         
         func invalidate() {

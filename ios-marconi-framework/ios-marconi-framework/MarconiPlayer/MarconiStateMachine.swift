@@ -107,6 +107,10 @@ extension Marconi {
                 if old != new {
                     state = .startPlaying(new, true)
                 }
+            case (.startPlaying(let old, true), .trackHasBeenChanged(let new)):
+                if old != new {
+                    state = .startPlaying(new, true)
+                }
             case (_, .trackHasBeenChanged(_)): break
             }
         }

@@ -18,12 +18,16 @@ extension Marconi {
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
         
-        private(set) lazy var timerObserver: TrackTimingsObserver = .init(every: 1.0,
+        private(set) lazy var timerObserver: TrackTimingsObserver = TrackTimingsObserver(every: 1.0,
                                                                           player: _player,
                                                                           delegate: self)
         
         private weak var _player: AVPlayer?
-        private(set) var streamProgress: TimeInterval?
+        private(set) var streamProgress: TimeInterval? {
+            didSet {
+                print("streamProgress: \(String(describing: streamProgress))")
+            }
+        }
         
         private(set) var stateMachine: StateMachine = .init()
         
@@ -151,13 +155,16 @@ extension Marconi {
                 }
             }
             if let duartion = currentMetaItem.duration {
-                if !(playlistStartTime...playlistStartTime + duartion ~= streamProgress) {
+                let upperBound = playlistStartTime + duartion
+                if !(playlistStartTime...upperBound ~= streamProgress) {
                     _currentTrackFinished()
                     return
                 }
             }
             self.streamProgress = streamProgress
-            self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
+            if currentItemProgress > 0.0 {
+                self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
+            }
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
@@ -184,11 +191,6 @@ extension Marconi {
                     return
                 }
                 currentMetaItem = item
-                
-                // Clarify current scenario
-                if case .startPlaying = stateMachine.state {
-                    if  timerObserver.progressTrackObserver == nil { _startObserveProgress() }
-                }
                 stateMachine.transition(with: .newMetaHasCame(item))
             }
         }
