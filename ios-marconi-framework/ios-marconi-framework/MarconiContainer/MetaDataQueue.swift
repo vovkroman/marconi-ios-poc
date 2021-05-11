@@ -9,7 +9,7 @@
 import Foundation
 
 extension Marconi {
-    struct MetaDataQueue {
+    class MetaDataQueue {
         
         private var _storage: ContiguousArray<MetaData>
         
@@ -27,12 +27,11 @@ extension Marconi {
             return _storage.count
         }
         
-        mutating func removeAll() {
+        func removeAll() {
             _storage.removeAll()
         }
         
-        @discardableResult
-        mutating func dequeue() -> MetaData? {
+        func dequeue() -> MetaData? {
             if isEmpty {
                 return nil
             }
@@ -53,13 +52,13 @@ extension Marconi {
             return nil
         }
         
-        mutating func enqueue(_ items: MetaData...) {
+        func enqueue(_ items: MetaData...) {
             for item in items {
                 insert(newElement: item)
             }
         }
 
-        mutating private func insert(newElement: MetaData) {
+        private func insert(newElement: MetaData) {
             if _storage.isEmpty {
                 _storage.append(newElement)
                 return

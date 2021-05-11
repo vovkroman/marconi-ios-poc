@@ -35,7 +35,6 @@ extension Marconi {
         // MARK: - Public methods
         
         func updateTimings(current: MetaData) {
-            _playlistOffset -= 0.1 // it's been added for rounded value
             currentMetaItem = current
         }
         
@@ -50,8 +49,10 @@ extension Marconi {
         }
         
         private func _setupProgressObserver() {
-            progressTrackObserver = _player?.addLinearPeriodicTimeObserver(every: _interval, queue: .main){ [weak self] (progress) in
-                self?._updateProgress(progress)
+            if progressTrackObserver == nil {
+                progressTrackObserver = _player?.addLinearPeriodicTimeObserver(every: _interval, queue: .main){ [weak self] (progress) in
+                    self?._updateProgress(progress)
+                }
             }
         }
         
