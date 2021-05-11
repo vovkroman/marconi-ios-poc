@@ -22,6 +22,8 @@ extension Marconi {
         private var _playlistOffset: TimeInterval = 0.0
         private let _interval: TimeInterval
         private var _queue: MetaDataQueue
+        
+        private var _isFinished: Bool = true
                 
         private(set) var progressTrackObserver: Any?
         private(set) var currentMetaItem: MetaData = .none
@@ -56,20 +58,25 @@ extension Marconi {
             let currentProgress = _playlistOffset + progress
             let playlistStartTime = currentMetaItem.playlistStartTime
             if let nextItem = _queue.next() {
-                if !(playlistStartTime..<nextItem.playlistStartTime ~= currentProgress) {
+                if !(playlistStartTime..<nextItem.playlistStartTime ~= currentProgress) && !_isFinished {
                     print("TRACK HAS BEEN CHANGED")
+                    _isFinished = true
                     _delegate?.trackHasBeenChanged()
+                    print("AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
                     return
                 }
             }
             if let duartion = currentMetaItem.duration {
                 let upperBound = playlistStartTime + duartion
-                if !(playlistStartTime...upperBound ~= currentProgress) {
+                if !(playlistStartTime...upperBound ~= currentProgress) && !_isFinished {
                     print("TRACK HAS BEEN CHANGED")
+                    _isFinished = true
                     _delegate?.trackHasBeenChanged()
+                    print("AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
                     return
                 }
             }
+            _isFinished = false
             _delegate?.trackProgress(currentProgress - currentMetaItem.playlistStartTime, currentProgress)
         }
         
