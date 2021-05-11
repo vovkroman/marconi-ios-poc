@@ -75,7 +75,7 @@ extension Marconi {
             case .live, .none:
                 return nil
             case .digit(let item, _):
-                return item.duration
+                return item.duration.flatMap{ round($0, toNearest: 1.0) }
             }
         }
         
@@ -200,10 +200,7 @@ extension Marconi.MetaData: Equatable {
                     lhs.url == rhs.url
         case (.none, .none):
             return true
-        case (_, .none):
-            // if new item is none, not to update UI
-            return true
-        case (.none, _):
+        case (.none, _), (_, .none):
             return false
         }
     }

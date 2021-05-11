@@ -18,10 +18,17 @@ extension Marconi {
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
         
-        private(set) lazy var timerObserver: TrackTimingsObserver = .init(self)
+        private(set) lazy var timerObserver: TrackTimingsObserver = .init(every: 1.0,
+                                                                          player: _player,
+                                                                          queue: _queue,
+                                                                          delegate: self)
         
         private weak var _player: AVPlayer?
-        private(set) var streamProgress: TimeInterval?
+        private(set) var streamProgress: TimeInterval? {
+            didSet {
+                print("streamProgress: \(String(describing: streamProgress))")
+            }
+        }
         
         private(set) var stateMachine: StateMachine = .init()
         
@@ -32,7 +39,6 @@ extension Marconi {
         private(set) var currentMetaItem: MetaData = .none
         
         private func _currentTrackFinished() {
-            // dequeue current track
             _queue.dequeue()
             
             guard let item = _queue.head() else {
@@ -106,6 +112,10 @@ extension Marconi {
             stopMonitoring()
         }
         
+        public func setPlayer(_ player: AVPlayer) {
+            _player = player
+        }
+        
         public func startMonitoring(_ playerItem: AVPlayerItem?, stationType: StationType) {
             currentMetaItem = .none
             guard let newPlayingItem = playerItem else {
@@ -138,15 +148,15 @@ extension Marconi {
         // MARK: - TimimgsDelegate implementation
         
         func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval) {
-            if let duration = currentMetaItem.duration {
-                let nextSongStartTime = _queue.next()?.playlistStartTime ?? (currentMetaItem.playlistStartTime + duration)
-                if currentMetaItem.playlistStartTime <= streamProgress && streamProgress <= nextSongStartTime {
-                    self.streamProgress = streamProgress
-                    self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
-                } else {
-                    _currentTrackFinished()
-                }
+            self.streamProgress = streamProgress
+            print("TimeInterval: \(currentItemProgress)")
+            if currentItemProgress >= 1.0 {
+                self.stateMachine.transition(with: .progressDidChanged(progress: round(currentItemProgress, toNearest: 1.0)))
             }
+        }
+        
+        func trackHasBeenChanged() {
+            _currentTrackFinished()
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
@@ -173,10 +183,8 @@ extension Marconi {
                     return
                 }
                 currentMetaItem = item
-                
-                // Clarify current scenario
-                if case .startPlaying = stateMachine.state {
-                    if  timerObserver.progressTrackObserver == nil { _startObserveProgress() }
+                if case .continuePlaying = stateMachine.state {
+                    _updateProgressObserver(metaData: item)
                 }
                 stateMachine.transition(with: .newMetaHasCame(item))
             }

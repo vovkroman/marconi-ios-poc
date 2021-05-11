@@ -9,7 +9,7 @@
 import Foundation
 
 extension Marconi {
-    struct MetaDataQueue {
+    class MetaDataQueue {
         
         private var _storage: ContiguousArray<MetaData>
         
@@ -27,12 +27,11 @@ extension Marconi {
             return _storage.count
         }
         
-        mutating func removeAll() {
+        func removeAll() {
             _storage.removeAll()
         }
         
-        @discardableResult
-        mutating func dequeue() -> MetaData? {
+        func dequeue() -> MetaData? {
             if isEmpty {
                 return nil
             }
@@ -53,24 +52,23 @@ extension Marconi {
             return nil
         }
         
-        mutating func enqueue(_ items: MetaData...) {
+        func enqueue(_ items: MetaData...) {
             for item in items {
                 insert(newElement: item)
             }
         }
 
-        mutating private func insert(newElement: MetaData) {
-            guard let newStartDate = newElement.startTrackDate else { return }
+        private func insert(newElement: MetaData) {
             if _storage.isEmpty {
                 _storage.append(newElement)
                 return
             }
             let index = findInsertionPoint(for: newElement)
-            if index >= 0, index < _storage.count, _storage[index].startTrackDate! == newStartDate {
+            if index >= 0, index < _storage.count, _storage[index].playlistStartTime == newElement.playlistStartTime {
                 return
             }
             var insertIndex = index
-            if _storage[index].startTrackDate! < newStartDate { insertIndex += 1 }
+            if _storage[index].playlistStartTime < newElement.playlistStartTime { insertIndex += 1 }
             _storage.insert(newElement, at: insertIndex)
         }
         
@@ -83,7 +81,7 @@ extension Marconi {
                 let midIndex = startIndex + (endIndex - startIndex) / 2
                 if _storage[midIndex] == element {
                     return midIndex
-                } else if _storage[midIndex].startTrackDate! < element.startTrackDate! {
+                } else if _storage[midIndex].playlistStartTime < element.playlistStartTime {
                     startIndex = midIndex + 1
                 } else {
                     endIndex = midIndex

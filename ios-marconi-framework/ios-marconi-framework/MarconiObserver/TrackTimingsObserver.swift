@@ -10,64 +10,81 @@ import AVFoundation
 
 protocol TrackTimimgsDelegate: class {
     func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval)
+    func trackHasBeenChanged()
 }
 
 extension Marconi {
     public class TrackTimingsObserver {
         
         private weak var _delegate: TrackTimimgsDelegate?
+        private weak var _player: AVPlayer?
         
         private var _playlistOffset: TimeInterval = 0.0
-        private var _counter: TimeInterval = 0.0
-        
-        private(set) var progressTrackObserver: Repeater?
+        private let _interval: TimeInterval
+        private var _queue: MetaDataQueue
+                
+        private(set) var progressTrackObserver: Any?
+        private(set) var currentMetaItem: MetaData = .none {
+            didSet {
+                if oldValue != currentMetaItem {
+                    _setupProgressObserver()
+                }
+            }
+        }
         
         // MARK: - Public methods
         
-        func pause() {
-            progressTrackObserver?.pause()
-        }
-        
         func updateTimings(current: MetaData) {
-            guard let duration = current.duration else { return }
-            
-            _playlistOffset = current.playlistStartTime
-            _counter = 0.0
-            
-            _setupProgressObserver(duration)
+            currentMetaItem = current
         }
         
         func startObserveTimings(metadata: MetaData) {
-            guard let duration = metadata.duration else { return }
             if metadata.datumTime < metadata.playlistStartTime {
                 // TODO: Clarify this scenario
                 _playlistOffset = metadata.datumTime + metadata.playlistStartTime
-                _counter = metadata.datumTime
             } else {
                 _playlistOffset = metadata.datumTime
-                _counter = metadata.datumTime - metadata.playlistStartTime
             }
-            let length = duration - _counter
-            _setupProgressObserver(length)
+            currentMetaItem = metadata
         }
         
-        private func _setupProgressObserver(_ duration: TimeInterval) {
-            progressTrackObserver = Repeater(every: 1.0, duration: duration) { [weak self] in
-                guard let self = self else { return }
-                self._counter += 1.0
-                self._playlistOffset += 1.0
-                self._delegate?.trackProgress(self._counter, self._playlistOffset)
+        private func _setupProgressObserver() {
+            if progressTrackObserver == nil {
+                progressTrackObserver = _player?.addLinearPeriodicTimeObserver(every: _interval, queue: .main){ [weak self] (progress) in
+                    self?._updateProgress(progress)
+                }
             }
-            progressTrackObserver?.start()
+        }
+        
+        private func _updateProgress(_ progress: TimeInterval) {
+            let currentProgress = _playlistOffset + progress
+            let playlistStartTime = currentMetaItem.playlistStartTime
+            if let nextItem = _queue.next() {
+                if !(playlistStartTime..<nextItem.playlistStartTime ~= currentProgress) {
+                    _delegate?.trackHasBeenChanged()
+                    return
+                }
+            }
+            if let duartion = currentMetaItem.duration {
+                let upperBound = playlistStartTime + duartion
+                if !(playlistStartTime...upperBound ~= currentProgress) {
+                    _delegate?.trackHasBeenChanged()
+                    return
+                }
+            }
+            _delegate?.trackProgress(currentProgress - currentMetaItem.playlistStartTime, currentProgress)
         }
         
         func invalidate() {
-            progressTrackObserver?.cancel()
+            _player?.removeTimeObserver(progressTrackObserver)
             progressTrackObserver = nil
         }
         
-        init(_ delegate: TrackTimimgsDelegate?) {
+        init(every interval: TimeInterval, player: AVPlayer?, queue: MetaDataQueue, delegate: TrackTimimgsDelegate?) {
+            _player = player
+            _queue = queue
             _delegate = delegate
+            _interval = interval
         }
         
         deinit {
