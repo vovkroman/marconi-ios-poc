@@ -151,7 +151,7 @@ extension Marconi {
             self.streamProgress = streamProgress
             print("TimeInterval: \(currentItemProgress)")
             if currentItemProgress >= 1.0 {
-                self.stateMachine.transition(with: .progressDidChanged(progress: round(currentItemProgress, toNearest: 1.0)))
+                self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
             }
         }
         
@@ -183,6 +183,7 @@ extension Marconi {
                     return
                 }
                 currentMetaItem = item
+                // TODO: to clarify this scenario
                 if case .continuePlaying = stateMachine.state {
                     _updateProgressObserver(metaData: item)
                 }

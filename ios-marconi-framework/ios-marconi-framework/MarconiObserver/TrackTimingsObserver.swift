@@ -24,18 +24,13 @@ extension Marconi {
         private var _queue: MetaDataQueue
                 
         private(set) var progressTrackObserver: Any?
-        private(set) var currentMetaItem: MetaData = .none {
-            didSet {
-                if oldValue != currentMetaItem {
-                    _setupProgressObserver()
-                }
-            }
-        }
+        private(set) var currentMetaItem: MetaData = .none
         
         // MARK: - Public methods
         
         func updateTimings(current: MetaData) {
             currentMetaItem = current
+            _setupProgressObserver()
         }
         
         func startObserveTimings(metadata: MetaData) {
@@ -46,6 +41,7 @@ extension Marconi {
                 _playlistOffset = metadata.datumTime
             }
             currentMetaItem = metadata
+            _setupProgressObserver()
         }
         
         private func _setupProgressObserver() {
@@ -61,6 +57,7 @@ extension Marconi {
             let playlistStartTime = currentMetaItem.playlistStartTime
             if let nextItem = _queue.next() {
                 if !(playlistStartTime..<nextItem.playlistStartTime ~= currentProgress) {
+                    print("TRACK HAS BEEN CHANGED")
                     _delegate?.trackHasBeenChanged()
                     return
                 }
@@ -68,6 +65,7 @@ extension Marconi {
             if let duartion = currentMetaItem.duration {
                 let upperBound = playlistStartTime + duartion
                 if !(playlistStartTime...upperBound ~= currentProgress) {
+                    print("TRACK HAS BEEN CHANGED")
                     _delegate?.trackHasBeenChanged()
                     return
                 }
