@@ -150,7 +150,9 @@ extension Marconi {
         func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval) {
             self.streamProgress = streamProgress
             print("TimeInterval: \(currentItemProgress)")
-            self.stateMachine.transition(with: .progressDidChanged(progress: round(currentItemProgress, toNearest: 1.0)))
+            if currentItemProgress >= 1.0 {
+                self.stateMachine.transition(with: .progressDidChanged(progress: round(currentItemProgress, toNearest: 1.0)))
+            }
         }
         
         func trackHasBeenChanged() {
