@@ -75,7 +75,7 @@ extension Marconi {
             case .live, .none:
                 return nil
             case .digit(let item, _):
-                return item.duration
+                return item.duration.flatMap{ round($0, toNearest: 1.0) }
             }
         }
         

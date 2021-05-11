@@ -8,6 +8,6 @@
 
 import Foundation
 
-func round(_ value: TimeInterval, toNearest: TimeInterval) -> Double {
+func round(_ value: TimeInterval, toNearest: TimeInterval) -> TimeInterval {
     return round(value / toNearest) * toNearest
 }

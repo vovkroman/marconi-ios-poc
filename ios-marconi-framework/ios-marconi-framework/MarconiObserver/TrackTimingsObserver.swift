@@ -35,6 +35,7 @@ extension Marconi {
         // MARK: - Public methods
         
         func updateTimings(current: MetaData) {
+            _playlistOffset -= 0.1 // it's been added for rounded value
             currentMetaItem = current
         }
         

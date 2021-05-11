@@ -103,14 +103,10 @@ extension Marconi {
             case (_, .progressDidChanged(_)):
                 // if not playing there is no sense to update progress (state)
                 break
-            case (.continuePlaying(let old, _), .trackHasBeenChanged(let new)):
-                if old != new {
-                    state = .startPlaying(new, true)
-                }
-            case (.startPlaying(let old, true), .trackHasBeenChanged(let new)):
-                if old != new {
-                    state = .startPlaying(new, true)
-                }
+            case (.continuePlaying(_, _), .trackHasBeenChanged(let new)):
+                state = .startPlaying(new, true)
+            case (.startPlaying(_, _), .trackHasBeenChanged(let new)):
+                state = .startPlaying(new, true)
             case (_, .trackHasBeenChanged(_)): break
             }
         }
