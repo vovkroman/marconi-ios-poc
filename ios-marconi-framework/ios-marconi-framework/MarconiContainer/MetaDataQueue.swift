@@ -65,11 +65,11 @@ extension Marconi {
                 return
             }
             let index = findInsertionPoint(for: newElement)
-            if index >= 0, index < _storage.count, _storage[index].playlistStartTime == newElement.playlistStartTime {
+            if index >= 0, index < _storage.count, _storage[index] == newElement {
                 return
             }
             var insertIndex = index
-            if _storage[index].playlistStartTime < newElement.playlistStartTime { insertIndex += 1 }
+            if _storage[index].sortedKey < newElement.sortedKey { insertIndex += 1 }
             _storage.insert(newElement, at: insertIndex)
         }
         
@@ -82,7 +82,7 @@ extension Marconi {
                 let midIndex = startIndex + (endIndex - startIndex) / 2
                 if _storage[midIndex] == element {
                     return midIndex
-                } else if _storage[midIndex].playlistStartTime < element.playlistStartTime {
+                } else if _storage[midIndex].sortedKey < element.sortedKey {
                     startIndex = midIndex + 1
                 } else {
                     endIndex = midIndex

@@ -73,10 +73,23 @@ extension Marconi {
         
         public var duration: TimeInterval? {
             switch self {
-            case .live, .none:
+            case .none:
                 return nil
+            case .live(let item, _):
+                return item.duration
             case .digit(let item, _):
                 return item.duration
+            }
+        }
+        
+        public var sortedKey: TimeInterval {
+            switch self {
+            case .digit(let item, _):
+                return item.playlistStartTime
+            case .live(_, let startDate):
+                return startDate.timeIntervalSince1970
+            case .none:
+                return 0.0
             }
         }
         
@@ -186,6 +199,7 @@ extension Marconi.MetaData: Equatable {
             return lhs.id == rhs.id &&
                 lhs.artist == rhs.artist &&
                 lhs.song == rhs.song &&
+                lhs.duration == rhs.duration &&
                 lhs.image == rhs.image
         case (.live, .digit), (.digit, .live):
             return false

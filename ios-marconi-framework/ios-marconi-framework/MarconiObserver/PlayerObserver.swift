@@ -42,9 +42,11 @@ extension Marconi {
             _queue.dequeue()
             
             guard let item = _queue.head() else {
-                let nextMeta: MetaData = .none
-                currentMetaItem = nextMeta
-                stateMachine.transition(with: .trackHasBeenChanged(nextMeta))
+                // skip assign .none if it's already .none
+                if currentMetaItem != .none {
+                    currentMetaItem = .none
+                    stateMachine.transition(with: .trackHasBeenChanged(.none))
+                }
                 return
             }
             
@@ -85,17 +87,13 @@ extension Marconi {
         // MARK: - Observe progressing
         
         private func _startObserveProgress() {
-            if case .digit = _stationType {
-                timerObserver.invalidate()
-                timerObserver.startObserveTimings(metadata: currentMetaItem)
-            }
+            timerObserver.invalidate()
+            timerObserver.startObserveTimings(metadata: currentMetaItem)
         }
         
         private func _updateProgressObserver(metaData: MetaData) {
-            if case .digit = _stationType {
-                timerObserver.invalidate()
-                timerObserver.updateTimings(current: metaData)
-            }
+            timerObserver.invalidate()
+            timerObserver.updateTimings(current: metaData)
         }
         
         // MARK: - Fetch meta
@@ -185,9 +183,14 @@ extension Marconi {
                 return
             }
             currentMetaItem = item
-            // TODO: to clarify this scenario
-            if case .continuePlaying = stateMachine.state {
-                _updateProgressObserver(metaData: item)
+            
+            // Cover case when meta's came with delay
+            #warning("removed once meta will pull from subtitles")
+            switch stateMachine.state {
+            case .continuePlaying, .startPlaying:
+               _startObserveProgress()
+            default:
+                break
             }
             stateMachine.transition(with: .newMetaHasCame(item))
         }
