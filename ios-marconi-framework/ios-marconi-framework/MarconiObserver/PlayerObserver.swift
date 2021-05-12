@@ -165,30 +165,31 @@ extension Marconi {
                                       didCollect metadataGroups: [AVDateRangeMetadataGroup],
                                       indexesOfNewGroups: IndexSet,
                                       indexesOfModifiedGroups: IndexSet) {
-            switch _stationType {
-            case .live:
-                let metadataItems = metadataGroups.flatMap{ $0.items }
-                let item = MetaData(Live.DataParser(metadataItems))
-                currentMetaItem = item
-                stateMachine.transition(with: .newMetaHasCame(currentMetaItem))
-            case .digit:
-                for group in metadataGroups {
-                    let startDate = group.startDate
-                    let items = MetaData(Digit.DataParser(group.items),
-                                         startDate: startDate)
-                    _queue.enqueue(items)
+            var items: [MetaData] = []
+            for group in metadataGroups {
+                let startDate = group.startDate
+                switch _stationType {
+                case .digit:
+                    let item = MetaData(Digit.DataParser(group.items),
+                                        startDate: startDate)
+                    items.append(item)
+                case .live:
+                    let item = MetaData(Live.DataParser(group.items),
+                                        startDate: startDate)
+                    items.append(item)
                 }
-                guard let item = _queue.head(), currentMetaItem != item else {
-                    // current asset's still playing
-                    return
-                }
-                currentMetaItem = item
-                // TODO: to clarify this scenario
-                if case .continuePlaying = stateMachine.state {
-                    _updateProgressObserver(metaData: item)
-                }
-                stateMachine.transition(with: .newMetaHasCame(item))
             }
+            _queue.enqueue(items)
+            guard let item = _queue.head(), currentMetaItem != item else {
+                // current asset's still playing
+                return
+            }
+            currentMetaItem = item
+            // TODO: to clarify this scenario
+            if case .continuePlaying = stateMachine.state {
+                _updateProgressObserver(metaData: item)
+            }
+            stateMachine.transition(with: .newMetaHasCame(item))
         }
         
         public init(_ observer: MarconiPlayerObserver?) {

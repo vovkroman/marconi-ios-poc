@@ -13,6 +13,7 @@ extension Marconi {
     public struct LiveItem {
         let id: String?
         let artist: String?
+        let duration: TimeInterval?
         let song: String?
         let image: URL?
     }
@@ -34,12 +35,12 @@ extension Marconi {
     
     public enum MetaData {
         case none
-        case live(LiveItem)
+        case live(LiveItem, Date)
         case digit(DigitaItem, Date)
         
         public var song: String? {
             switch self {
-            case .live(let item):
+            case .live(let item, _):
                 return item.song
             case .digit(let item, _):
                 return item.song
@@ -50,7 +51,7 @@ extension Marconi {
         
         public var imageUrl: URL? {
             switch self {
-            case .live(let item):
+            case .live(let item, _):
                 return item.image
             case .digit(let item, _):
                 return item.url
@@ -61,7 +62,7 @@ extension Marconi {
         
         public var artist: String? {
             switch self {
-            case .live(let item):
+            case .live(let item, _):
                 return item.artist
             case .digit(let item, _):
                 return item.artist
@@ -144,18 +145,20 @@ extension Marconi {
         
         public var startTrackDate: Date? {
             switch self {
-            case .digit(_, let startDate):
+            case .digit(_, let startDate), .live(_, let startDate):
                 return startDate
             default:
                 return nil
             }
         }
         
-        init(_ parser: Live.DataParser) {
+        init(_ parser: Live.DataParser, startDate: Date) {
             self = .live(.init(id: parser.Id,
-                         artist: parser.song,
-                         song: parser.artist,
-                         image: parser.image))
+                               artist: parser.song,
+                               duration: parser.duration,
+                               song: parser.artist,
+                               image: parser.image),
+                         startDate)
         }
         
         init(_ parser: Digit.DataParser, startDate: Date) {
@@ -179,7 +182,7 @@ extension Marconi {
 extension Marconi.MetaData: Equatable {
     public static func == (lhs: Marconi.MetaData, rhs: Marconi.MetaData) -> Bool {
         switch (lhs, rhs) {
-        case (.live(let lhs), .live(let rhs)):
+        case (.live(let lhs, _), .live(let rhs, _)):
             return lhs.id == rhs.id &&
                 lhs.artist == rhs.artist &&
                 lhs.song == rhs.song &&
@@ -227,14 +230,16 @@ extension Marconi.MetaData: CustomStringConvertible {
             START-DATE: \(startDate)
             
             """
-        case .live(let item):
+        case .live(let item, let startDate):
             return """
             Metadata for Live Station has came with following list of properties:
             
             lsdr/X-TITLE: \(String(describing: item.song)),
             lsdr/X-ARTIST: \(String(describing: item.artist)),
             lsdr/X-PLAY-ID: \(String(describing: item.id)),
-            lsdr/X-IMAGE: \(String(describing: item.image))
+            lsdr/X-IMAGE: \(String(describing: item.image)),
+            lsdr/X-DURATION: \(String(describing: item.duration)),
+            START-DATE: \(startDate)
             
             """
         case .none:

@@ -53,7 +53,7 @@ extension Marconi {
             return nil
         }
         
-        func enqueue(_ items: MetaData...) {
+        func enqueue(_ items: [MetaData]) {
             for item in items {
                 insert(newElement: item)
             }
