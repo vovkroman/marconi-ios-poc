@@ -58,7 +58,7 @@ extension Marconi {
             let currentProgress = _playlistOffset + progress
             let playlistStartTime = currentMetaItem.playlistStartTime
             if let nextItem = _queue.next() {
-                if !(playlistStartTime..<nextItem.playlistStartTime ~= currentProgress) && !_isFinished {
+                if playlistStartTime < currentProgress && currentProgress >= nextItem.playlistStartTime && !_isFinished {
                     print("TRACK HAS BEEN CHANGED")
                     _isFinished = true
                     _delegate?.trackHasBeenChanged()
@@ -68,7 +68,7 @@ extension Marconi {
             }
             if let duartion = currentMetaItem.duration {
                 let upperBound = playlistStartTime + duartion
-                if !(playlistStartTime...upperBound ~= currentProgress) && !_isFinished {
+                if playlistStartTime < currentProgress &&  currentProgress > upperBound && !_isFinished {
                     print("TRACK HAS BEEN CHANGED")
                     _isFinished = true
                     _delegate?.trackHasBeenChanged()
