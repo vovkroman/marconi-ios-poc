@@ -82,7 +82,7 @@ extension Marconi {
             }
         }
         
-        public var sortedKey: TimeInterval {
+        var sortedKey: TimeInterval {
             switch self {
             case .digit(let item, _):
                 return item.playlistStartTime
@@ -129,15 +129,6 @@ extension Marconi {
             }
         }
         
-        public var datumStartTime: TimeInterval {
-            switch self {
-            case .live, .none:
-                return 0.0
-            case .digit(let item, _):
-                return item.datumStartTime
-            }
-        }
-        
         public var playlistStartTime: TimeInterval {
             switch self {
             case .live, .none:
@@ -171,7 +162,7 @@ extension Marconi {
                                duration: parser.duration,
                                song: parser.artist,
                                image: parser.image),
-                         startDate)
+                               startDate)
         }
         
         init(_ parser: Digit.DataParser, startDate: Date) {

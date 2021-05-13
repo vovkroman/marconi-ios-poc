@@ -32,7 +32,7 @@ extension Marconi {
         }
         
         @discardableResult
-        func dequeue() -> MetaData? {
+        func popFirst() -> MetaData? {
             if isEmpty {
                 return nil
             }

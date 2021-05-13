@@ -76,7 +76,8 @@ extension Marconi {
             }
         }
         
-        private func _process(item: DigitaItem, progress: TimeInterval) {
+        // MARK: - Processing Digital Item on tick
+        private func _processing(item: DigitaItem, progress: TimeInterval) {
             let currentProgress = _playlistOffset + progress
             let playlistStartTime = item.playlistStartTime
             if let nextItem = _queue.next() {
@@ -99,7 +100,8 @@ extension Marconi {
             _delegate?.trackProgress(currentProgress - playlistStartTime, currentProgress)
         }
         
-        private func _process(item: LiveItem, startDate: Date) {
+        // MARK: - Processing Live Item on tick
+        private func _processing(item: LiveItem, startDate: Date) {
             guard _queue.count > 0 else { return }
             if let nextItem = _queue.next() {
                 if nextItem.startTrackDate! <= Date() && !_isFinished {
@@ -122,9 +124,9 @@ extension Marconi {
         private func _updateProgress(_ progress: TimeInterval) {
             switch currentMetaItem {
             case .digit(let item, _):
-                _process(item: item, progress: progress)
+                _processing(item: item, progress: progress)
                 case .live(let item, let startDate):
-                _process(item: item, startDate: startDate)
+                _processing(item: item, startDate: startDate)
             case .none:
                 break
             }

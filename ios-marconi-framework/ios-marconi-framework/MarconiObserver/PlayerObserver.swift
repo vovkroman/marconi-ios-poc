@@ -12,13 +12,13 @@ extension Marconi {
     
     public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate, TrackTimimgsDelegate {
         
-        private(set) var _stationType: StationType = .live
+        private var _stationType: StationType = .live
         
         private var _playbackLikelyToKeepUpKeyPathObserver: NSKeyValueObservation?
         private var _playbackBufferEmptyObserver: NSKeyValueObservation?
         private var _playbackBufferFullObserver: NSKeyValueObservation?
         
-        private(set) lazy var timerObserver: TrackTimingsObserver = .init(every: 1.0,
+        private lazy var _timerObserver: TrackTimingsObserver = .init(every: 1.0,
                                                                           player: _player,
                                                                           queue: _queue,
                                                                           delegate: self)
@@ -37,9 +37,8 @@ extension Marconi {
         private var _queue: MetaDataQueue = .init()
         
         private(set) var currentMetaItem: MetaData = .none
-        
-        private func _currentTrackFinished() {
-            _queue.dequeue()
+        private func _currentTrackDidFinish() {
+            _queue.popFirst()
             
             guard let item = _queue.head() else {
                 // skip assign .none if it's already .none
@@ -51,7 +50,7 @@ extension Marconi {
             }
             
             currentMetaItem = item
-            _updateProgressObserver(metaData: item)
+            _updateProgressObserver(metadata: item)
             stateMachine.transition(with: .trackHasBeenChanged(item))
         }
         
@@ -87,13 +86,13 @@ extension Marconi {
         // MARK: - Observe progressing
         
         private func _startObserveProgress() {
-            timerObserver.invalidate()
-            timerObserver.startObserveTimings(metadata: currentMetaItem)
+            _timerObserver.invalidate()
+            _timerObserver.startObserveTimings(metadata: currentMetaItem)
         }
         
-        private func _updateProgressObserver(metaData: MetaData) {
-            timerObserver.invalidate()
-            timerObserver.updateTimings(current: metaData)
+        private func _updateProgressObserver(metadata: MetaData) {
+            _timerObserver.invalidate()
+            _timerObserver.updateTimings(current: metadata)
         }
         
         // MARK: - Fetch meta
@@ -133,7 +132,7 @@ extension Marconi {
             
             _queue.removeAll()
             
-            timerObserver.invalidate()
+            _timerObserver.invalidate()
             
             _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
             _playbackBufferEmptyObserver?.invalidate()
@@ -154,7 +153,7 @@ extension Marconi {
         }
         
         func trackHasBeenChanged() {
-            _currentTrackFinished()
+            _currentTrackDidFinish()
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
