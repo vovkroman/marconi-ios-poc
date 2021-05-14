@@ -10,7 +10,7 @@ import AVFoundation
 
 extension Marconi {
     
-    public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate, TrackTimimgsDelegate {
+    public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate, TrackTimimgsDelegate, PlaylistLoaderDelegate {
         
         private var _stationType: StationType = .live
         
@@ -37,22 +37,6 @@ extension Marconi {
         private var _queue: MetaDataQueue = .init()
         
         private(set) var currentMetaItem: MetaData = .none
-        private func _currentTrackDidFinish() {
-            _queue.popFirst()
-            
-            guard let item = _queue.head() else {
-                // skip assign .none if it's already .none
-                if currentMetaItem != .none {
-                    currentMetaItem = .none
-                    stateMachine.transition(with: .trackHasBeenChanged(.none))
-                }
-                return
-            }
-            
-            currentMetaItem = item
-            _updateProgressObserver(metadata: item)
-            stateMachine.transition(with: .trackHasBeenChanged(item))
-        }
         
         // MARK: - Observe buffering
         
@@ -153,7 +137,33 @@ extension Marconi {
         }
         
         func trackHasBeenChanged() {
-            _currentTrackDidFinish()
+            _queue.popFirst()
+            guard let item = _queue.head() else {
+                // skip assign .none if it's already .none
+                if currentMetaItem != .none {
+                    currentMetaItem = .none
+                    _timerObserver.invalidate()
+                    stateMachine.transition(with: .trackHasBeenChanged(.none))
+                }
+                return
+            }
+            
+            currentMetaItem = item
+            _updateProgressObserver(metadata: item)
+            stateMachine.transition(with: .trackHasBeenChanged(item))
+        }
+        
+        // MARK: - PlaylistLoaderDelegate implementation
+        
+        func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) {
+            for segement in playlist.segments {
+                switch _stationType {
+                case .digit:
+                    print(segement)
+                case .live:
+                    print(segement)
+                }
+            }
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
@@ -184,13 +194,13 @@ extension Marconi {
             currentMetaItem = item
             
             // Cover case when meta's came with delay
-            #warning("removed once meta will pull from subtitles")
-            switch stateMachine.state {
-            case .continuePlaying, .startPlaying:
-               _startObserveProgress()
-            default:
-                break
-            }
+//            #warning("removed once meta will pull from subtitles")
+//            switch stateMachine.state {
+//            case .continuePlaying, .startPlaying:
+//               _startObserveProgress()
+//            default:
+//                break
+//            }
             stateMachine.transition(with: .newMetaHasCame(item))
         }
         

@@ -13,6 +13,8 @@ extension Marconi {
     public class Player: AVPlayer {
         
         private var _observer: PlayerObserver?
+        private var _resourceLoader: ResourceLoader?
+        
         public var _currentURL: URL?
         
         public var streamProgress: TimeInterval {
@@ -24,13 +26,17 @@ extension Marconi {
         }
         
         public func replaceCurrentURL(with url: URL, stationType: StationType) {
+            guard let asset = URLAsset(url: url) else { return }
+            
             _currentURL = url
             _observer?.stopMonitoring()
-            replaceCurrentItem(with: nil)
-            let playingItem = AVPlayerItem(url: url)
-            
+            if currentItem != nil { replaceCurrentItem(with: nil) }
+            _resourceLoader = ResourceLoader(_observer)
+            asset.resourceLoader.setDelegate(_resourceLoader, queue: .main)
+            let playingItem = AVPlayerItem(asset: asset)
+
             // we need to know *station type* to know how to map paylaod
-            _observer?.startMonitoring(playingItem, stationType: stationType)
+            self._observer?.startMonitoring(playingItem, stationType: stationType)
             super.replaceCurrentItem(with: playingItem)
             super.play()
         }
@@ -56,7 +62,6 @@ extension Marconi {
         
         public override func play() {
             _currentURL.flatMap(restore)
-            super.play()
         }
         
         public override func pause() {
@@ -69,5 +74,57 @@ extension Marconi {
         deinit {
             print("\(self) has been removed")
         }
+    }
+}
+
+extension Marconi.Player: AVAssetResourceLoaderDelegate {
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader,
+                               shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+        guard let url = loadingRequest.request.url else {
+            print("🔑", #function, "Unable to read the url/host data.")
+            loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -1, userInfo: nil))
+            return false
+        }
+        ////////////////
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        components!.scheme = "https"
+        let baseURL = components?.url
+        ////////////////
+        if let url = baseURL {
+            let request = URLRequest(url: url)
+            print(request)
+            let session = URLSession.shared
+            let task = session.dataTask(with: request) { (data, responce, error) in
+                if let data = data {
+                    let string = String(decoding: data, as: UTF8.self)
+                    // The CKC is correctly returned and is now send to the `AVPlayer` instance so we
+                    // can continue to play the stream.
+                    print("DATA: \(string)")
+                    
+                    print(responce!.expectedContentLength)
+                    
+                    print(loadingRequest.dataRequest?.requestedLength)
+                    loadingRequest.contentInformationRequest!.isByteRangeAccessSupported = true
+                    loadingRequest.contentInformationRequest!.contentLength = responce!.expectedContentLength
+                    loadingRequest.dataRequest?.respond(with: data)
+                    loadingRequest.finishLoading()
+                } else {
+                    print("🔑", #function, "Unable to fetch the CKC.")
+                    loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -4, userInfo: nil))
+                }
+            }
+            task.resume()
+            
+        } else {
+            print("🔑", #function, "Unable to read the url/host data.")
+            loadingRequest.finishLoading(with: NSError(domain: "com.icapps.error", code: -1, userInfo: nil))
+            return false
+        }
+        return true
+    }
+    
+    public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest) -> Bool {
+        print("")
+        return true
     }
 }
