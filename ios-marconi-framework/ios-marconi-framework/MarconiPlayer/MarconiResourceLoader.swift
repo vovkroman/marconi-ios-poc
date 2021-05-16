@@ -10,7 +10,7 @@ import Foundation
 import AVFoundation
 
 protocol PlaylistLoaderDelegate: class {
-    func playlistHasBeenLoaded(_ playlist: Marconi.Playlist)
+    func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) throws
 }
 
 extension Marconi {
@@ -54,7 +54,7 @@ extension Marconi {
                         let mediaManifest = try MediaManifestParser(url)
                         mediaManifest.parse()
                         
-                        self?._delegate?.playlistHasBeenLoaded(mediaManifest.playlist)
+                        try self?._delegate?.playlistHasBeenLoaded(mediaManifest.playlist)
                         
                         loadingRequest?.dataRequest?.respond(with: data)
                         loadingRequest?.finishLoading()

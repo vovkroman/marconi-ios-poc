@@ -214,6 +214,52 @@ extension Marconi.MetaData: Equatable {
     }
 }
 
+extension Marconi.DigitaItem: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case trackId = "id"
+        case datumTime = "datumTime"
+        case datumStartTime = "datumStartTime"
+        case playlistTrackStartTime = "playlistTrackStartTime"
+        case playId = "playId"
+        case stationId = "stationId"
+        case skips = "skips"
+        case title = "title"
+        case artist = "artist"
+        case isExplicit = "isExplicit"
+        case isSkippable = "isSkippable"
+        case canPause = "canPause"
+        case duration = "duration"
+        case albumArtUrl = "albumArtUrl"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let skips = try? container.decode(Int.self, forKey: .skips)
+        let datumTime = try? container.decode(Double.self, forKey: .datumTime)
+        let datumStartTime = try? container.decode(Double.self, forKey: .datumStartTime)
+        let playlistStartTime = try? container.decode(Double.self, forKey: .playlistTrackStartTime)
+        let isSkippable = try? container.decode(Bool.self, forKey: .isSkippable)
+        let stationId = try? container.decode(Int.self, forKey: .stationId)
+        
+        self.init(trackId: try? container.decode(String.self, forKey: .trackId),
+                  playId: try? container.decode(String.self, forKey: .playId),
+                  artist: try? container.decode(String.self, forKey: .artist),
+                  stationId: stationId.flatMap{ String($0) },
+                  song: try? container.decode(String.self, forKey: .title),
+                  datumTime: datumTime ?? 0.0,
+                  datumStartTime: datumStartTime ?? 0.0,
+                  duration: try? container.decode(Double.self, forKey: .duration),
+                  playlistStartTime: playlistStartTime ?? 0.0,
+                  url: try? container.decode(URL.self, forKey: .albumArtUrl),
+                  skips: skips ?? 0,
+                  isSkippable: isSkippable ?? false)
+    }
+}
+
+extension Marconi.LiveItem: Decodable {
+    
+}
+
 extension Marconi.MetaData: CustomStringConvertible {
     public var description: String {
         switch self {

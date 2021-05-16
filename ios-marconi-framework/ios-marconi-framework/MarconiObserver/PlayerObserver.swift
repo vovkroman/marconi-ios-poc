@@ -87,6 +87,15 @@ extension Marconi {
             playerItem.add(metadataCollector)
         }
         
+        private func _newItemsHasCame() {
+            guard let item = _queue.head(), currentMetaItem != item else {
+                // current asset's still playing
+                return
+            }
+            currentMetaItem = item
+            stateMachine.transition(with: .newMetaHasCame(item))
+        }
+        
         // Public methods
         
         deinit {
@@ -155,14 +164,20 @@ extension Marconi {
         
         // MARK: - PlaylistLoaderDelegate implementation
         
-        func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) {
-            for segement in playlist.segments {
-                switch _stationType {
-                case .digit:
-                    print(segement)
-                case .live:
-                    print(segement)
-                }
+        func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) throws {
+            guard let data = "[\(playlist.segments.compactMap{ $0.json }.joined(separator: ", "))]".data(using: .utf8) else {
+                return
+            }
+            
+            switch _stationType {
+            case .digit:
+                let items = try JSONDecoder().decode([DigitaItem].self, from: data)
+                _queue.enqueue(items.compactMap{ MetaData.digit($0, Date()) })
+                print(_queue.count)
+                _newItemsHasCame()
+            case .live:
+                let items = try JSONDecoder().decode([LiveItem].self, from: data)
+                _queue.enqueue(items.compactMap{ MetaData.live($0, Date()) })
             }
         }
         
@@ -191,17 +206,7 @@ extension Marconi {
                 // current asset's still playing
                 return
             }
-            currentMetaItem = item
-            
-            // Cover case when meta's came with delay
-//            #warning("removed once meta will pull from subtitles")
-//            switch stateMachine.state {
-//            case .continuePlaying, .startPlaying:
-//               _startObserveProgress()
-//            default:
-//                break
-//            }
-            stateMachine.transition(with: .newMetaHasCame(item))
+            _newItemsHasCame()
         }
         
         public init(_ observer: MarconiPlayerObserver?) {

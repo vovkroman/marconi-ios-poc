@@ -89,7 +89,6 @@ extension Marconi {
         
         func parse() {
             _m3u8Content.enumerateLines { [weak self](line, _) in
-                print(line)
                 if line.contains("\(Tag.EXTINF)") {
                     self?._processInfTag(line)
                 }
