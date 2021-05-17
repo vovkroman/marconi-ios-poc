@@ -9,13 +9,6 @@
 import Foundation
 
 extension Double {
-    var stringValue: String {
-        let formatter = NumberFormatter()
-        return formatter.string(from: NSNumber(value: self)) ?? "1"
-    }
-}
-
-extension Double {
   func asString(style: DateComponentsFormatter.UnitsStyle) -> String {
     let formatter = DateComponentsFormatter()
     formatter.allowedUnits = [.minute, .second]

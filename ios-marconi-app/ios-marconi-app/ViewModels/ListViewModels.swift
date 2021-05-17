@@ -22,16 +22,12 @@ extension StationWrapper {
     typealias ProgressData = (progress: TimeInterval?, playId: String?)
     func saveCurrent(progressData: ProgressData) {
         if case .digit = type {
-            
-            // please user's seen none second of asset, repeated request will no return meta data
-            // that's why set the default value 1.0s
-            // TODO: Clarify this moment with Tony
-            let progress = progressData.progress ?? 0.0 //else { return }
-            UserDefaults.saveProgress(progress.stringValue, for: station)
-            
+            let progress = progressData.progress ?? 0.0
+            let progressString = String(format: "%.1f", progress)
+            UserDefaults.saveProgress(progressString, for: station)
             if let playId = progressData.playId {
                 UserDefaults.savePlayId(playId, for: station)
-                Log.debug("Saved \(progress) progress by playId: \(playId)", category: .default)
+                Log.debug("Saved \(progressString) progress by playId: \(playId)", category: .default)
             }
         }
     }
