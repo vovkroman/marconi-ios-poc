@@ -60,6 +60,7 @@
 		6FA3C25A260B39540095D6AB /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C259260B39540095D6AB /* ImageCache.swift */; };
 		6FA3C25C260B58F80095D6AB /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C25B260B58F80095D6AB /* Globals.swift */; };
 		6FA3C25F260BA84E0095D6AB /* MarconiImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3C25E260BA84E0095D6AB /* MarconiImageView.swift */; };
+		6FE8725526526D3D003C21D7 /* String+ValueOrDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE8725426526D3D003C21D7 /* String+ValueOrDefault.swift */; };
 		6FE9B897260A0C940023F68D /* PlayerStateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B896260A0C940023F68D /* PlayerStateViewController.swift */; };
 		6FE9B89A260A132D0023F68D /* NoPlayingItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9B899260A132D0023F68D /* NoPlayingItemView.swift */; };
 		6FE9B89D260A136C0023F68D /* NoPlayingItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE9B89C260A136C0023F68D /* NoPlayingItemView.xib */; };
@@ -156,6 +157,7 @@
 		6FA3C259260B39540095D6AB /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		6FA3C25B260B58F80095D6AB /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		6FA3C25E260BA84E0095D6AB /* MarconiImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarconiImageView.swift; sourceTree = "<group>"; };
+		6FE8725426526D3D003C21D7 /* String+ValueOrDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+ValueOrDefault.swift"; sourceTree = "<group>"; };
 		6FE9B896260A0C940023F68D /* PlayerStateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStateViewController.swift; sourceTree = "<group>"; };
 		6FE9B899260A132D0023F68D /* NoPlayingItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPlayingItemView.swift; sourceTree = "<group>"; };
 		6FE9B89C260A136C0023F68D /* NoPlayingItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoPlayingItemView.xib; sourceTree = "<group>"; };
@@ -470,6 +472,14 @@
 			path = MarconiImageView;
 			sourceTree = "<group>";
 		};
+		6FE8725326526D19003C21D7 /* String+ValueOrDefault */ = {
+			isa = PBXGroup;
+			children = (
+				6FE8725426526D3D003C21D7 /* String+ValueOrDefault.swift */,
+			);
+			path = "String+ValueOrDefault";
+			sourceTree = "<group>";
+		};
 		6FE9B898260A12F10023F68D /* UIViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -502,6 +512,7 @@
 		6FEC7E982600DAF700C55A2D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				6FE8725326526D19003C21D7 /* String+ValueOrDefault */,
 				6F9AF829261DFC2D0034B8F0 /* Double+StringConverter */,
 				6F9AF80F261DB88B0034B8F0 /* UIImage+SolidColor */,
 				6F6E221B2608EB710057D41F /* URL+Extensions */,
@@ -770,6 +781,7 @@
 				6FE9B897260A0C940023F68D /* PlayerStateViewController.swift in Sources */,
 				6F44B1172603B0890047A3E5 /* ListViewController.swift in Sources */,
 				6F5649102628811B00EA258D /* SessionApi.swift in Sources */,
+				6FE8725526526D3D003C21D7 /* String+ValueOrDefault.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

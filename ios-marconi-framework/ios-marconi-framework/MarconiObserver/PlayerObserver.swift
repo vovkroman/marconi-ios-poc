@@ -10,7 +10,7 @@ import AVFoundation
 
 extension Marconi {
     
-    public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate, TrackTimimgsDelegate {
+    public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate, TrackTimimgsDelegate, PlaylistLoaderDelegate {
         
         private var _stationType: StationType = .live
         
@@ -37,22 +37,6 @@ extension Marconi {
         private var _queue: MetaDataQueue = .init()
         
         private(set) var currentMetaItem: MetaData = .none
-        private func _currentTrackDidFinish() {
-            _queue.popFirst()
-            
-            guard let item = _queue.head() else {
-                // skip assign .none if it's already .none
-                if currentMetaItem != .none {
-                    currentMetaItem = .none
-                    stateMachine.transition(with: .trackHasBeenChanged(.none))
-                }
-                return
-            }
-            
-            currentMetaItem = item
-            _updateProgressObserver(metadata: item)
-            stateMachine.transition(with: .trackHasBeenChanged(item))
-        }
         
         // MARK: - Observe buffering
         
@@ -101,6 +85,15 @@ extension Marconi {
             let metadataCollector = AVPlayerItemMetadataCollector()
             metadataCollector.setDelegate(self, queue: .main)
             playerItem.add(metadataCollector)
+        }
+        
+        private func _processingNewItems() {
+            guard let item = _queue.head(), currentMetaItem != item else {
+                // current asset's still playing
+                return
+            }
+            currentMetaItem = item
+            stateMachine.transition(with: .newMetaHasCame(item))
         }
         
         // Public methods
@@ -153,7 +146,38 @@ extension Marconi {
         }
         
         func trackHasBeenChanged() {
-            _currentTrackDidFinish()
+            _queue.popFirst()
+            guard let item = _queue.head() else {
+                // skip assign .none if it's already .none
+                if currentMetaItem != .none {
+                    currentMetaItem = .none
+                    stateMachine.transition(with: .trackHasBeenChanged(.none))
+                }
+                return
+            }
+            
+            currentMetaItem = item
+            _updateProgressObserver(metadata: item)
+            stateMachine.transition(with: .trackHasBeenChanged(item))
+        }
+        
+        // MARK: - PlaylistLoaderDelegate implementation
+        
+        func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) throws {
+            guard let data = "[\(playlist.segments.compactMap{ $0.json }.joined(separator: ", "))]".data(using: .utf8) else {
+                throw MError.loaderError(description: "Failed laoding json from #EXTINF tag")
+            }
+            
+            let startDate = playlist.startDate ?? Date()
+            switch _stationType {
+            case .digit:
+                let items = try JSONDecoder().decode([DigitaItem].self, from: data)
+                _queue.enqueue(items.compactMap{ MetaData.digit($0, startDate) })
+            case .live:
+                let items = try JSONDecoder().decode([LiveItem].self, from: data)
+                _queue.enqueue(items.compactMap{ MetaData.live($0, startDate) })
+            }
+            _processingNewItems()
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
@@ -181,17 +205,7 @@ extension Marconi {
                 // current asset's still playing
                 return
             }
-            currentMetaItem = item
-            
-            // Cover case when meta's came with delay
-            #warning("removed once meta will pull from subtitles")
-            switch stateMachine.state {
-            case .continuePlaying, .startPlaying:
-               _startObserveProgress()
-            default:
-                break
-            }
-            stateMachine.transition(with: .newMetaHasCame(item))
+            _processingNewItems()
         }
         
         public init(_ observer: MarconiPlayerObserver?) {

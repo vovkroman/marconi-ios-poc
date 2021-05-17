@@ -13,6 +13,9 @@ extension Marconi {
     public class Player: AVPlayer {
         
         private var _observer: PlayerObserver?
+        private var _resourceLoader: ResourceLoader?
+        private var _stationType: StationType = .live
+        
         public var _currentURL: URL?
         
         public var streamProgress: TimeInterval {
@@ -24,25 +27,28 @@ extension Marconi {
         }
         
         public func replaceCurrentURL(with url: URL, stationType: StationType) {
+            guard let asset = URLAsset(url: url) else { return }
+            _stationType = stationType
             _currentURL = url
             _observer?.stopMonitoring()
-            replaceCurrentItem(with: nil)
-            let playingItem = AVPlayerItem(url: url)
+            if currentItem != nil { replaceCurrentItem(with: nil) }
             
+            // remove prev instance ResourceLoader
+            _resourceLoader = nil
+            _resourceLoader = ResourceLoader(_observer)
+            
+            asset.resourceLoader.setDelegate(_resourceLoader, queue: .main)
+            let playingItem = AVPlayerItem(asset: asset)
+
             // we need to know *station type* to know how to map paylaod
-            _observer?.startMonitoring(playingItem, stationType: stationType)
+            self._observer?.startMonitoring(playingItem, stationType: stationType)
             super.replaceCurrentItem(with: playingItem)
             super.play()
         }
         
         public func restore(with url: URL) {
             let url = url.updateQueryParams(key: "playlistOffset", value: "\(streamProgress)")
-            print(url)
-            _observer?.stopMonitoring()
-            
-            let playingItem = AVPlayerItem(url: url)
-            _observer?.startMonitoring(playingItem)
-            super.replaceCurrentItem(with: playingItem)
+            replaceCurrentURL(with: url, stationType: _stationType)
         }
         
         public init(_ observer: MarconiPlayerObserver?) {
@@ -56,7 +62,6 @@ extension Marconi {
         
         public override func play() {
             _currentURL.flatMap(restore)
-            super.play()
         }
         
         public override func pause() {

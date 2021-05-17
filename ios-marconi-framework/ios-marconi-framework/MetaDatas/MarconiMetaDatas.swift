@@ -27,7 +27,7 @@ extension Marconi {
         let datumTime: TimeInterval
         let datumStartTime: TimeInterval
         let duration: TimeInterval?
-        let playlistStartTime: TimeInterval
+        let playlistStartTime: TimeInterval?
         let url: URL?
         let skips: Int
         let isSkippable: Bool
@@ -82,14 +82,14 @@ extension Marconi {
             }
         }
         
-        var sortedKey: TimeInterval {
+        var sortedKey: TimeInterval? {
             switch self {
             case .digit(let item, _):
                 return item.playlistStartTime
             case .live(_, let startDate):
                 return startDate.timeIntervalSince1970
             case .none:
-                return 0.0
+                return nil
             }
         }
         
@@ -129,10 +129,10 @@ extension Marconi {
             }
         }
         
-        public var playlistStartTime: TimeInterval {
+        public var playlistStartTime: TimeInterval? {
             switch self {
             case .live, .none:
-                return 0.0
+                return nil
             case .digit(let item, _):
                 return item.playlistStartTime
             }
@@ -171,10 +171,10 @@ extension Marconi {
                           artist: parser.artist,
                           stationId: parser.stationId,
                           song: parser.song,
-                          datumTime: parser.datumTime ?? 0.0,
-                          datumStartTime: parser.datumStartTime ?? 0.0,
+                          datumTime: parser.datumTime ?? .zero,
+                          datumStartTime: parser.datumStartTime ?? .zero,
                           duration: parser.duration,
-                          playlistStartTime: parser.playlistStartTime ?? 0.0,
+                          playlistStartTime: parser.playlistStartTime ?? .zero,
                           url: parser.url,
                           skips: parser.skips ?? 0,
                           isSkippable: parser.isSkippable ?? false),
@@ -211,6 +211,74 @@ extension Marconi.MetaData: Equatable {
         case (.none, _), (_, .none):
             return false
         }
+    }
+}
+
+extension Marconi.DigitaItem: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case trackId = "id"
+        case datumTime = "datumTime"
+        case datumStartTime = "datumStartTime"
+        case playlistTrackStartTime = "playlistTrackStartTime"
+        case playId = "playId"
+        case stationId = "stationId"
+        case skips = "skips"
+        case title = "title"
+        case artist = "artist"
+        case isExplicit = "isExplicit"
+        case isSkippable = "isSkippable"
+        case canPause = "canPause"
+        case duration = "duration"
+        case albumArtUrl = "albumArtUrl"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try? decoder.container(keyedBy: CodingKeys.self)
+        let skips = try? container?.decode(Int.self, forKey: .skips)
+        let datumTime = try? container?.decode(Double.self, forKey: .datumTime)
+        let datumStartTime = try? container?.decode(Double.self, forKey: .datumStartTime)
+        let playlistStartTime = try? container?.decode(Double.self, forKey: .playlistTrackStartTime)
+        let isSkippable = try? container?.decode(Bool.self, forKey: .isSkippable)
+        let stationId = try? container?.decode(Int.self, forKey: .stationId)
+        
+        self.init(trackId: try? container?.decode(String.self, forKey: .trackId),
+                  playId: try? container?.decode(String.self, forKey: .playId),
+                  artist: try? container?.decode(String.self, forKey: .artist),
+                  stationId: stationId.flatMap{ String($0) },
+                  song: try? container?.decode(String.self, forKey: .title),
+                  datumTime: datumTime ?? .zero,
+                  datumStartTime: datumStartTime ?? 0.0,
+                  duration: try? container?.decode(Double.self, forKey: .duration),
+                  playlistStartTime: playlistStartTime,
+                  url: try? container?.decode(URL.self, forKey: .albumArtUrl),
+                  skips: skips ?? 0,
+                  isSkippable: isSkippable ?? false)
+    }
+}
+
+extension Marconi.LiveItem: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case title = "title"
+        case artist = "artist"
+        case image = "image"
+        case duration = "duration"
+        case play_id = "play_id"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let title = try? container.decode(String.self, forKey: .title)
+        let artist = try? container.decode(String.self, forKey: .artist)
+        let image = try? container.decode(URL.self, forKey: .artist)
+        let duartion = try? container.decode(Double.self, forKey: .duration)
+        let play_id = try? container.decode(String.self, forKey: .play_id)
+        
+        self.init(id: play_id,
+                  artist: artist,
+                  duration: duartion,
+                  song: title,
+                  image: image)
     }
 }
 

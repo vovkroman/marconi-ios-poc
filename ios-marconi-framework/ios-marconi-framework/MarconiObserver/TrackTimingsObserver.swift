@@ -33,9 +33,10 @@ extension Marconi {
         func startObserveTimings(metadata: MetaData) {
             switch metadata {
             case .digit(let item, _):
-                if item.datumTime < item.playlistStartTime {
+                guard let playlistStartTime = item.playlistStartTime else { return }
+                if item.datumTime < playlistStartTime {
                     #warning("most likely this scenrio will be never exected")
-                    _playlistOffset = item.datumTime + item.playlistStartTime
+                    _playlistOffset = item.datumTime + playlistStartTime
                 } else {
                     _playlistOffset = item.datumTime
                 }
@@ -79,9 +80,9 @@ extension Marconi {
         // MARK: - Processing Digital Item on tick
         private func _processing(item: DigitaItem, progress: TimeInterval) {
             let currentProgress = _playlistOffset + progress
-            let playlistStartTime = item.playlistStartTime
-            if let nextItem = _queue.next() {
-                if playlistStartTime < currentProgress && currentProgress >= nextItem.playlistStartTime && !_isFinished {
+            guard let playlistStartTime = item.playlistStartTime else { return }
+            if let nextItem = _queue.next(), let nextItemPlaylistStartTime = nextItem.playlistStartTime {
+                if playlistStartTime < currentProgress && currentProgress >= nextItemPlaylistStartTime && !_isFinished {
                     _isFinished = true
                     _delegate?.trackHasBeenChanged()
                     print("Track has been changed, AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
