@@ -14,7 +14,10 @@ extension Marconi {
         let duration: Float
         let json: String
         
-        init(_ duration: Float?, json: String) {
+        init?(_ duration: Float?, json: String?) {
+            guard let json = json else {
+                return nil
+            }
             self.duration = duration ?? 0.0
             self.json = json
         }
@@ -78,7 +81,11 @@ extension Marconi {
         private func _processInfTag(_ line: String) {
             let segmentRange = line.range(of: "\(Tag.EXTINF)")!
             let componenets = String(line.suffix(from: segmentRange.upperBound)).components(separatedBy: ", {")
-            playlist.segments.append(Segment(Float(componenets[0]), json: "{\(componenets[1])"))
+            guard let segment = Segment(componenets.first.flatMap(Float.init),
+                                        json: componenets.last.flatMap{ "{" + $0 }) else {
+                return
+            }
+            playlist.segments.append(segment)
         }
         
         private func _processStartDateTag(_ line: String) {
