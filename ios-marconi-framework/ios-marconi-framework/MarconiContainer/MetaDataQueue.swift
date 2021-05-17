@@ -70,7 +70,7 @@ extension Marconi {
             guard let index = findInsertionPoint(for: newElement) else {
                 return
             }
-            if index >= 0, index < _storage.count, _storage[index] == newElement {
+            if index >= 0, index < _storage.count, _storage[index].sortedKey == newElement.sortedKey {
                 return
             }
             var insertIndex = index

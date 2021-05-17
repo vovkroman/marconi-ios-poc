@@ -80,7 +80,11 @@ extension Marconi {
         // MARK: - Processing Digital Item on tick
         private func _processing(item: DigitaItem, progress: TimeInterval) {
             let currentProgress = _playlistOffset + progress
-            guard let playlistStartTime = item.playlistStartTime else { return }
+            guard let playlistStartTime = item.playlistStartTime else {
+                _isFinished = false
+                _delegate?.trackProgress(currentProgress, currentProgress)
+                return
+            }
             if let nextItem = _queue.next(), let nextItemPlaylistStartTime = nextItem.playlistStartTime {
                 if playlistStartTime < currentProgress && currentProgress >= nextItemPlaylistStartTime && !_isFinished {
                     _isFinished = true

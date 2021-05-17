@@ -235,7 +235,7 @@ extension Marconi.DigitaItem: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        let skips = try container.decode(Int.self, forKey: .skips)
+        let skips = try? container.decode(Int.self, forKey: .skips)
         let datumTime = try? container.decode(Double.self, forKey: .datumTime)
         let datumStartTime = try? container.decode(Double.self, forKey: .datumStartTime)
         let playlistStartTime = try? container.decode(Double.self, forKey: .playlistTrackStartTime)

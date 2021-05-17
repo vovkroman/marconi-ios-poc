@@ -48,7 +48,7 @@ extension Marconi {
         }
         
         public func restore(with url: URL) {
-            let url = url.updateQueryParams(key: "playlistOffset", value: "\(streamProgress.rounded(.toNearestOrEven))")
+            let url = url.updateQueryParams(key: "playlistOffset", value: "\(streamProgress)")
             print("replaced url: \(url)")
             replaceCurrentURL(with: url, stationType: _stationType)
         }
