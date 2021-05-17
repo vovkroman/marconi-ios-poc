@@ -13,6 +13,7 @@ extension Marconi {
     public struct LiveItem {
         let id: String?
         let artist: String?
+        let duration: TimeInterval?
         let song: String?
         let image: URL?
     }
@@ -26,7 +27,7 @@ extension Marconi {
         let datumTime: TimeInterval
         let datumStartTime: TimeInterval
         let duration: TimeInterval?
-        let playlistStartTime: TimeInterval
+        let playlistStartTime: TimeInterval?
         let url: URL?
         let skips: Int
         let isSkippable: Bool
@@ -34,12 +35,12 @@ extension Marconi {
     
     public enum MetaData {
         case none
-        case live(LiveItem)
+        case live(LiveItem, Date)
         case digit(DigitaItem, Date)
         
         public var song: String? {
             switch self {
-            case .live(let item):
+            case .live(let item, _):
                 return item.song
             case .digit(let item, _):
                 return item.song
@@ -50,7 +51,7 @@ extension Marconi {
         
         public var imageUrl: URL? {
             switch self {
-            case .live(let item):
+            case .live(let item, _):
                 return item.image
             case .digit(let item, _):
                 return item.url
@@ -61,7 +62,7 @@ extension Marconi {
         
         public var artist: String? {
             switch self {
-            case .live(let item):
+            case .live(let item, _):
                 return item.artist
             case .digit(let item, _):
                 return item.artist
@@ -72,10 +73,23 @@ extension Marconi {
         
         public var duration: TimeInterval? {
             switch self {
-            case .live, .none:
+            case .none:
                 return nil
+            case .live(let item, _):
+                return item.duration
             case .digit(let item, _):
                 return item.duration
+            }
+        }
+        
+        var sortedKey: TimeInterval? {
+            switch self {
+            case .digit(let item, _):
+                return item.playlistStartTime
+            case .live(_, let startDate):
+                return startDate.timeIntervalSince1970
+            case .none:
+                return nil
             }
         }
         
@@ -115,19 +129,10 @@ extension Marconi {
             }
         }
         
-        public var datumStartTime: TimeInterval {
+        public var playlistStartTime: TimeInterval? {
             switch self {
             case .live, .none:
-                return 0.0
-            case .digit(let item, _):
-                return item.datumStartTime
-            }
-        }
-        
-        public var playlistStartTime: TimeInterval {
-            switch self {
-            case .live, .none:
-                return 0.0
+                return nil
             case .digit(let item, _):
                 return item.playlistStartTime
             }
@@ -144,18 +149,20 @@ extension Marconi {
         
         public var startTrackDate: Date? {
             switch self {
-            case .digit(_, let startDate):
+            case .digit(_, let startDate), .live(_, let startDate):
                 return startDate
             default:
                 return nil
             }
         }
         
-        init(_ parser: Live.DataParser) {
+        init(_ parser: Live.DataParser, startDate: Date) {
             self = .live(.init(id: parser.Id,
-                         artist: parser.song,
-                         song: parser.artist,
-                         image: parser.image))
+                               artist: parser.song,
+                               duration: parser.duration,
+                               song: parser.artist,
+                               image: parser.image),
+                               startDate)
         }
         
         init(_ parser: Digit.DataParser, startDate: Date) {
@@ -164,10 +171,10 @@ extension Marconi {
                           artist: parser.artist,
                           stationId: parser.stationId,
                           song: parser.song,
-                          datumTime: parser.datumTime ?? 0.0,
-                          datumStartTime: parser.datumStartTime ?? 0.0,
+                          datumTime: parser.datumTime ?? .zero,
+                          datumStartTime: parser.datumStartTime ?? .zero,
                           duration: parser.duration,
-                          playlistStartTime: parser.playlistStartTime ?? 0.0,
+                          playlistStartTime: parser.playlistStartTime ?? .zero,
                           url: parser.url,
                           skips: parser.skips ?? 0,
                           isSkippable: parser.isSkippable ?? false),
@@ -179,10 +186,11 @@ extension Marconi {
 extension Marconi.MetaData: Equatable {
     public static func == (lhs: Marconi.MetaData, rhs: Marconi.MetaData) -> Bool {
         switch (lhs, rhs) {
-        case (.live(let lhs), .live(let rhs)):
+        case (.live(let lhs, _), .live(let rhs, _)):
             return lhs.id == rhs.id &&
                 lhs.artist == rhs.artist &&
                 lhs.song == rhs.song &&
+                lhs.duration == rhs.duration &&
                 lhs.image == rhs.image
         case (.live, .digit), (.digit, .live):
             return false
@@ -203,6 +211,74 @@ extension Marconi.MetaData: Equatable {
         case (.none, _), (_, .none):
             return false
         }
+    }
+}
+
+extension Marconi.DigitaItem: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case trackId = "id"
+        case datumTime = "datumTime"
+        case datumStartTime = "datumStartTime"
+        case playlistTrackStartTime = "playlistTrackStartTime"
+        case playId = "playId"
+        case stationId = "stationId"
+        case skips = "skips"
+        case title = "title"
+        case artist = "artist"
+        case isExplicit = "isExplicit"
+        case isSkippable = "isSkippable"
+        case canPause = "canPause"
+        case duration = "duration"
+        case albumArtUrl = "albumArtUrl"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try? decoder.container(keyedBy: CodingKeys.self)
+        let skips = try? container?.decode(Int.self, forKey: .skips)
+        let datumTime = try? container?.decode(Double.self, forKey: .datumTime)
+        let datumStartTime = try? container?.decode(Double.self, forKey: .datumStartTime)
+        let playlistStartTime = try? container?.decode(Double.self, forKey: .playlistTrackStartTime)
+        let isSkippable = try? container?.decode(Bool.self, forKey: .isSkippable)
+        let stationId = try? container?.decode(Int.self, forKey: .stationId)
+        
+        self.init(trackId: try? container?.decode(String.self, forKey: .trackId),
+                  playId: try? container?.decode(String.self, forKey: .playId),
+                  artist: try? container?.decode(String.self, forKey: .artist),
+                  stationId: stationId.flatMap{ String($0) },
+                  song: try? container?.decode(String.self, forKey: .title),
+                  datumTime: datumTime ?? .zero,
+                  datumStartTime: datumStartTime ?? 0.0,
+                  duration: try? container?.decode(Double.self, forKey: .duration),
+                  playlistStartTime: playlistStartTime,
+                  url: try? container?.decode(URL.self, forKey: .albumArtUrl),
+                  skips: skips ?? 0,
+                  isSkippable: isSkippable ?? false)
+    }
+}
+
+extension Marconi.LiveItem: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case title = "title"
+        case artist = "artist"
+        case image = "image"
+        case duration = "duration"
+        case play_id = "play_id"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let title = try? container.decode(String.self, forKey: .title)
+        let artist = try? container.decode(String.self, forKey: .artist)
+        let image = try? container.decode(URL.self, forKey: .artist)
+        let duartion = try? container.decode(Double.self, forKey: .duration)
+        let play_id = try? container.decode(String.self, forKey: .play_id)
+        
+        self.init(id: play_id,
+                  artist: artist,
+                  duration: duartion,
+                  song: title,
+                  image: image)
     }
 }
 
@@ -227,14 +303,16 @@ extension Marconi.MetaData: CustomStringConvertible {
             START-DATE: \(startDate)
             
             """
-        case .live(let item):
+        case .live(let item, let startDate):
             return """
             Metadata for Live Station has came with following list of properties:
             
             lsdr/X-TITLE: \(String(describing: item.song)),
             lsdr/X-ARTIST: \(String(describing: item.artist)),
             lsdr/X-PLAY-ID: \(String(describing: item.id)),
-            lsdr/X-IMAGE: \(String(describing: item.image))
+            lsdr/X-IMAGE: \(String(describing: item.image)),
+            lsdr/X-DURATION: \(String(describing: item.duration)),
+            START-DATE: \(startDate)
             
             """
         case .none:

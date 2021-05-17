@@ -30,55 +30,28 @@ extension Marconi {
         
         // MARK: - Public methods
         
-        func updateTimings(current: MetaData) {
-            currentMetaItem = current
-            _setupProgressObserver()
-        }
-        
         func startObserveTimings(metadata: MetaData) {
-            if metadata.datumTime < metadata.playlistStartTime {
-                // TODO: Clarify this scenario
-                _playlistOffset = metadata.datumTime + metadata.playlistStartTime
-            } else {
-                _playlistOffset = metadata.datumTime
+            switch metadata {
+            case .digit(let item, _):
+                guard let playlistStartTime = item.playlistStartTime else { return }
+                if item.datumTime < playlistStartTime {
+                    #warning("most likely this scenrio will be never exected")
+                    _playlistOffset = item.datumTime + playlistStartTime
+                } else {
+                    _playlistOffset = item.datumTime
+                }
+            case .live(_, _), .none:
+                break
             }
             currentMetaItem = metadata
             _setupProgressObserver()
         }
         
-        private func _setupProgressObserver() {
-            if progressTrackObserver == nil {
-                progressTrackObserver = _player?.addLinearPeriodicTimeObserver(every: _interval, queue: .main){ [weak self] (progress) in
-                    self?._updateProgress(progress)
-                }
-            }
+        func updateTimings(current: MetaData) {
+            currentMetaItem = current
+            _setupProgressObserver()
         }
         
-        private func _updateProgress(_ progress: TimeInterval) {
-            let currentProgress = _playlistOffset + progress
-            let playlistStartTime = currentMetaItem.playlistStartTime
-            if let nextItem = _queue.next() {
-                if playlistStartTime < currentProgress && currentProgress >= nextItem.playlistStartTime && !_isFinished {
-                    print("TRACK HAS BEEN CHANGED")
-                    _isFinished = true
-                    _delegate?.trackHasBeenChanged()
-                    print("AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
-                    return
-                }
-            }
-            if let duartion = currentMetaItem.duration {
-                let upperBound = playlistStartTime + duartion
-                if playlistStartTime < currentProgress &&  currentProgress > upperBound && !_isFinished {
-                    print("TRACK HAS BEEN CHANGED")
-                    _isFinished = true
-                    _delegate?.trackHasBeenChanged()
-                    print("AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
-                    return
-                }
-            }
-            _isFinished = false
-            _delegate?.trackProgress(currentProgress - currentMetaItem.playlistStartTime, currentProgress)
-        }
         
         func invalidate() {
             _player?.removeTimeObserver(progressTrackObserver)
@@ -90,6 +63,74 @@ extension Marconi {
             _queue = queue
             _delegate = delegate
             _interval = interval
+        }
+        
+        
+        // MARK: - Private methods
+        
+        private func _setupProgressObserver() {
+            if progressTrackObserver == nil {
+                progressTrackObserver = _player?.addLinearPeriodicTimeObserver(every: _interval,
+                                                                               queue: .main){ [weak self] (progress) in
+                    self?._updateProgress(progress)
+                }
+            }
+        }
+        
+        // MARK: - Processing Digital Item on tick
+        private func _processing(item: DigitaItem, progress: TimeInterval) {
+            let currentProgress = _playlistOffset + progress
+            guard let playlistStartTime = item.playlistStartTime else { return }
+            if let nextItem = _queue.next(), let nextItemPlaylistStartTime = nextItem.playlistStartTime {
+                if playlistStartTime < currentProgress && currentProgress >= nextItemPlaylistStartTime && !_isFinished {
+                    _isFinished = true
+                    _delegate?.trackHasBeenChanged()
+                    print("Track has been changed, AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
+                    return
+                }
+            } else if let duration = item.duration {
+                let upperBound = playlistStartTime + duration
+                if playlistStartTime < currentProgress &&  currentProgress > upperBound && !_isFinished {
+                    _isFinished = true
+                    _delegate?.trackHasBeenChanged()
+                    print("Track has been changed, AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
+                    return
+                }
+            }
+            _isFinished = false
+            _delegate?.trackProgress(currentProgress - playlistStartTime, currentProgress)
+        }
+        
+        // MARK: - Processing Live Item on tick
+        private func _processing(item: LiveItem, startDate: Date) {
+            guard _queue.count > 0 else { return }
+            if let nextItem = _queue.next() {
+                if nextItem.startTrackDate! <= Date() && !_isFinished {
+                    _isFinished = true
+                    _delegate?.trackHasBeenChanged()
+                    print("Track has been changed, AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
+                    return
+                }
+            } else if let duration = item.duration {
+                if startDate.addingTimeInterval(duration) < Date() && !_isFinished {
+                    _isFinished = true
+                    _delegate?.trackHasBeenChanged()
+                    print("Track has been changed, AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
+                    return
+                }
+            }
+            _isFinished = false
+        }
+        
+        private func _updateProgress(_ progress: TimeInterval) {
+            switch currentMetaItem {
+            case .digit(let item, _):
+                _processing(item: item, progress: progress)
+                case .live(let item, let startDate):
+                _processing(item: item, startDate: startDate)
+            case .none:
+                break
+            }
         }
         
         deinit {

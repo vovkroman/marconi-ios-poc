@@ -15,7 +15,8 @@ public protocol MarconiPlayerObserver: class {
 }
 
 extension Marconi {
-    public enum MError: Equatable {
+    public enum MError: Error, Equatable {
+        case loaderError(description: String)
         case playerError(description: String?)
     }
 }

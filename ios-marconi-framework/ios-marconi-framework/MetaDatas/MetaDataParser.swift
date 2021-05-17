@@ -103,6 +103,11 @@ extension Marconi.Live {
             return _dict[Identifier.title] as? String
         }
         
+        var duration: TimeInterval? {
+            let value = _dict[Identifier.duration]
+            return value?.doubleValue
+        }
+        
         var image: URL? {
             guard let value = _dict[Identifier.image] as? String else {
                 return nil

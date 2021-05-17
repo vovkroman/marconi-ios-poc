@@ -12,6 +12,7 @@ enum Identifier {
     static let playID = AVMetadataIdentifier("lsdr/X-PLAY-ID")
     static let type = AVMetadataIdentifier("lsdr/X-TYPE")
     static let artist = AVMetadataIdentifier("lsdr/X-ARTIST")
+    static let duration = AVMetadataIdentifier("lsdr/X-DURATION")
     static let title = AVMetadataIdentifier("lsdr/X-TITLE")
     static let image = AVMetadataIdentifier("lsdr/X-IMAGE")
     

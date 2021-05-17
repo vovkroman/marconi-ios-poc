@@ -43,11 +43,11 @@ extension DisplayItemNode {
     }
     
     var title: String {
-        return _metaData.song ?? "Unknown"
+        return _metaData.song.valueOrDefault("Unknown")
     }
     
     var artistName: String {
-        return _metaData.artist ?? "Unknown"
+        return _metaData.artist.valueOrDefault("Unknown")
     }
     
     var stationName: String? {
@@ -98,7 +98,8 @@ extension DisplayItemNode {
         if _isNextTrack {
             return 0.0
         }
-        return _metaData.datumTime - _metaData.playlistStartTime
+        let playlistStartTime = _metaData.playlistStartTime ?? 0.0
+        return _metaData.datumTime - playlistStartTime
     }
     
     var playId: String? {
