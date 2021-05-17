@@ -75,7 +75,7 @@ extension Marconi {
         }
         
         private func _updateProgressObserver(metadata: MetaData) {
-            _timerObserver.invalidate()
+            //_timerObserver.invalidate()
             _timerObserver.updateTimings(current: metadata)
         }
         
