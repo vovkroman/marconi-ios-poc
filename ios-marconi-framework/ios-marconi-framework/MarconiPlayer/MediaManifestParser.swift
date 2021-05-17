@@ -84,7 +84,7 @@ extension Marconi {
         private func _processStartDateTag(_ line: String) {
             let dateRange = line.range(of: "\(Tag.EXT_DATE_TIME)")!
             let stringDate = String(line.suffix(from: dateRange.upperBound))
-            playlist.startDate = DateFormatter().date(from: stringDate)
+            playlist.startDate = stringDate.date
         }
         
         func parse() {

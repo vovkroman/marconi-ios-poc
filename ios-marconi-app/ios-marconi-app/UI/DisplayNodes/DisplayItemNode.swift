@@ -43,11 +43,11 @@ extension DisplayItemNode {
     }
     
     var title: String {
-        return _metaData.song ?? "Unknown"
+        return _metaData.song.valueOrDefault("Unknown")
     }
     
     var artistName: String {
-        return _metaData.artist ?? "Unknown"
+        return _metaData.artist.valueOrDefault("Unknown")
     }
     
     var stationName: String? {

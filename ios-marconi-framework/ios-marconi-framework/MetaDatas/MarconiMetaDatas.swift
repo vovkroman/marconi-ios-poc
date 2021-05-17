@@ -89,7 +89,7 @@ extension Marconi {
             case .live(_, let startDate):
                 return startDate.timeIntervalSince1970
             case .none:
-                return 0.0
+                return .zero
             }
         }
         
@@ -171,10 +171,10 @@ extension Marconi {
                           artist: parser.artist,
                           stationId: parser.stationId,
                           song: parser.song,
-                          datumTime: parser.datumTime ?? 0.0,
-                          datumStartTime: parser.datumStartTime ?? 0.0,
+                          datumTime: parser.datumTime ?? .zero,
+                          datumStartTime: parser.datumStartTime ?? .zero,
                           duration: parser.duration,
-                          playlistStartTime: parser.playlistStartTime ?? 0.0,
+                          playlistStartTime: parser.playlistStartTime ?? .zero,
                           url: parser.url,
                           skips: parser.skips ?? 0,
                           isSkippable: parser.isSkippable ?? false),
@@ -246,10 +246,10 @@ extension Marconi.DigitaItem: Decodable {
                   artist: try? container.decode(String.self, forKey: .artist),
                   stationId: stationId.flatMap{ String($0) },
                   song: try? container.decode(String.self, forKey: .title),
-                  datumTime: datumTime ?? 0.0,
-                  datumStartTime: datumStartTime ?? 0.0,
+                  datumTime: datumTime ?? .zero,
+                  datumStartTime: datumStartTime ?? .zero,
                   duration: try? container.decode(Double.self, forKey: .duration),
-                  playlistStartTime: playlistStartTime ?? 0.0,
+                  playlistStartTime: playlistStartTime ?? .zero,
                   url: try? container.decode(URL.self, forKey: .albumArtUrl),
                   skips: skips ?? 0,
                   isSkippable: isSkippable ?? false)
@@ -257,7 +257,29 @@ extension Marconi.DigitaItem: Decodable {
 }
 
 extension Marconi.LiveItem: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case title = "title"
+        case artist = "artist"
+        case image = "image"
+        case duration = "duration"
+        case play_id = "play_id"
+    }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let title = try? container.decode(String.self, forKey: .title)
+        let artist = try? container.decode(String.self, forKey: .artist)
+        let image = try? container.decode(URL.self, forKey: .artist)
+        let duartion = try? container.decode(Double.self, forKey: .duration)
+        let play_id = try? container.decode(String.self, forKey: .play_id)
+        
+        self.init(id: play_id,
+                  artist: artist,
+                  duration: duartion,
+                  song: title,
+                  image: image)
+    }
 }
 
 extension Marconi.MetaData: CustomStringConvertible {

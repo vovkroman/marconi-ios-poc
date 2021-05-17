@@ -60,6 +60,8 @@ extension Marconi {
         }
 
         private func insert(newElement: MetaData) {
+            if newElement.sortedKey.isZero { return }
+            
             if _storage.isEmpty {
                 _storage.append(newElement)
                 return

@@ -32,6 +32,9 @@ extension Marconi {
             _currentURL = url
             _observer?.stopMonitoring()
             if currentItem != nil { replaceCurrentItem(with: nil) }
+            
+            // remove prev instance ResourceLoader
+            _resourceLoader = nil
             _resourceLoader = ResourceLoader(_observer)
             
             asset.resourceLoader.setDelegate(_resourceLoader, queue: .main)

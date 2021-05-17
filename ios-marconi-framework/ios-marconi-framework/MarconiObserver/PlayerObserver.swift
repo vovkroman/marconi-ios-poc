@@ -87,7 +87,7 @@ extension Marconi {
             playerItem.add(metadataCollector)
         }
         
-        private func _newItemsHasCame() {
+        private func _processingNewItems() {
             guard let item = _queue.head(), currentMetaItem != item else {
                 // current asset's still playing
                 return
@@ -151,7 +151,6 @@ extension Marconi {
                 // skip assign .none if it's already .none
                 if currentMetaItem != .none {
                     currentMetaItem = .none
-                    _timerObserver.invalidate()
                     stateMachine.transition(with: .trackHasBeenChanged(.none))
                 }
                 return
@@ -166,19 +165,20 @@ extension Marconi {
         
         func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) throws {
             guard let data = "[\(playlist.segments.compactMap{ $0.json }.joined(separator: ", "))]".data(using: .utf8) else {
-                return
+                throw MError.loaderError(description: "Failed laoding json from #EXTINF tag")
             }
             
+            let startDate = playlist.startDate ?? Date()
             switch _stationType {
             case .digit:
                 let items = try JSONDecoder().decode([DigitaItem].self, from: data)
-                _queue.enqueue(items.compactMap{ MetaData.digit($0, Date()) })
-                print(_queue.count)
-                _newItemsHasCame()
+                _queue.enqueue(items.compactMap{ MetaData.digit($0, startDate) })
             case .live:
                 let items = try JSONDecoder().decode([LiveItem].self, from: data)
-                _queue.enqueue(items.compactMap{ MetaData.live($0, Date()) })
+                _queue.enqueue(items.compactMap{ MetaData.live($0, startDate) })
+                print(items)
             }
+            _processingNewItems()
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
@@ -206,7 +206,7 @@ extension Marconi {
                 // current asset's still playing
                 return
             }
-            _newItemsHasCame()
+            _processingNewItems()
         }
         
         public init(_ observer: MarconiPlayerObserver?) {
