@@ -85,7 +85,7 @@ class MarconiPlayerController: UIViewController, Containerable {
 //
     private func _willReplace(_ stationWrapper: StationWrapper?) {
         let playId = _playingItem?.playId ?? _player.playId
-        _stationWrapper?.saveCurrent(progressData: (_player.streamProgress, playId))
+        _stationWrapper?.saveCurrent(progressData: (_player.streamProgress.rounded(.toNearestOrEven), playId))
     }
     
     // MARK: - UI is function of State Machine
