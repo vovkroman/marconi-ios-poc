@@ -176,7 +176,6 @@ extension Marconi {
             case .live:
                 let items = try JSONDecoder().decode([LiveItem].self, from: data)
                 _queue.enqueue(items.compactMap{ MetaData.live($0, startDate) })
-                print(items)
             }
             _processingNewItems()
         }

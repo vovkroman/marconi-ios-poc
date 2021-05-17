@@ -27,7 +27,7 @@ extension Marconi {
         let datumTime: TimeInterval
         let datumStartTime: TimeInterval
         let duration: TimeInterval?
-        let playlistStartTime: TimeInterval
+        let playlistStartTime: TimeInterval?
         let url: URL?
         let skips: Int
         let isSkippable: Bool
@@ -82,14 +82,14 @@ extension Marconi {
             }
         }
         
-        var sortedKey: TimeInterval {
+        var sortedKey: TimeInterval? {
             switch self {
             case .digit(let item, _):
                 return item.playlistStartTime
             case .live(_, let startDate):
                 return startDate.timeIntervalSince1970
             case .none:
-                return .zero
+                return nil
             }
         }
         
@@ -129,10 +129,10 @@ extension Marconi {
             }
         }
         
-        public var playlistStartTime: TimeInterval {
+        public var playlistStartTime: TimeInterval? {
             switch self {
             case .live, .none:
-                return 0.0
+                return nil
             case .digit(let item, _):
                 return item.playlistStartTime
             }
@@ -233,24 +233,24 @@ extension Marconi.DigitaItem: Decodable {
     }
     
     public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let skips = try? container.decode(Int.self, forKey: .skips)
-        let datumTime = try? container.decode(Double.self, forKey: .datumTime)
-        let datumStartTime = try? container.decode(Double.self, forKey: .datumStartTime)
-        let playlistStartTime = try? container.decode(Double.self, forKey: .playlistTrackStartTime)
-        let isSkippable = try? container.decode(Bool.self, forKey: .isSkippable)
-        let stationId = try? container.decode(Int.self, forKey: .stationId)
+        let container = try? decoder.container(keyedBy: CodingKeys.self)
+        let skips = try? container?.decode(Int.self, forKey: .skips)
+        let datumTime = try? container?.decode(Double.self, forKey: .datumTime)
+        let datumStartTime = try? container?.decode(Double.self, forKey: .datumStartTime)
+        let playlistStartTime = try? container?.decode(Double.self, forKey: .playlistTrackStartTime)
+        let isSkippable = try? container?.decode(Bool.self, forKey: .isSkippable)
+        let stationId = try? container?.decode(Int.self, forKey: .stationId)
         
-        self.init(trackId: try? container.decode(String.self, forKey: .trackId),
-                  playId: try? container.decode(String.self, forKey: .playId),
-                  artist: try? container.decode(String.self, forKey: .artist),
+        self.init(trackId: try? container?.decode(String.self, forKey: .trackId),
+                  playId: try? container?.decode(String.self, forKey: .playId),
+                  artist: try? container?.decode(String.self, forKey: .artist),
                   stationId: stationId.flatMap{ String($0) },
-                  song: try? container.decode(String.self, forKey: .title),
+                  song: try? container?.decode(String.self, forKey: .title),
                   datumTime: datumTime ?? .zero,
-                  datumStartTime: datumStartTime ?? .zero,
-                  duration: try? container.decode(Double.self, forKey: .duration),
-                  playlistStartTime: playlistStartTime ?? .zero,
-                  url: try? container.decode(URL.self, forKey: .albumArtUrl),
+                  datumStartTime: datumStartTime ?? 0.0,
+                  duration: try? container?.decode(Double.self, forKey: .duration),
+                  playlistStartTime: playlistStartTime,
+                  url: try? container?.decode(URL.self, forKey: .albumArtUrl),
                   skips: skips ?? 0,
                   isSkippable: isSkippable ?? false)
     }

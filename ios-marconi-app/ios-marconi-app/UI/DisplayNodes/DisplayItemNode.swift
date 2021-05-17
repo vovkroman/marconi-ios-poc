@@ -98,7 +98,8 @@ extension DisplayItemNode {
         if _isNextTrack {
             return 0.0
         }
-        return _metaData.datumTime - _metaData.playlistStartTime
+        let playlistStartTime = _metaData.playlistStartTime ?? 0.0
+        return _metaData.datumTime - playlistStartTime
     }
     
     var playId: String? {

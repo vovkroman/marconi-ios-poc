@@ -77,8 +77,8 @@ extension Marconi {
         
         private func _processInfTag(_ line: String) {
             let segmentRange = line.range(of: "\(Tag.EXTINF)")!
-            let componenets = String(line.suffix(from: segmentRange.upperBound)).components(separatedBy: ", ")
-            playlist.segments.append(Segment(Float(componenets[0]), json: componenets[1]))
+            let componenets = String(line.suffix(from: segmentRange.upperBound)).components(separatedBy: ", {")
+            playlist.segments.append(Segment(Float(componenets[0]), json: "{\(componenets[1])"))
         }
         
         private func _processStartDateTag(_ line: String) {

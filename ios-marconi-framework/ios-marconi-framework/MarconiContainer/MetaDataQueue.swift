@@ -60,23 +60,30 @@ extension Marconi {
         }
 
         private func insert(newElement: MetaData) {
-            if newElement.sortedKey.isZero { return }
-            
+            guard let newElementKey = newElement.sortedKey else {
+                return
+            }
             if _storage.isEmpty {
                 _storage.append(newElement)
                 return
             }
-            let index = findInsertionPoint(for: newElement)
+            guard let index = findInsertionPoint(for: newElement) else {
+                return
+            }
             if index >= 0, index < _storage.count, _storage[index] == newElement {
                 return
             }
             var insertIndex = index
-            if _storage[index].sortedKey < newElement.sortedKey { insertIndex += 1 }
+            if _storage[index].sortedKey! < newElementKey { insertIndex += 1 }
             _storage.insert(newElement, at: insertIndex)
         }
         
         // Using binary search define index to insert item at position
-        private func findInsertionPoint(for element: MetaData) -> Int {
+        private func findInsertionPoint(for element: MetaData) -> Int? {
+            guard let newElementKey = element.sortedKey else {
+                return nil
+            }
+
             var startIndex = 0
             var endIndex = _storage.count - 1
             
@@ -84,7 +91,7 @@ extension Marconi {
                 let midIndex = startIndex + (endIndex - startIndex) / 2
                 if _storage[midIndex] == element {
                     return midIndex
-                } else if _storage[midIndex].sortedKey < element.sortedKey {
+                } else if _storage[midIndex].sortedKey! < newElementKey {
                     startIndex = midIndex + 1
                 } else {
                     endIndex = midIndex
