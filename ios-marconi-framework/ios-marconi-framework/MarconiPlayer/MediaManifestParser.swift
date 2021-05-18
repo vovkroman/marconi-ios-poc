@@ -61,6 +61,7 @@ extension Marconi {
         enum Tag: String, CustomStringConvertible {
             case EXTINF = "#EXTINF:"
             case EXT_DATE_TIME = "#EXT-X-PROGRAM-DATE-TIME:"
+            case EXT_X_DATERANGE = "#EXT-X-DATERANGE:"
             
             var description: String {
                 return rawValue
@@ -87,11 +88,12 @@ extension Marconi {
             }
             playlist.segments.append(segment)
         }
+
         
         private func _processStartDateTag(_ line: String) {
             let dateRange = line.range(of: "\(Tag.EXT_DATE_TIME)")!
-            let stringDate = String(line.suffix(from: dateRange.upperBound))
-            playlist.startDate = stringDate.date
+            let string = String(line.suffix(from: dateRange.upperBound))
+            playlist.startDate = string.date
         }
         
         func parse() {

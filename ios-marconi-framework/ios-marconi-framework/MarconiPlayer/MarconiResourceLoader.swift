@@ -36,14 +36,17 @@ extension Marconi {
             return true
         }
         
-        private func _loadResource(by url: URL, loadingRequest: AVAssetResourceLoadingRequest?) {
+        private func _loadResource(by url: URL, loadingRequest: AVAssetResourceLoadingRequest) {
             let request = URLRequest(url: url)
             let task = _session.dataTask(with: request) { [weak self] (data, responce, error) in
                 if let error = error {
-                    loadingRequest?.finishLoading(with: MError.loaderError(description: "\(request) failed with error \(error)"))
+                    loadingRequest.finishLoading(with: MError.loaderError(description: "\(request) failed with error \(error)"))
                     return
                 }
                 if let data = data {
+                    loadingRequest.dataRequest?.respond(with: data)
+                    loadingRequest.finishLoading()
+                    
                     let manifestContent = String(decoding: data, as: UTF8.self)
                     let masterParser = MasterManigestParser(manifestContent)
                     do {
@@ -55,16 +58,12 @@ extension Marconi {
                         mediaManifest.parse()
                         
                         try self?._delegate?.playlistHasBeenLoaded(mediaManifest.playlist)
-                        
-                        loadingRequest?.dataRequest?.respond(with: data)
-                        loadingRequest?.finishLoading()
-                    } catch {
-                        loadingRequest?.dataRequest?.respond(with: data)
-                        loadingRequest?.finishLoading()
+                    } catch let error {
+                        print(error)
                         return
                     }
                 } else {
-                    loadingRequest?.finishLoading(with: MError.loaderError(description: "Unable to fetch manifest"))
+                    loadingRequest.finishLoading(with: MError.loaderError(description: "Unable to fetch manifest"))
                 }
             }
             task.resume()

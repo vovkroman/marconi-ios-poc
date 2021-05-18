@@ -200,11 +200,12 @@ extension Marconi {
                     items.append(item)
                 }
             }
-            _queue.enqueue(items)
-            guard let item = _queue.head(), currentMetaItem != item else {
-                // current asset's still playing
+
+            if items.isEmpty {
                 return
             }
+
+            _queue.enqueue(items)
             _processingNewItems()
         }
         

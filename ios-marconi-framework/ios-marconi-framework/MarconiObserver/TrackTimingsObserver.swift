@@ -33,7 +33,16 @@ extension Marconi {
         func startObserveTimings(metadata: MetaData) {
             switch metadata {
             case .digit(let item, _):
-                _playlistOffset = item.datumTime
+                guard let playlistStartTime = item.playlistStartTime else {
+                    _playlistOffset = item.datumTime
+                    return
+                }
+                if item.datumTime < playlistStartTime {
+                    // TODO: Clarify this scenario
+                    _playlistOffset = item.datumTime + playlistStartTime
+                } else {
+                    _playlistOffset = item.datumTime
+                }
             case .live(_, _), .none:
                 break
             }
@@ -45,7 +54,6 @@ extension Marconi {
             currentMetaItem = current
             _setupProgressObserver()
         }
-        
         
         func invalidate() {
             _player?.removeTimeObserver(progressTrackObserver)
@@ -86,8 +94,7 @@ extension Marconi {
                     print("Track has been changed, AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
                     return
                 }
-            }
-            if let duration = item.duration {
+            } else if let duration = item.duration {
                 let upperBound = playlistStartTime + duration
                 if playlistStartTime < currentProgress &&  currentProgress > upperBound && !_isFinished {
                     _isFinished = true
@@ -110,8 +117,7 @@ extension Marconi {
                     print("Track has been changed, AMOUNT OF ITEMS in QUEUE: \(_queue.count)")
                     return
                 }
-            }
-            if let duration = item.duration {
+            } else if let duration = item.duration {
                 if startDate.addingTimeInterval(duration) < Date() && !_isFinished {
                     _isFinished = true
                     _delegate?.trackHasBeenChanged()
