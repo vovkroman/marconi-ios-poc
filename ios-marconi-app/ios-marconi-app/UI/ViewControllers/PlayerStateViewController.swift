@@ -66,6 +66,12 @@ final class PlayingItemViewController: PlayerStateViewController<PlayingView> {
         }
     }
     
+    func pause() {
+        if isViewLoaded {
+            contentView.pause()
+        }
+    }
+    
     func willReuseController() {
         contentView.willReuseView()
     }

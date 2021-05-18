@@ -97,6 +97,10 @@ final class PlayingView: UIView, NibReusable {
         layoutIfNeeded()
     }
     
+    func pause() {
+        _playButton.isSelected = false
+    }
+    
     func updateProgress(_ value: TimeInterval) {
         _progressBar.value = Float(value)
         _progressLabel.text = value.asString(style: .positional)
