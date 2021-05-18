@@ -58,7 +58,9 @@ extension Marconi {
         private func _observeStatus(_ playerItem: AVPlayerItem) {
             switch playerItem.status {
             case .readyToPlay:
-                _startObserveProgress()
+                if currentMetaItem != .none {
+                    _startObserveProgress()
+                }
                 stateMachine.transition(with: .bufferingEnded(currentMetaItem))
             case .failed:
                 stateMachine.transition(with: .catchTheError(playerItem.error))
@@ -69,13 +71,12 @@ extension Marconi {
         
         // MARK: - Observe progressing
         
-        private func _startObserveProgress() {
+        func _startObserveProgress() {
             _timerObserver.invalidate()
             _timerObserver.startObserveTimings(metadata: currentMetaItem)
         }
         
         private func _updateProgressObserver(metadata: MetaData) {
-            //_timerObserver.invalidate()
             _timerObserver.updateTimings(current: metadata)
         }
         
@@ -93,6 +94,7 @@ extension Marconi {
                 return
             }
             currentMetaItem = item
+            _startObserveProgress()
             stateMachine.transition(with: .newMetaHasCame(item))
         }
         

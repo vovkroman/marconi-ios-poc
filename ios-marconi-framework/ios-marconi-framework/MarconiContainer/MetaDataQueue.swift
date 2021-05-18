@@ -12,6 +12,7 @@ extension Marconi {
     class MetaDataQueue {
         
         private var _storage: ContiguousArray<MetaData>
+        private let _lock: NSLock = .init()
         
         private var isEmpty: Bool {
             return _storage.isEmpty
@@ -28,11 +29,19 @@ extension Marconi {
         }
         
         func removeAll() {
+            defer {
+                _lock.unlock()
+            }
+            _lock.lock()
             _storage.removeAll()
         }
         
         @discardableResult
         func popFirst() -> MetaData? {
+            defer {
+                _lock.unlock()
+            }
+            _lock.lock()
             if isEmpty {
                 return nil
             }
@@ -40,6 +49,10 @@ extension Marconi {
         }
         
         func head() -> MetaData? {
+            defer {
+                _lock.unlock()
+            }
+            _lock.lock()
             if isEmpty {
                 return nil
             }
@@ -47,6 +60,10 @@ extension Marconi {
         }
         
         func next() -> MetaData? {
+            defer {
+                _lock.unlock()
+            }
+            _lock.lock()
             if _storage.count > 1 {
                 return _storage[1]
             }
@@ -54,6 +71,10 @@ extension Marconi {
         }
         
         func enqueue(_ items: [MetaData]) {
+            defer {
+                _lock.unlock()
+            }
+            _lock.lock()
             for item in items {
                 insert(newElement: item)
             }

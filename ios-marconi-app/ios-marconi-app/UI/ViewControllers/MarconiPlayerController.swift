@@ -217,7 +217,7 @@ extension MarconiPlayerController: ApplicationStateListenerDelegate {
     
     func onApplicationStateChanged(_ newState: ApplicationState) {
         if case .didEnterBackground = newState {
-            // To save progress when enter Background the app
+            // Paue app, and save progress when enter Background the app
             _playingItemViewController.pause()
             _player.pause()
             _willReplace(_stationWrapper)
