@@ -54,6 +54,7 @@ class MarconiPlayerController: UIViewController, Containerable {
     }
     
     private var _onSkip: NextAction?
+    private var _worker: DispatchQueue = .main
     
     private lazy var _player: Player = .init(self)
     
@@ -70,7 +71,7 @@ class MarconiPlayerController: UIViewController, Containerable {
             _willReplace(_stationWrapper)
         }
     }
-        
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         _applicationStateListener.delegate = self // I'm your father, Luke
@@ -163,12 +164,8 @@ extension MarconiPlayerController: MarconiPlayerObserver {
 
 extension MarconiPlayerController: MarconiPlayerDelegate {
     
-    func catchTheError(_ error: Error) {
-        // Log error
-        logger?.emittedEvent(event: .caughtTheError(error))
-    }
-    
-    func willPlayStation(_ wrapper: StationWrapper, with url: URL?) {
+    // // MARK: - Process new station
+    private func _process(_ wrapper: StationWrapper, with url: URL?) {
         guard let url = url else { return }
         _stationWrapper = wrapper
         _playingItem = nil
@@ -176,6 +173,15 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
         
         // Log event
         logger?.emittedEvent(event: .handleStreamURL(description: "\(url) to initialize \(wrapper.station.name)"))
+    }
+    
+    func catchTheError(_ error: Error) {
+        // Log error
+        logger?.emittedEvent(event: .caughtTheError(error))
+    }
+    
+    func willPlayStation(_ wrapper: StationWrapper, with url: URL?) {
+        _worker.async(execute: combine(wrapper, url, with: _process))
     }
 }
 

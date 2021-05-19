@@ -14,7 +14,6 @@ extension Marconi {
         
         private var _observer: PlayerObserver?
         private var _resourceLoader: ResourceLoader?
-        private var _stationType: StationType = .live
         
         public var _currentURL: URL?
         
@@ -28,11 +27,9 @@ extension Marconi {
         
         public func replaceCurrentURL(with url: URL, stationType: StationType) {
             guard let asset = URLAsset(url: url) else { return }
-            print(url)
-            _stationType = stationType
             _currentURL = url
             _observer?.stopMonitoring()
-            if currentItem != nil { replaceCurrentItem(with: nil) }
+            replaceCurrentItem(with: nil)
             
             // remove prev instance ResourceLoader
             _resourceLoader = nil
@@ -50,7 +47,14 @@ extension Marconi {
         public func restore(with url: URL) {
             let url = url.updateQueryParams(key: "playlistOffset", value: String(format: "%.2f", streamProgress))
             print("replaced url: \(url)")
-            replaceCurrentURL(with: url, stationType: _stationType)
+            _currentURL = url
+            _observer?.stopMonitoring(false)
+
+            let playingItem = AVPlayerItem(url: url)
+
+            self._observer?.startMonitoring(playingItem)
+            super.replaceCurrentItem(with: playingItem)
+            super.play()
         }
         
         public init(_ observer: MarconiPlayerObserver?) {

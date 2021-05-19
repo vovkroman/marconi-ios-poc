@@ -132,7 +132,7 @@ extension Marconi {
             switch currentMetaItem {
             case .digit(let item, _):
                 _processing(item: item, progress: progress)
-                case .live(let item, let startDate):
+            case .live(let item, let startDate):
                 _processing(item: item, startDate: startDate)
             case .none:
                 break

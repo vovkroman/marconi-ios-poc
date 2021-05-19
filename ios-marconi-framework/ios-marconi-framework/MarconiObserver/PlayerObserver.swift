@@ -88,7 +88,7 @@ extension Marconi {
             playerItem.add(metadataCollector)
         }
         
-        private func _processingNewItems() {
+        private func _handleNewItems() {
             guard let item = _queue.head(), currentMetaItem != item else {
                 // current asset's still playing
                 return
@@ -122,10 +122,10 @@ extension Marconi {
             startMonitoring(playerItem, stationType: _stationType)
         }
         
-        public func stopMonitoring() {
-            //_player?.pause()
-            
-            _queue.removeAll()
+        public func stopMonitoring(_ isCleanAll: Bool = true) {
+            if isCleanAll {
+                _queue.removeAll()
+            }
             
             _timerObserver.invalidate()
             
@@ -179,7 +179,7 @@ extension Marconi {
                 let items = try JSONDecoder().decode([LiveItem].self, from: data)
                 _queue.enqueue(items.compactMap{ MetaData.live($0, startDate) })
             }
-            _processingNewItems()
+            DispatchQueue.main.async(execute: _handleNewItems)
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
@@ -208,7 +208,7 @@ extension Marconi {
             }
 
             _queue.enqueue(items)
-            _processingNewItems()
+            _handleNewItems()
         }
         
         public init(_ observer: MarconiPlayerObserver?) {
