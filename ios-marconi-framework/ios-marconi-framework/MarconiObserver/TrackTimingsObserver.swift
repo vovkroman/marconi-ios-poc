@@ -33,16 +33,7 @@ extension Marconi {
         func startObserveTimings(metadata: MetaData) {
             switch metadata {
             case .digit(let item, _):
-                guard let playlistStartTime = item.playlistStartTime else {
-                    _playlistOffset = item.datumTime
-                    return
-                }
-                if item.datumTime < playlistStartTime {
-                    // TODO: Clarify this scenario
-                    _playlistOffset = item.datumTime + playlistStartTime
-                } else {
-                    _playlistOffset = item.datumTime
-                }
+                _playlistOffset = item.datumTime
             case .live(_, _), .none:
                 break
             }
