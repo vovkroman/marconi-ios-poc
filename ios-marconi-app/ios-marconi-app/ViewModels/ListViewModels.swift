@@ -13,7 +13,11 @@ enum Live {}
 enum Digital {}
 enum Rewind {}
 
-struct StationWrapper {    
+struct StationWrapper: Equatable {
+    static func == (lhs: StationWrapper, rhs: StationWrapper) -> Bool {
+        return lhs.station.id == rhs.station.id
+    }
+    
     let station: Station
     let type: StationType
 }

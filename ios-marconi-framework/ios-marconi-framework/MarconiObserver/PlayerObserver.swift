@@ -122,10 +122,10 @@ extension Marconi {
             startMonitoring(playerItem, stationType: _stationType)
         }
         
-        public func stopMonitoring(_ isCleanAll: Bool = true) {
-            if isCleanAll {
-                _queue.removeAll()
-            }
+        public func stopMonitoring() {
+            //_player?.pause()
+            
+            _queue.removeAll()
             
             _timerObserver.invalidate()
             
