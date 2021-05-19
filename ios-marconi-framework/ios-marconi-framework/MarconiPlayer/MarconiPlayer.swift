@@ -45,7 +45,11 @@ extension Marconi {
         }
         
         public func restore(with url: URL) {
-            let url = url.updateQueryParams(key: "playlistOffset", value: String(format: "%.2f", streamProgress))
+            var url = url.updateQueryParams(key: "playlistOffset", value: String(format: "%.2f", streamProgress))
+            if let playId = playId {
+                url = url.updateQueryParams(key: "playId", value: playId)
+            }
+
             print("replaced url: \(url)")
             _currentURL = url
             _observer?.stopMonitoring(false)
