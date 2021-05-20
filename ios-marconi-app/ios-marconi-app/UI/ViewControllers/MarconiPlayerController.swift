@@ -56,6 +56,8 @@ class MarconiPlayerController: UIViewController, Containerable {
     private var _onSkip: NextAction?
     private var _worker: DispatchQueue = .main
     
+    private var _isCleanedAll: Bool = false
+    
     private lazy var _player: Player = .init(self)
     
     private let _applicationStateListener = ApplicationStateListener()
@@ -82,9 +84,15 @@ class MarconiPlayerController: UIViewController, Containerable {
         _noPlayingItem()
     }
     
+    func cleanAll() {
+        _isCleanedAll = true
+    }
+    
 //    // MARK: - Private methods
 //
     private func _willReplace(_ stationWrapper: StationWrapper?) {
+        // if user cleaned stored all the data, so we don't need to store curret progress
+        if _isCleanedAll { return }
         let playId = _playingItem?.playId ?? _player.playId
         _stationWrapper?.saveCurrent(progressData: (_player.streamProgress, playId))
     }
@@ -170,7 +178,7 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
         _stationWrapper = wrapper
         _playingItem = nil
         _player.replaceCurrentURL(with: url, stationType: wrapper.type)
-        
+        _isCleanedAll = false
         // Log event
         logger?.emittedEvent(event: .handleStreamURL(description: "\(url) to initialize \(wrapper.station.name)"))
     }

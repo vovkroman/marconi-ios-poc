@@ -62,6 +62,7 @@ class MainViewController: UIViewController, Containerable {
     }
     
     @IBAction func cleanStoredAction(_ sender: Any) {
+        _playerController?.cleanAll()
         UserDefaults.removeAll()
     }
 }
