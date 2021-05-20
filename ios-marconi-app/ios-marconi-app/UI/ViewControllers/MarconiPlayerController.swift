@@ -147,7 +147,7 @@ class MarconiPlayerController: UIViewController, Containerable {
             
             // To save progress on caught the error
             _willReplace(_stationWrapper)
-            Log.error("[Error]: Marconi.Player throws the error", category: .default)
+            Log.error("[Error]: Marconi.Player throws the error: \(error.localizedDescription)", category: .default)
         }
     }
     
@@ -164,7 +164,7 @@ extension MarconiPlayerController: MarconiPlayerObserver {
 
 extension MarconiPlayerController: MarconiPlayerDelegate {
     
-    // // MARK: - Process new station
+    // // MARK: - Process station
     private func _process(_ wrapper: StationWrapper, with url: URL?) {
         guard let url = url else { return }
         _stationWrapper = wrapper
@@ -181,9 +181,9 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
     }
     
     func willPlayStation(_ wrapper: StationWrapper, with url: URL?) {
-        if _stationWrapper != wrapper {
+        //if _stationWrapper != wrapper {
             _worker.async(execute: combine(wrapper, url, with: _process))
-        }
+        //}
     }
 }
 
@@ -191,13 +191,15 @@ extension MarconiPlayerController: MarconiPlayerControlsDelegate {
     
     func performSkip() {
         _onSkip?().observe(){ [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let skipItem):
-                if let stationWrapper = self?._stationWrapper {
-                    self?.willPlayStation(stationWrapper, with: URL(skipItem.newPlaybackUrl))
+                if let stationWrapper = self._stationWrapper {
+                    self._worker.async(execute: combine(stationWrapper, URL(skipItem.newPlaybackUrl),
+                                                        with: self._process))
                 }
             case .failure(let error):
-                self?.catchTheError(error)
+                self.catchTheError(error)
             }
         }
     }

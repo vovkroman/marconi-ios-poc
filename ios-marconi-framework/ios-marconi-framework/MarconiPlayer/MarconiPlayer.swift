@@ -36,10 +36,12 @@ extension Marconi {
             
             // remove prev instance ResourceLoader
             _resourceLoader = nil
-            _resourceLoader = ResourceLoader(_observer)
+            let resourceLoader = ResourceLoader(_observer)
             
-            asset.resourceLoader.setDelegate(_resourceLoader, queue: .main)
+            asset.resourceLoader.setDelegate(resourceLoader, queue: .main)
             let playingItem = AVPlayerItem(asset: asset)
+            
+            _resourceLoader = resourceLoader
 
             // we need to know *station type* to know how to map paylaod
             self._observer?.startMonitoring(playingItem, stationType: stationType)
@@ -67,12 +69,15 @@ extension Marconi {
         }
         
         public override func play() {
-            _currentURL.flatMap(restore)
+            if let url = _currentURL {
+                restore(with: url)
+            }
         }
         
         public override func pause() {
             if isPlaying {
                 stop()
+                _observer?.stopMonitoring()
             }
             super.pause()
         }

@@ -33,6 +33,7 @@ extension Marconi {
                 _lock.unlock()
             }
             _lock.lock()
+            if _storage.isEmpty { return }
             _storage.removeAll()
         }
         

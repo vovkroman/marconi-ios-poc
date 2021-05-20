@@ -10,13 +10,27 @@ import AVFoundation
 
 extension Marconi {
     
+    class ObserverWrapper {
+        private let _observer: NSKeyValueObservation?
+        
+        init(_ observer: NSKeyValueObservation) {
+            _observer = observer
+        }
+        
+        deinit {
+            if let observer = _observer {
+                observer.invalidate()
+            }
+        }
+    }
+    
     public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate, TrackTimimgsDelegate, PlaylistLoaderDelegate {
         
         private var _stationType: StationType = .live
         
-        private var _playbackLikelyToKeepUpKeyPathObserver: NSKeyValueObservation?
-        private var _playbackBufferEmptyObserver: NSKeyValueObservation?
-        private var _playbackBufferFullObserver: NSKeyValueObservation?
+        private var _playbackLikelyToKeepUpKeyPathObserver: ObserverWrapper?
+        private var _playbackBufferEmptyObserver: ObserverWrapper?
+        private var _playbackBufferFullObserver: ObserverWrapper?
         
         private lazy var _timerObserver: TrackTimingsObserver = .init(every: 1.0,
                                                                           player: _player,
@@ -42,17 +56,17 @@ extension Marconi {
         
         private func _observeBuffering(_ playerItem: AVPlayerItem) {
             stateMachine.transition(with: .bufferingStarted(playerItem))
-            _playbackBufferEmptyObserver = playerItem.observe(\.isPlaybackBufferEmpty, options: [.new]) { [weak self](playerItem, _) in
+            _playbackBufferEmptyObserver = .init(playerItem.observe(\.isPlaybackBufferEmpty, options: [.new]) { [weak self](playerItem, _) in
                 self?.stateMachine.transition(with: .bufferingStarted(playerItem))
-            }
+            })
             
-            _playbackLikelyToKeepUpKeyPathObserver = playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self](playerItem, _) in
+            _playbackLikelyToKeepUpKeyPathObserver = .init(playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self](playerItem, _) in
                 self?._observeStatus(playerItem)
-            }
+            })
             
-            _playbackBufferFullObserver = playerItem.observe(\.isPlaybackBufferFull, options: [.new]) { [weak self](playerItem, _) in
+            _playbackBufferFullObserver = .init(playerItem.observe(\.isPlaybackBufferFull, options: [.new]) { [weak self](playerItem, _) in
                 self?._observeStatus(playerItem)
-            }
+            })
         }
         
         private func _observeStatus(_ playerItem: AVPlayerItem) {
@@ -118,20 +132,11 @@ extension Marconi {
             _observeBuffering(newPlayingItem)
         }
         
-        public func startMonitoring(_ playerItem: AVPlayerItem?) {
-            startMonitoring(playerItem, stationType: _stationType)
-        }
-        
-        public func stopMonitoring() {
-            //_player?.pause()
-            
+        public func stopMonitoring() {            
             _queue.removeAll()
             
             _timerObserver.invalidate()
             
-            _playbackLikelyToKeepUpKeyPathObserver?.invalidate()
-            _playbackBufferEmptyObserver?.invalidate()
-            _playbackBufferFullObserver?.invalidate()
             _playbackBufferEmptyObserver = nil
             _playbackLikelyToKeepUpKeyPathObserver = nil
             _playbackBufferFullObserver = nil
@@ -141,7 +146,7 @@ extension Marconi {
         
         func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval) {
             self.streamProgress = streamProgress
-            print("TimeInterval: \(currentItemProgress)")
+            print("Item Current Progress: \(currentItemProgress)")
             if currentItemProgress >= 1.0 {
                 self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
             }
