@@ -49,7 +49,7 @@ extension Marconi {
             super.play()
         }
         
-        public func restore(with url: URL) {
+        func restore(with url: URL) {
             var url = url.updateQueryParams(key: "playlistOffset", value: String(format: "%.2f", streamProgress))
             if let playId = playId {
                 url = url.updateQueryParams(key: "playId", value: playId)

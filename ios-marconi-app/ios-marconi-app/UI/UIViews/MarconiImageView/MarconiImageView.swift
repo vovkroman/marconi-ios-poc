@@ -76,6 +76,7 @@ final class MarconiImageView: UIImageView {
     }
     
     func cancelLoading() {
+        image = nil
         _provider.cancel()
     }
 }

@@ -31,13 +31,13 @@ class MainViewController: UIViewController, Containerable {
         _playerController?.logger = loggerViewModel
         _loggerViewModel = loggerViewModel
         
-        let liveVC = Live.ViewController(viewModel: Live.ViewModel(_playerController))
+        let liveVC = Live.ViewController(viewModel: Live.ViewModel(_playerController, loggerDelegate: loggerViewModel))
         liveVC.tabBarItem.title = "Live Stations"
         
-        let digitVC = Digital.ViewController(viewModel: Digital.ViewModel(_playerController))
+        let digitVC = Digital.ViewController(viewModel: Digital.ViewModel(_playerController, loggerDelegate: loggerViewModel))
         digitVC.tabBarItem.title = "Digital Stations"
         
-        let rewindVC = Rewind.ViewController(viewModel: Rewind.ViewModel(_playerController))
+        let rewindVC = Rewind.ViewController(viewModel: Rewind.ViewModel(_playerController, loggerDelegate: loggerViewModel))
         rewindVC.tabBarItem.title = "Rewind Stations"
         
         let loggerVC = Logger.ViewController(viewModel: loggerViewModel)

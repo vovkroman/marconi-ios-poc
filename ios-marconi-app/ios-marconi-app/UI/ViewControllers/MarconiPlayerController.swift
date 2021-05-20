@@ -181,9 +181,7 @@ extension MarconiPlayerController: MarconiPlayerDelegate {
     }
     
     func willPlayStation(_ wrapper: StationWrapper, with url: URL?) {
-        //if _stationWrapper != wrapper {
-            _worker.async(execute: combine(wrapper, url, with: _process))
-        //}
+        _worker.async(execute: combine(wrapper, url, with: _process))
     }
 }
 

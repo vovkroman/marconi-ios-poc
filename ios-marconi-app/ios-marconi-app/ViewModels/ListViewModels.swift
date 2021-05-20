@@ -42,7 +42,11 @@ class BaseListViewModel: ListViewModelable {
     
     var items: ContiguousArray<Model>
     
+    var selectedStationId: Int?
+    
     private(set) weak var _playerDelegate: MarconiPlayerDelegate?
+    private(set) weak var _loggerDelegate: LoggerDelegate?
+    
     private let _provider: StationProvider = .init()
     
     private func _fetchStation(by id: Int) {
@@ -68,11 +72,17 @@ class BaseListViewModel: ListViewModelable {
     
     func didSelected(at indexPath: IndexPath) {
         guard let stationPlaceHolder = items[safe: indexPath.row] else { return }
-        _fetchStation(by: stationPlaceHolder.id)
+        if selectedStationId != stationPlaceHolder.id {
+            _fetchStation(by: stationPlaceHolder.id)
+            selectedStationId = stationPlaceHolder.id
+        } else {
+            _loggerDelegate?.emittedEvent(event: .handleStreamURL(description: "Selected \(stationPlaceHolder.name) station is playing"))
+        }
     }
     
-    required init(_ playerDelegate: MarconiPlayerDelegate?) {
+    required init(_ playerDelegate: MarconiPlayerDelegate?, loggerDelegate: LoggerDelegate?) {
         self._playerDelegate = playerDelegate
+        self._loggerDelegate = loggerDelegate
         self.items = []
     }
 }
@@ -90,8 +100,8 @@ extension Live {
                                              with: URL(string: hls.url + "?udid=\(UserDefaults.udid)"))
         }
         
-        required init(_ playerDelegate: MarconiPlayerDelegate?) {
-            super.init(playerDelegate)
+        required init(_ playerDelegate: MarconiPlayerDelegate?, loggerDelegate: LoggerDelegate?) {
+            super.init(playerDelegate, loggerDelegate: loggerDelegate)
             items = [.init(id: 1005, name: "ALT 92.3"),
                       .init(id: 349, name: "KROQ"),
                       .init(id: 395, name: "Your '70s Playlist"),
@@ -116,8 +126,8 @@ extension Digital {
                                              with: URL(string: digitalUrl))
         }
         
-        required init(_ playerDelegate: MarconiPlayerDelegate?) {
-            super.init(playerDelegate)
+        required init(_ playerDelegate: MarconiPlayerDelegate?, loggerDelegate: LoggerDelegate?) {
+            super.init(playerDelegate, loggerDelegate: loggerDelegate)
             items = [.init(id: 2395, name: "Women of Alt"),
                       .init(id: 2396, name: "Ladies of Country"),
                       .init(id: 2401, name: "Slow Jams"),
@@ -135,8 +145,8 @@ extension Rewind {
         
         override func processTheStation(_ station: Station) {}
         
-        required init(_ playerDelegate: MarconiPlayerDelegate?) {
-            super.init(playerDelegate)
+        required init(_ playerDelegate: MarconiPlayerDelegate?, loggerDelegate: LoggerDelegate?) {
+            super.init(playerDelegate, loggerDelegate: loggerDelegate)
         }
     }
 }
