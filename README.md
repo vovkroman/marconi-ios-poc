@@ -20,6 +20,10 @@ The project contains 2 separated modules/frameworks and target app (descriptions
 
 - case **error(MError)** - state is triggered when caught any error;
 
+Graph given below, describes the transitions between states:
+
+![](Demo/Graph.png)
+
 [Marconi.Player](https://github.com/Entercom/ios-marconi-poc/tree/master/ios-marconi-framework/ios-marconi-framework/MarconiPlayer) inherited from AVFoundation [AVPlayer](https://developer.apple.com/documentation/avfoundation/avplayer).
 
 Usage:
