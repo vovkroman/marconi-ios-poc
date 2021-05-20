@@ -82,7 +82,7 @@ extension Logger {
         }
         
         func clearLogs() {
-            guard !_items.isEmpty else { return }
+            if _items.isEmpty { return }
             _items = []
             changeHandler?(.clearAll)
         }

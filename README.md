@@ -20,6 +20,54 @@ The project contains 2 separated modules/frameworks and target app (descriptions
 
 - case **error(MError)** - state is triggered when caught any error;
 
+Graph given below, describes the transitions between states:
+
+![](Demo/Graph.png)
+
+or the same in code:
+
+```swift
+func transition(with event: Event) {
+    switch (state, event) {
+        case (.buffering, .bufferingStarted(_)): break
+        case (_, .bufferingStarted(let playerItem)):
+            state = .buffering(playerItem)
+        case (.buffering, .bufferingEnded(let playingItem)):
+            state = .startPlaying(playingItem, false)
+        case (.buffering, .newMetaHasCame(_)):
+             // fetched meta data but buffering still in progress
+             break
+        case (.startPlaying(let old, _), .newMetaHasCame(let new)):
+            if old != new {
+                state = .startPlaying(new, false)
+             }
+        case (_, .bufferingEnded(let new)):
+            state = .startPlaying(new, false)
+        case (.noPlaying, .newMetaHasCame(_)): break
+        case (_, .startPlaying): break
+        case (.error, .catchTheError(_)): break
+        case (_, .catchTheError(let error)):
+            state = .error(.playerError(description: error?.localizedDescription))
+        case (.error(_), .newMetaHasCame(let new)):
+            state = .startPlaying(new, false)
+        case (.startPlaying(let playingItem, _), .progressDidChanged(let progress)):
+            state = .continuePlaying(playingItem, progress)
+        case (.continuePlaying(_, _), .newMetaHasCame(let new)):
+            state = .startPlaying(new, false)
+        case (.continuePlaying(let meta, _), .progressDidChanged(let progress)):
+            state = .continuePlaying(meta, progress)
+        case (_, .progressDidChanged(_)):
+            // if not playing there is no sense to update progress (state)
+            break
+        case (.continuePlaying(_, _), .trackHasBeenChanged(let new)):
+            state = .startPlaying(new, true)
+        case (.startPlaying(_, _), .trackHasBeenChanged(let new)):
+            state = .startPlaying(new, true)
+        case (_, .trackHasBeenChanged(_)): break
+        }
+    }
+```
+
 [Marconi.Player](https://github.com/Entercom/ios-marconi-poc/tree/master/ios-marconi-framework/ios-marconi-framework/MarconiPlayer) inherited from AVFoundation [AVPlayer](https://developer.apple.com/documentation/avfoundation/avplayer).
 
 Usage:
