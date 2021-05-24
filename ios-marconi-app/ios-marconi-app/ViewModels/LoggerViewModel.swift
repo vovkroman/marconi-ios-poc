@@ -92,8 +92,8 @@ extension Logger {
         private func _processNewItem(event: LoggerEvent) {
             let dateString = _dateFormatter.string(from: Date())
             if _items.isEmpty {
-                _items.append(.init(event: event, dateString: dateString))
                 DispatchQueue.main.async {
+                    self._items.append(.init(event: event, dateString: dateString))
                     self.changeHandler?(.firstItem)
                     return
                 }
@@ -109,6 +109,6 @@ extension Logger {
 
 extension Logger.ViewModel: LoggerDelegate {
     func emittedEvent(event: LoggerEvent) {
-        _worker.async(execute: combine(event, with: _processNewItem))
+        _worker.async(flags: .barrier, execute: combine(event, with: _processNewItem))
     }
 }
