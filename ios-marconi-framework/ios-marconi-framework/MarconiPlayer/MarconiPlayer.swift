@@ -19,7 +19,7 @@ extension Marconi {
         public var _currentURL: URL?
         
         public var streamProgress: TimeInterval {
-            return _observer?.streamProgress ?? 0.0
+            return _observer?.currentProgress ?? 0.0
         }
         
         public var playId: String? {

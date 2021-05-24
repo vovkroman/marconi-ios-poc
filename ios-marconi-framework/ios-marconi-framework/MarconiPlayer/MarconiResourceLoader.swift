@@ -10,6 +10,7 @@ import Foundation
 import AVFoundation
 
 protocol PlaylistLoaderDelegate: class {
+    var currentProgress: TimeInterval? { get }
     func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) throws
 }
 
@@ -19,51 +20,71 @@ extension Marconi {
         
         private weak var _delegate: PlaylistLoaderDelegate?
         private let _session: URLSession
-
+        
         public func resourceLoader(_ resourceLoader: AVAssetResourceLoader,
                                    shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-            guard let url = loadingRequest.request.url else {
+            guard var url = loadingRequest.request.url else {
                 loadingRequest.finishLoading(with: MError.loaderError(description: "Unable to read the url/host data."))
                 return false
             }
-            let baseURL = url.replace("https")
-            if let url = baseURL {
-                _loadResource(by: url, loadingRequest: loadingRequest)
+            
+            if let streamProgress = _delegate?.currentProgress {
+                url = url.updateQueryParams(key: "playlistOffset", value: String(format: "%.2f", streamProgress))
+            }
+            
+            if let url = url.replace("https") {
+                print("Loading \(url)")
+                _loadMasterManifest(by: url, loadingRequest: loadingRequest)
             } else {
-                loadingRequest.finishLoading(with: MError.loaderError(description: "Invalid url: \(String(describing: baseURL))"))
+                loadingRequest.finishLoading(with: MError.loaderError(description: "Invalid url: \(String(describing: url))"))
                 return false
             }
             return true
         }
         
-        private func _loadResource(by url: URL, loadingRequest: AVAssetResourceLoadingRequest) {
+        private func _loadMasterManifest(by url: URL, loadingRequest: AVAssetResourceLoadingRequest) {
             let request = URLRequest(url: url)
-            let task = _session.dataTask(with: request) { [weak self] (data, responce, error) in
+            let task = _session.dataTask(with: request) { [weak self] (data, response, error) in
                 if let error = error {
-                    loadingRequest.finishLoading(with: MError.loaderError(description: "\(request) failed with error \(error)"))
+                    loadingRequest.finishLoading(with: MError.loaderError(description: "\(request) failed load master manifset with \(error)"))
                     return
                 }
                 if let data = data {
-                    loadingRequest.dataRequest?.respond(with: data)
-                    loadingRequest.finishLoading()
-                    
                     let manifestContent = String(decoding: data, as: UTF8.self)
-                    let masterParser = MasterManigestParser(manifestContent)
+                    let masterParser = MasterManifestParser(manifestContent)
                     do {
                         try masterParser.parse()
                         guard let url = masterParser.playlists.first else {
                             throw MError.loaderError(description: "There is no playlist url")
                         }
-                        let mediaManifest = try MediaManifestParser(url)
-                        mediaManifest.parse()
-                        
-                        try self?._delegate?.playlistHasBeenLoaded(mediaManifest.playlist)
+                        self?._loadPlaylistManifest(by: url, loadingRequest: loadingRequest)
                     } catch let error {
-                        print(error)
-                        return
+                        loadingRequest.finishLoading(with: MError.loaderError(description: "Failed parse master manifest error: \(error.localizedDescription)"))
                     }
+                }
+            }
+            task.resume()
+        }
+        
+        private func _loadPlaylistManifest(by url: URL, loadingRequest: AVAssetResourceLoadingRequest) {
+            let request = URLRequest(url: url)
+            print("Load PlaylistManifest by url: \(url)")
+            let task = _session.dataTask(with: request) { [weak self] (data, response, error) in
+                if let data = data {
+                    let manifestContent = String(decoding: data, as: UTF8.self)
+                    let playlistManifest = MediaManifestParser(manifestContent)
+                    
+                    playlistManifest.parse()
+                    
+                    try? self?._delegate?.playlistHasBeenLoaded(playlistManifest.playlist)
+                    
+                    loadingRequest.contentInformationRequest?.contentType = response?.mimeType
+                    loadingRequest.contentInformationRequest?.isByteRangeAccessSupported = true
+                    loadingRequest.contentInformationRequest?.contentLength = response!.expectedContentLength
+                    loadingRequest.dataRequest?.respond(with: data)
+                    loadingRequest.finishLoading()
                 } else {
-                    loadingRequest.finishLoading(with: MError.loaderError(description: "Unable to fetch manifest"))
+                    loadingRequest.finishLoading(with: MError.loaderError(description: "Failed to load playlist manifest"))
                 }
             }
             task.resume()

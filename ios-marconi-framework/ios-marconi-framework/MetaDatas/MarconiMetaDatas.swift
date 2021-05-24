@@ -10,7 +10,7 @@ import AVFoundation
 
 extension Marconi {
     
-    public struct LiveItem {
+    public struct LiveItem: Hashable {
         let id: String?
         let artist: String?
         let duration: TimeInterval?
@@ -18,11 +18,12 @@ extension Marconi {
         let image: URL?
     }
     
-    public struct DigitaItem {
+    public struct DigitaItem: Hashable {
         let trackId: String?
         let playId: String?
         let artist: String?
         let stationId: String?
+        let type: String?
         let song: String?
         let datumTime: TimeInterval
         let datumStartTime: TimeInterval
@@ -170,6 +171,7 @@ extension Marconi {
                           playId: parser.playId,
                           artist: parser.artist,
                           stationId: parser.stationId,
+                          type: parser.type,
                           song: parser.song,
                           datumTime: parser.datumTime ?? 0.0,
                           datumStartTime: parser.datumStartTime ?? 0.0,
@@ -202,6 +204,7 @@ extension Marconi.MetaData: Equatable {
                     lhs.song == rhs.song &&
                     lhs.datumTime == rhs.datumTime &&
                     lhs.skips == rhs.skips &&
+                    lhs.type == rhs.type &&
                     lhs.isSkippable == rhs.isSkippable &&
                     lhs.duration == rhs.duration &&
                     lhs.playlistStartTime == rhs.playlistStartTime &&
@@ -225,6 +228,7 @@ extension Marconi.DigitaItem: Decodable {
         case skips = "skips"
         case title = "title"
         case artist = "artist"
+        case type = "type"
         case isExplicit = "isExplicit"
         case isSkippable = "isSkippable"
         case canPause = "canPause"
@@ -246,6 +250,7 @@ extension Marconi.DigitaItem: Decodable {
                   playId: try? container.decode(String.self, forKey: .playId),
                   artist: try? container.decode(String.self, forKey: .artist),
                   stationId: stationId.flatMap{ String($0) },
+                  type: try? container.decode(String.self, forKey: .type),
                   song: try? container.decode(String.self, forKey: .title),
                   datumTime: datumTime ?? 0.0,
                   datumStartTime: datumStartTime ?? 0.0,

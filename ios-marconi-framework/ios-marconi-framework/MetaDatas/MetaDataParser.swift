@@ -32,6 +32,10 @@ extension Marconi.Digit {
             return _dict[Identifier.songArtist] as? String
         }
         
+        var type: String? {
+            return _dict[Identifier.songType] as? String
+        }
+        
         var song: String? {
             return _dict[Identifier.songTitle] as? String
         }

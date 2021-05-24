@@ -145,7 +145,7 @@ extension Marconi {
         // MARK: - TimimgsDelegate implementation
         
         func trackProgress(_ currentItemProgress: TimeInterval, _ streamProgress: TimeInterval) {
-            self.streamProgress = streamProgress
+            self.currentProgress = streamProgress
             print("Item Current Progress: \(currentItemProgress)")
             if currentItemProgress >= 1.0 {
                 self.stateMachine.transition(with: .progressDidChanged(progress: currentItemProgress))
@@ -170,6 +170,15 @@ extension Marconi {
         
         // MARK: - PlaylistLoaderDelegate implementation
         
+        var streamProgress: TimeInterval? {
+            switch _stationType {
+            case .digit:
+                return currentProgress
+            case .live:
+                return nil
+            }
+        }
+        
         func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) throws {
             guard let data = "[\(playlist.segments.compactMap{ $0.json }.joined(separator: ", "))]".data(using: .utf8) else {
                 throw MError.loaderError(description: "Failed laoding json from #EXTINF tag")
@@ -178,10 +187,10 @@ extension Marconi {
             let startDate = playlist.startDate ?? Date()
             switch _stationType {
             case .digit:
-                let items = try JSONDecoder().decode([DigitaItem].self, from: data)
+                let items = try JSONDecoder().decode(Set<DigitaItem>.self, from: data)
                 _queue.enqueue(items.compactMap{ MetaData.digit($0, startDate) })
             case .live:
-                let items = try JSONDecoder().decode([LiveItem].self, from: data)
+                let items = try JSONDecoder().decode(Set<LiveItem>.self, from: data)
                 _queue.enqueue(items.compactMap{ MetaData.live($0, startDate) })
             }
             DispatchQueue.main.async(execute: _handleNewItems)

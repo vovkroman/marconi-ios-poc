@@ -28,7 +28,7 @@ extension Marconi {
         var segments: [Segment] = []
     }
     
-    class MasterManigestParser {
+    class MasterManifestParser {
         
         private let _m3u8Content: String
         private(set) var playlists: [URL] = []
@@ -71,11 +71,7 @@ extension Marconi {
         private let _m3u8Content: String
         private(set) var playlist: Playlist = .init()
         
-        init(_ url: URL) throws {
-            let dataContent = try String(contentsOf: url, encoding: .utf8)
-            guard !dataContent.isEmpty else {
-                throw MError.loaderError(description: "MediaManifest is empty")
-            }
+        init(_ dataContent: String) {
             _m3u8Content = dataContent
         }
         
@@ -88,7 +84,6 @@ extension Marconi {
             }
             playlist.segments.append(segment)
         }
-
         
         private func _processStartDateTag(_ line: String) {
             let dateRange = line.range(of: "\(Tag.EXT_DATE_TIME)")!
@@ -97,7 +92,11 @@ extension Marconi {
         }
         
         func parse() {
-            _m3u8Content.enumerateLines { [weak self](line, _) in
+            print(_m3u8Content)
+            _m3u8Content.enumerateLines { [weak self](line, isStop) in
+                if line.contains("\(Tag.EXT_X_DATERANGE)") {
+                    isStop = true
+                }
                 if line.contains("\(Tag.EXTINF)") {
                     self?._processInfTag(line)
                 }
