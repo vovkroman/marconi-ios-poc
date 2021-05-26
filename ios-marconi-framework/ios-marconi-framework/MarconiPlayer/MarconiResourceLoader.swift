@@ -11,6 +11,7 @@ import AVFoundation
 
 protocol PlaylistLoaderDelegate: class {
     func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) throws
+    func isLoadPlaylist(by url: URL) -> Bool
 }
 
 extension Marconi {
@@ -46,7 +47,7 @@ extension Marconi {
                 if let data = data {
                     loadingRequest.dataRequest?.respond(with: data)
                     loadingRequest.finishLoading()
-                    
+                    guard let delegate = self?._delegate, delegate.isLoadPlaylist(by: url) else { return }
                     let manifestContent = String(decoding: data, as: UTF8.self)
                     let masterParser = MasterManigestParser(manifestContent)
                     do {

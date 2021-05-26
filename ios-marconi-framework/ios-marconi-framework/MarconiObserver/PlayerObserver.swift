@@ -187,6 +187,15 @@ extension Marconi {
             DispatchQueue.main.async(execute: _handleNewItems)
         }
         
+        func isLoadPlaylist(by url: URL) -> Bool {
+            switch _stationType {
+            case .digit:
+                return url.absoluteString.contains("playlistoffset")
+            case .live:
+                return true
+            }
+        }
+        
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
         
         public func metadataCollector(_ metadataCollector: AVPlayerItemMetadataCollector,
