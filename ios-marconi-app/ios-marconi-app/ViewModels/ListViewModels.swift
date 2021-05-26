@@ -63,7 +63,7 @@ class BaseListViewModel: ListViewModelable {
     }
     
     func processTheStation(_ station: Station) {
-        //fatalError("method should be overrided")
+        selectedStationId = station.id
     }
     
     subscript(index: Int) -> Model? {
@@ -91,6 +91,7 @@ extension Live {
     
     class ViewModel: BaseListViewModel {
         override func processTheStation(_ station: Station) {
+            super.processTheStation(station)
             // if hls is not present in streams so skip it
             guard let hls = station.streams?.first(where: { $0.type == .m3u8 }) else {
                 _playerDelegate?.catchTheError(ErrorType.noHls(stationName: station.name))
@@ -114,6 +115,7 @@ extension Digital {
     class ViewModel: BaseListViewModel {
         
         override func processTheStation(_ station: Station) {
+            super.processTheStation(station)
             var digitalUrl = "https://smartstreams.radio-stg.com/stream/\(station.id)/manifest/digitalstations/playlist.m3u8?udid=\(UserDefaults.udid)"
             if let playlistOffset = UserDefaults.progress(by: station) {
                 digitalUrl += "&playlistOffset=\(playlistOffset)"
