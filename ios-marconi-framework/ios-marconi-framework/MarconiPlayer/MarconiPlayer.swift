@@ -49,7 +49,8 @@ extension Marconi {
             if let playId = playId {
                 url = url.updateQueryParams(key: "playId", value: playId)
             }
-
+            
+            print("restored url: \(url)")
             replaceCurrentURL(with: url, stationType: _stationType)
         }
         
