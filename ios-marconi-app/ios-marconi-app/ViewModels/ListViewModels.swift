@@ -27,7 +27,7 @@ extension StationWrapper {
     func saveCurrent(progressData: ProgressData) {
         if case .digit = type {
             let progress = progressData.progress ?? 0.0
-            let progressString = "\(progress)"
+            let progressString = progress.stringValue
             UserDefaults.saveProgress(progressString, for: station)
             if let playId = progressData.playId {
                 UserDefaults.savePlayId(playId, for: station)
