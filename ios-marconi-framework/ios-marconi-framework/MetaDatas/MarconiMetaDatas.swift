@@ -10,7 +10,7 @@ import AVFoundation
 
 extension Marconi {
     
-    public struct LiveItem {
+    public struct LiveItem: Hashable {
         let id: String?
         let artist: String?
         let duration: TimeInterval?
@@ -18,7 +18,7 @@ extension Marconi {
         let image: URL?
     }
     
-    public struct DigitaItem {
+    public struct DigitaItem: Hashable {
         let trackId: String?
         let playId: String?
         let artist: String?

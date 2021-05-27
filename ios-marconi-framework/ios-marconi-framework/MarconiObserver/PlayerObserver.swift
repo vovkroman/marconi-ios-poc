@@ -178,10 +178,10 @@ extension Marconi {
             let startDate = playlist.startDate ?? Date()
             switch _stationType {
             case .digit:
-                let items = try JSONDecoder().decode([DigitaItem].self, from: data)
+                let items = try JSONDecoder().decode(Set<DigitaItem>.self, from: data)
                 _queue.enqueue(items.compactMap{ MetaData.digit($0, startDate) })
             case .live:
-                let items = try JSONDecoder().decode([LiveItem].self, from: data)
+                let items = try JSONDecoder().decode(Set<LiveItem>.self, from: data)
                 _queue.enqueue(items.compactMap{ MetaData.live($0, startDate) })
             }
             DispatchQueue.main.async(execute: _handleNewItems)
