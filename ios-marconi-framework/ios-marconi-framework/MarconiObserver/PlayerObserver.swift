@@ -26,6 +26,9 @@ extension Marconi {
     
     public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate, TrackTimimgsDelegate, PlaylistLoaderDelegate {
         
+        var currentURL: URL?
+        private var _loader: ResourceLoader?
+        
         private var _stationType: StationType = .live
         
         private var _playbackLikelyToKeepUpKeyPathObserver: ObserverWrapper?
@@ -72,7 +75,11 @@ extension Marconi {
         private func _observeStatus(_ playerItem: AVPlayerItem) {
             switch playerItem.status {
             case .readyToPlay:
-                if currentMetaItem != .none {
+                if case .none = currentMetaItem {
+                    let resourceLoader = ResourceLoader(self)
+                    currentURL.flatMap(resourceLoader.loadResource)
+                    _loader = resourceLoader
+                } else {
                     _startObserveProgress()
                 }
                 stateMachine.transition(with: .bufferingEnded(currentMetaItem))
@@ -185,15 +192,6 @@ extension Marconi {
                 _queue.enqueue(items.compactMap{ MetaData.live($0, startDate) })
             }
             DispatchQueue.main.async(execute: _handleNewItems)
-        }
-        
-        func isLoadPlaylist(by url: URL) -> Bool {
-            switch _stationType {
-            case .digit:
-                return url.absoluteString.contains("playlistoffset")
-            case .live:
-                return true
-            }
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation

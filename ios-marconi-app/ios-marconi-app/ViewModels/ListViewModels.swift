@@ -27,7 +27,7 @@ extension StationWrapper {
     func saveCurrent(progressData: ProgressData) {
         if case .digit = type {
             let progress = progressData.progress ?? 0.0
-            let progressString = String(format: "%.1f", progress)
+            let progressString = "\(progress)"
             UserDefaults.saveProgress(progressString, for: station)
             if let playId = progressData.playId {
                 UserDefaults.savePlayId(playId, for: station)
@@ -74,7 +74,6 @@ class BaseListViewModel: ListViewModelable {
         guard let stationPlaceHolder = items[safe: indexPath.row] else { return }
         if selectedStationId != stationPlaceHolder.id {
             _fetchStation(by: stationPlaceHolder.id)
-            selectedStationId = stationPlaceHolder.id
         } else {
             _loggerDelegate?.emittedEvent(event: .handleStreamURL(description: "Selected \(stationPlaceHolder.name) station is playing"))
         }

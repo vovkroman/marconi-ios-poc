@@ -13,10 +13,13 @@ extension Marconi {
     public class Player: AVPlayer {
         
         private var _observer: PlayerObserver?
-        private var _resourceLoader: ResourceLoader?
         private var _stationType: StationType = .live
         
-        public var _currentURL: URL?
+        public var _currentURL: URL? {
+            didSet {
+                _observer?.currentURL = _currentURL
+            }
+        }
         
         public var streamProgress: TimeInterval {
             return _observer?.streamProgress ?? 0.0
@@ -27,22 +30,14 @@ extension Marconi {
         }
         
         public func replaceCurrentURL(with url: URL, stationType: StationType) {
-            guard let asset = URLAsset(url: url) else { return }
-            print(url)
             _stationType = stationType
             _currentURL = url
             _observer?.stopMonitoring()
             if currentItem != nil { replaceCurrentItem(with: nil) }
             
-            // remove prev instance ResourceLoader
-            _resourceLoader = nil
-            let resourceLoader = ResourceLoader(_observer)
-            
-            asset.resourceLoader.setDelegate(resourceLoader, queue: .main)
+            let asset = AVURLAsset(url: url)
             let playingItem = AVPlayerItem(asset: asset)
             
-            _resourceLoader = resourceLoader
-
             // we need to know *station type* to know how to map paylaod
             self._observer?.startMonitoring(playingItem, stationType: stationType)
             super.replaceCurrentItem(with: playingItem)
@@ -50,12 +45,11 @@ extension Marconi {
         }
         
         func restore(with url: URL) {
-            var url = url.updateQueryParams(key: "playlistOffset", value: String(format: "%.2f", streamProgress))
+            var url = url.updateQueryParams(key: "playlistOffset", value: "\(streamProgress)")
             if let playId = playId {
                 url = url.updateQueryParams(key: "playId", value: playId)
             }
 
-            print("replaced url: \(url)")
             replaceCurrentURL(with: url, stationType: _stationType)
         }
         

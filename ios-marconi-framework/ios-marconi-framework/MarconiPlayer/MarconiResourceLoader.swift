@@ -11,43 +11,26 @@ import AVFoundation
 
 protocol PlaylistLoaderDelegate: class {
     func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) throws
-    func isLoadPlaylist(by url: URL) -> Bool
 }
 
 extension Marconi {
     
-    final class ResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
+    final class ResourceLoader: NSObject {
         
         private weak var _delegate: PlaylistLoaderDelegate?
         private let _session: URLSession
 
-        public func resourceLoader(_ resourceLoader: AVAssetResourceLoader,
-                                   shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-            guard let url = loadingRequest.request.url else {
-                loadingRequest.finishLoading(with: MError.loaderError(description: "Unable to read the url/host data."))
-                return false
-            }
-            let baseURL = url.replace("https")
-            if let url = baseURL {
-                _loadResource(by: url, loadingRequest: loadingRequest)
-            } else {
-                loadingRequest.finishLoading(with: MError.loaderError(description: "Invalid url: \(String(describing: baseURL))"))
-                return false
-            }
-            return true
+        public func loadResource(by url: URL) {
+            _loadMasterManifest(by: url)
         }
         
-        private func _loadResource(by url: URL, loadingRequest: AVAssetResourceLoadingRequest) {
+        private func _loadMasterManifest(by url: URL) {
             let request = URLRequest(url: url)
             let task = _session.dataTask(with: request) { [weak self] (data, responce, error) in
-                if let error = error {
-                    loadingRequest.finishLoading(with: MError.loaderError(description: "\(request) failed with error \(error)"))
+                if error != nil {
                     return
                 }
                 if let data = data {
-                    loadingRequest.dataRequest?.respond(with: data)
-                    loadingRequest.finishLoading()
-                    guard let delegate = self?._delegate, delegate.isLoadPlaylist(by: url) else { return }
                     let manifestContent = String(decoding: data, as: UTF8.self)
                     let masterParser = MasterManigestParser(manifestContent)
                     do {
@@ -63,8 +46,6 @@ extension Marconi {
                         print(error)
                         return
                     }
-                } else {
-                    loadingRequest.finishLoading(with: MError.loaderError(description: "Unable to fetch manifest"))
                 }
             }
             task.resume()
