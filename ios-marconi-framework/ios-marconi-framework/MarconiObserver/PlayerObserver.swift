@@ -26,6 +26,11 @@ extension Marconi {
     
     public class PlayerObserver: NSObject, AVPlayerItemMetadataCollectorPushDelegate, TrackTimimgsDelegate, PlaylistLoaderDelegate {
         
+        enum MetadataSource: Int {
+            case metaCollector = 0
+            case playlist = 1
+        }
+        
         var currentURL: URL?
         private var _loader: ResourceLoader?
         
@@ -75,19 +80,26 @@ extension Marconi {
         private func _observeStatus(_ playerItem: AVPlayerItem) {
             switch playerItem.status {
             case .readyToPlay:
-                if case .none = currentMetaItem {
-                    let resourceLoader = ResourceLoader(self)
-                    currentURL.flatMap(resourceLoader.loadResource)
-                    _loader = resourceLoader
-                } else {
-                    _startObserveProgress()
-                }
-                stateMachine.transition(with: .bufferingEnded(currentMetaItem))
+                _willStartPlaying()
             case .failed:
                 stateMachine.transition(with: .catchTheError(playerItem.error))
             default:
                 break
             }
+        }
+        
+        private func _willStartPlaying() {
+            // if .none then meta hasn't came, so requesting playlists
+            if case .none = currentMetaItem {
+                let resourceLoader = ResourceLoader(self)
+                // suspend playing unless meta has came
+                _player?.rate = 0.0
+                currentURL.flatMap(resourceLoader.loadResource)
+                _loader = resourceLoader
+            } else {
+               _startObserveProgress()
+               stateMachine.transition(with: .bufferingEnded(currentMetaItem))
+           }
         }
         
         // MARK: - Observe progressing
@@ -109,14 +121,23 @@ extension Marconi {
             playerItem.add(metadataCollector)
         }
         
-        private func _handleNewItems() {
+        private func _handleNewItems(from source: MetadataSource) {
             guard let item = _queue.head(), currentMetaItem != item else {
                 // current asset's still playing
                 return
             }
             currentMetaItem = item
             _startObserveProgress()
-            stateMachine.transition(with: .newMetaHasCame(item))
+            
+            switch source {
+            case .metaCollector:
+                stateMachine.transition(with: .newMetaHasCame(item))
+            case .playlist:
+                if let player = _player, !player.isPlaying {
+                    player.rate = 1.0
+                }
+                stateMachine.transition(with: .bufferingEnded(item))
+            }
         }
         
         // Public methods
@@ -183,15 +204,24 @@ extension Marconi {
             }
             
             let startDate = playlist.startDate ?? Date()
+            var metaItems: [MetaData] = []
             switch _stationType {
             case .digit:
                 let items = try JSONDecoder().decode(Set<DigitaItem>.self, from: data)
-                _queue.enqueue(items.compactMap{ MetaData.digit($0, startDate) })
+                metaItems.append(contentsOf: items.compactMap{ MetaData.digit($0, startDate) })
             case .live:
                 let items = try JSONDecoder().decode(Set<LiveItem>.self, from: data)
-                _queue.enqueue(items.compactMap{ MetaData.live($0, startDate) })
+                metaItems.append(contentsOf: items.compactMap{ MetaData.live($0, startDate) })
             }
-            DispatchQueue.main.async(execute: _handleNewItems)
+            if metaItems.isEmpty { return }
+            _queue.enqueue(metaItems)
+            DispatchQueue.main.async { self._handleNewItems(from: .playlist) }
+        }
+        
+        func playlistLoaded(with error: Error) {
+            guard let player = _player, !player.isPlaying else { return }
+            player.rate = 1.0
+            stateMachine.transition(with: .bufferingEnded(currentMetaItem))
         }
         
         // MARK: - AVPlayerItemMetadataCollectorPushDelegate implementation
@@ -220,7 +250,7 @@ extension Marconi {
             }
 
             _queue.enqueue(items)
-            _handleNewItems()
+            _handleNewItems(from: .metaCollector)
         }
         
         public init(_ observer: MarconiPlayerObserver?) {

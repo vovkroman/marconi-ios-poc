@@ -11,6 +11,7 @@ import AVFoundation
 
 protocol PlaylistLoaderDelegate: class {
     func playlistHasBeenLoaded(_ playlist: Marconi.Playlist) throws
+    func playlistLoaded(with error: Error)
 }
 
 extension Marconi {
@@ -26,8 +27,9 @@ extension Marconi {
         
         private func _loadMasterManifest(by url: URL) {
             let request = URLRequest(url: url)
-            let task = _session.dataTask(with: request) { [weak self] (data, responce, error) in
-                if error != nil {
+            let task = _session.dataTask(with: request) { [weak self] (data, _, error) in
+                if let error = error {
+                    self?._delegate?.playlistLoaded(with: MError.loaderError(description: error.localizedDescription))
                     return
                 }
                 if let data = data {
@@ -43,9 +45,12 @@ extension Marconi {
                         
                         try self?._delegate?.playlistHasBeenLoaded(mediaManifest.playlist)
                     } catch let error {
-                        print(error)
+                        self?._delegate?.playlistLoaded(with: MError.loaderError(description: error.localizedDescription))
                         return
                     }
+                } else {
+                    self?._delegate?.playlistLoaded(with: MError.loaderError(description: "Data for master manifset is nil"))
+                    return
                 }
             }
             task.resume()
