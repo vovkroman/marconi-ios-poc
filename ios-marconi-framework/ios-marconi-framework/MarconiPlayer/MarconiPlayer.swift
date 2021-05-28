@@ -33,6 +33,7 @@ extension Marconi {
             _stationType = stationType
             _currentURL = url
             _observer?.stopMonitoring()
+            _observer?.cleanAllData()
             if currentItem != nil { replaceCurrentItem(with: nil) }
             
             let asset = AVURLAsset(url: url)
@@ -49,9 +50,13 @@ extension Marconi {
             if let playId = playId {
                 url = url.updateQueryParams(key: "playId", value: playId)
             }
-            
             print("restored url: \(url)")
-            replaceCurrentURL(with: url, stationType: _stationType)
+            let asset = AVURLAsset(url: url)
+            let playingItem = AVPlayerItem(asset: asset)
+            
+            // we need to know *station type* to know how to map paylaod
+            self._observer?.startMonitoring(playingItem, stationType: _stationType)
+            super.replaceCurrentItem(with: playingItem)
         }
         
         public init(_ observer: MarconiPlayerObserver?) {
@@ -67,12 +72,13 @@ extension Marconi {
             if let url = _currentURL {
                 restore(with: url)
             }
+            super.play()
         }
         
         public override func pause() {
             if isPlaying {
-                stop()
                 _observer?.stopMonitoring()
+                stop()
             }
             super.pause()
         }

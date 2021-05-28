@@ -144,6 +144,7 @@ extension Marconi {
         
         deinit {
             stopMonitoring()
+            cleanAllData()
         }
         
         public func setPlayer(_ player: AVPlayer) {
@@ -160,8 +161,11 @@ extension Marconi {
             _observeBuffering(newPlayingItem)
         }
         
-        public func stopMonitoring() {            
+        public func cleanAllData() {
             _queue.removeAll()
+        }
+        
+        public func stopMonitoring() {
             
             _timerObserver.invalidate()
             
@@ -219,8 +223,9 @@ extension Marconi {
         }
         
         func playlistLoaded(with error: Error) {
-            guard let player = _player, !player.isPlaying else { return }
-            player.rate = 1.0
+            if let player = _player, !player.isPlaying {
+                player.rate = 1.0
+            }
             stateMachine.transition(with: .bufferingEnded(currentMetaItem))
         }
         

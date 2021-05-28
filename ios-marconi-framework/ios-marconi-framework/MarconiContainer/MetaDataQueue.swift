@@ -93,6 +93,7 @@ extension Marconi {
                 return
             }
             if index >= 0, index < _storage.count, _storage[index].sortedKey == newElement.sortedKey {
+                _storage[index] = newElement
                 return
             }
             var insertIndex = index
