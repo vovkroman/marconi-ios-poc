@@ -29,10 +29,4 @@ extension URL {
         components.queryItems = params.map{ URLQueryItem(name: $0, value: $1) }
         return components.url!
     }
-    
-    func replace(_ scheme: String) -> URL? {
-        var components = URLComponents(url: self, resolvingAgainstBaseURL: false)
-        components?.scheme = scheme
-        return components?.url
-    }
 }

@@ -98,6 +98,9 @@ extension Marconi {
                 _loader = resourceLoader
             } else {
                _startObserveProgress()
+                if let player = _player, !player.isPlaying {
+                    player.rate = 1.0
+                }
                stateMachine.transition(with: .bufferingEnded(currentMetaItem))
            }
         }
@@ -235,6 +238,7 @@ extension Marconi {
                                       didCollect metadataGroups: [AVDateRangeMetadataGroup],
                                       indexesOfNewGroups: IndexSet,
                                       indexesOfModifiedGroups: IndexSet) {
+            print("Meta has come")
             var items: [MetaData] = []
             for group in metadataGroups {
                 let startDate = group.startDate

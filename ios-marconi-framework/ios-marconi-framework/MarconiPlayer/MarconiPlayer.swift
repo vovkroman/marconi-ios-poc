@@ -34,7 +34,7 @@ extension Marconi {
             _currentURL = url
             _observer?.stopMonitoring()
             _observer?.cleanAllData()
-            if currentItem != nil { replaceCurrentItem(with: nil) }
+            replaceCurrentItem(with: nil)
             
             let asset = AVURLAsset(url: url)
             let playingItem = AVPlayerItem(asset: asset)
@@ -69,16 +69,14 @@ extension Marconi {
         }
         
         public override func play() {
-            if let url = _currentURL {
-                restore(with: url)
-            }
-            super.play()
+            _currentURL.flatMap(restore)
+            super.playImmediately(atRate: 1.0)
         }
         
         public override func pause() {
             if isPlaying {
-                _observer?.stopMonitoring()
                 stop()
+                _observer?.stopMonitoring()
             }
             super.pause()
         }
