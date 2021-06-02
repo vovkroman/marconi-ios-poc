@@ -12,7 +12,7 @@ extension TimeInterval {
     public var stringValue: String {
         let formatter = NumberFormatter()
         formatter.decimalSeparator = "."
-        formatter.maximumFractionDigits = 3
+        formatter.maximumFractionDigits = 5
 
         let number = NSNumber(value: self)
         return formatter.string(from: number) ?? "0.0"
