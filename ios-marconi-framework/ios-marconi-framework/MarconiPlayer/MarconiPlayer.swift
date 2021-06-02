@@ -46,10 +46,7 @@ extension Marconi {
         }
         
         func restore(with url: URL) {
-            var url = url.updateQueryParams(key: "playlistOffset", value: streamProgress.stringValue)
-            if let playId = playId {
-                url = url.updateQueryParams(key: "playId", value: playId)
-            }
+            let url = url.updateQueryParams(key: "playlistOffset", value: streamProgress.stringValue)
             print("restored url: \(url)")
             let asset = AVURLAsset(url: url)
             let playingItem = AVPlayerItem(asset: asset)
@@ -69,8 +66,10 @@ extension Marconi {
         }
         
         public override func play() {
-            _currentURL.flatMap(restore)
-            super.playImmediately(atRate: 1.0)
+            if case .digit = _stationType {
+                _currentURL.flatMap(restore)
+            }
+            super.play()
         }
         
         public override func pause() {
