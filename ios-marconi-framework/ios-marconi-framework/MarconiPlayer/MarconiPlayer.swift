@@ -24,9 +24,7 @@ extension Marconi {
         public var streamProgress: TimeInterval {
             return _observer?.streamProgress ?? 0.0
         }
-        
-        var time: CMTime?
-        
+            
         public var playId: String? {
             return _observer?.currentMetaItem.playId
         }
@@ -38,9 +36,11 @@ extension Marconi {
             _observer?.cleanAllData()
             replaceCurrentItem(with: nil)
             
-            let asset = AVURLAsset(url: url)
+            let asset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
             let playingItem = AVPlayerItem(asset: asset)
-            
+            playingItem.automaticallyPreservesTimeOffsetFromLive = true
+            playingItem.configuredTimeOffsetFromLive = .zero
+
             // we need to know *station type* to know how to map paylaod
             self._observer?.startMonitoring(playingItem, stationType: stationType)
             super.replaceCurrentItem(with: playingItem)
@@ -48,21 +48,15 @@ extension Marconi {
         }
         
         func restore(with url: URL) {
-            let interval = 1.0
-            let progress = streamProgress - interval
-            let url = url.updateQueryParams(key: "playlistOffset", value: progress.stringValue)
+            let url = url.updateQueryParams(key: "playlistOffset", value: streamProgress.stringValue)
             print("restored url: \(url)")
-            let asset = AVURLAsset(url: url)
+            let asset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
             let playingItem = AVPlayerItem(asset: asset)
-            playingItem.seek(to: CMTime(seconds: interval,
-                                        preferredTimescale: CMTimeScale(1)),
-                             toleranceBefore: .zero,
-                             toleranceAfter: .zero) { _ in
-                
-                // we need to know *station type* to know how to map paylaod
-                self._observer?.startMonitoring(playingItem, stationType: self._stationType)
-                super.replaceCurrentItem(with: playingItem)
-            }
+            playingItem.automaticallyPreservesTimeOffsetFromLive = true
+            playingItem.configuredTimeOffsetFromLive = .zero
+            
+            self._observer?.startMonitoring(playingItem, stationType: self._stationType)
+            super.replaceCurrentItem(with: playingItem)
         }
         
         public init(_ observer: MarconiPlayerObserver?) {
@@ -83,7 +77,6 @@ extension Marconi {
         
         public override func pause() {
             if isPlaying {
-                time = currentItem?.currentTime()
                 stop()
                 _observer?.stopMonitoring()
             }
