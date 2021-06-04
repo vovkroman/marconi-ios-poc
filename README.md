@@ -88,4 +88,6 @@ Client code should use Marconi.Player instance, instead of AVPlayer, subscribing
 - Open ios-marconi-poc.xcworkspace;
 - Build and run the ios-marconi-app target;
 
+### Known issues:
 
+- pause/resume is not as precise (AVPlayer plays segment from the begining, ignoring playlistofsset). 
