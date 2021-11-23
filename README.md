@@ -1,5 +1,5 @@
 # ios-marconi-poc
-iOS mobile testing tool for Marconi streams
+**ios-marconi-poc** is iOS mobile PoC tool to verify idea of decoding metadata from HLS media manifest. 
 
 ### Structure of project
 
